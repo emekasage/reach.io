@@ -1,10 +1,11 @@
 import React,{useContext} from 'react'
-import {Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 import {providerFunctions} from "../provider/FunctionsProvider"
 
 
 export default function Sidebar() {
     const {
+        logout,
         showSideBar
     } = useContext(providerFunctions)
     return (
@@ -14,37 +15,37 @@ export default function Sidebar() {
                 <nav>
 					<ul className="navigate">
 						<li>
-                            <Link to="/admin" className="nav">
+                            <NavLink to="/admin/dashboard" className="nav" activeClassName="nav--active">
                                 <i class="bi bi-house-door menu-img"></i>
                                 <span className="menu-text">Overview</span>
-                            </Link>
+                            </NavLink>
                         </li>
 						<li>
-                            <Link to="/admin/clients" className="nav">
+                            <NavLink to="/admin/clients" className="nav" activeClassName="nav--active">
                                 <i class="bi bi-people menu-img"></i>
                                 <span className="menu-text">Users</span>
-                            </Link>
+                            </NavLink>
                         </li>
 						
 						<li>
-                            <Link to="/admin/settings" className="nav">
+                            <NavLink to="/admin/settings" className="nav" activeClassName="nav--active">
                                 <i class="bi bi-gear menu-img"></i>
                                 <span className="menu-text">Settings</span>
-                            </Link>
+                            </NavLink>
                         </li>
                         <li>
-                            <Link to="/admin/campaign" className="nav">
+                            <NavLink to="/admin/campaign" className="nav" activeClassName="nav--active">
                                 <i class="bi bi-megaphone"></i>
                                 <span className="menu-text">Campaign</span>
-                            </Link>
+                            </NavLink>
                         </li>
 					</ul>
                     <ul className="navigate-log">
                         <li>
-                            <Link to="/login" className="nav2">
+                           <div className="nav2" onClick={()=>logout()}>
                                 <i class="bi bi-box-arrow-right menu-img-2"></i>
                                 <span className="menu-text-2">Log Out</span>
-                            </Link>
+                            </div>
                         </li>
                     </ul>
 				</nav>

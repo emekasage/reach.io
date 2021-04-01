@@ -5,17 +5,17 @@ export default function Login() {
     const [username,setUsername] = useState("");
     const [password, setPassword] = useState("");
     const {
-        login
+        adminlogin
     } = useContext(providerFunctions)
     return (
         <div className="login-page">
             <div className="row">
                 <div className="col-md-12 mt-3">
                     <span className="reachio-logo">
-                        <img src="assets/img/Group-73.png" alt="" />
+                        <img src="../../assets/img/Group-73.png" alt="" />
                     </span>
                     <div className="page-text mt-5">
-                        <p>Login to access dashboard</p>
+                        <p>Login as Admin</p>
                     </div>
                     <div className="rectangle-5 mt-3">
                         <form>
@@ -33,7 +33,7 @@ export default function Login() {
                             </span>
                         </div>
                         <div className="mt-4">
-                            <button class="submit-btn" type="button" onClick={()=>login(username, password)}>Login to dashboard</button>
+                            <button class="submit-btn" type="button" onClick={()=>adminlogin(username, password)}>Login to dashboard</button>
                         </div>
                         </form>
                     </div>

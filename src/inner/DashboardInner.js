@@ -1,15 +1,22 @@
-import React ,{useContext, useState} from 'react'
+import React ,{useContext, useState, useEffect} from 'react'
 import {providerFunctions} from "../provider/FunctionsProvider"
 import RadialChart from "../components/RadialChart"
 import StackedBarChart from "../components/StackedBarChart"
+import {Link} from 'react-router-dom'
+
 export default function DashboardInner(props) {
 	const [showRadial1, setShowRadial1] = useState(false);
 	const [showRadial2, setShowRadial2] = useState(false);
 	const [showRadial3, setShowRadial3] = useState(false);
 	const [showRadial4, setShowRadial4] = useState(false);
 	const {
-        showSideBar
+        showSideBar, getAllUsers
     } = useContext(providerFunctions)
+
+	useEffect(()=>{
+		getAllUsers();
+	})
+
 	
     return (
         <div className={`pagebody ${showSideBar ? "":"expand"}`}>
@@ -165,7 +172,7 @@ export default function DashboardInner(props) {
 
 
 					<div className="row">
-						<div className="col-12 col-lg-12 col-xxl-9 d-flex">
+						<div className="col-12 col-lg-12 col-xxl-12 d-flex">
 							<div className="card flex-fill">
 								<div className="card-header table-card-head d-flex justify-content-between">
 
@@ -196,45 +203,45 @@ export default function DashboardInner(props) {
 										</thead>
 										<tbody>
 											<tr>
-												<td>1</td>
-												<td>Cameron Williamson</td>
-												<td className="d-none d-xl-table-cell">ronaldrich@gmail.com</td>
-												<td className="d-none d-xl-table-cell">(405) 555-0128</td>
-												<td><span className="badge bg-success">Yes</span></td>
-												<td className="d-none d-md-table-cell">Jan 12th, 2021</td>
-											</tr>
-											<tr>
-												<td>2</td>
-												<td>Savannah Nguyen</td>
-												<td className="d-none d-xl-table-cell">robertfox@gmail.com</td>
-												<td className="d-none d-xl-table-cell">(208) 555-0112</td>
-												<td><span className="badge bg-success">Yes</span></td>
-												<td className="d-none d-md-table-cell">Jan 12th, 2021</td>
-											</tr>
-											<tr>
-												<td>3</td>
-												<td>Brooklyn Simmons</td>
-												<td className="d-none d-xl-table-cell">ronaldrich@gmail.com</td>
-												<td className="d-none d-xl-table-cell">(603) 555-0123</td>
-												<td><span className="badge bg-danger">No</span></td>
-												<td className="d-none d-md-table-cell">-</td>
-											</tr>
-											<tr>
-												<td>4</td>
-												<td>Courtney Henry</td>
-												<td className="d-none d-xl-table-cell">bassiecooper@gmail.com</td>
-												<td className="d-none d-xl-table-cell">(201) 555-0124</td>
-												<td><span className="badge bg-success">Yes</span></td>
-												<td className="d-none d-md-table-cell">Jan 12th, 2021</td>
-											</tr>
-											<tr>
-												<td>5</td>
-												<td>Alene McCoy</td>
-												<td className="d-none d-xl-table-cell">bassiecooper@gmail.com</td>
-												<td className="d-none d-xl-table-cell">(302) 555-0107</td>
-												<td><span className="badge bg-danger">No</span></td>
-												<td className="d-none d-md-table-cell">-</td>
-											</tr>
+													<td>1</td>
+													<td>Cameron Williamson</td>
+													<td className="d-none d-xl-table-cell">camwilliamson@gmail.com</td>
+													<td className="d-none d-xl-table-cell">(405) 555-0128</td>
+													<td><span className="badge bg-success">Yes</span></td>
+													<td className="d-none d-md-table-cell">Jan 12th, 2021</td>
+												</tr>
+												<tr>
+													<td>2</td>
+													<td>Savannah Nguyen</td>
+													<td className="d-none d-xl-table-cell">robertfox@gmail.com</td>
+													<td className="d-none d-xl-table-cell">(208) 555-0112</td>
+													<td><span className="badge bg-success">Yes</span></td>
+													<td className="d-none d-md-table-cell">Jan 12th, 2021</td>
+												</tr>
+												<tr>
+													<td>3</td>
+													<td>Brooklyn Simmons</td>
+													<td className="d-none d-xl-table-cell">ronaldrich@gmail.com</td>
+													<td className="d-none d-xl-table-cell">(603) 555-0123</td>
+													<td><span className="badge bg-danger">No</span></td>
+													<td className="d-none d-md-table-cell">-</td>
+												</tr>
+												<tr>
+													<td>4</td>
+													<td>Courtney Henry</td>
+													<td className="d-none d-xl-table-cell">bassiecooper@gmail.com</td>
+													<td className="d-none d-xl-table-cell">(201) 555-0124</td>
+													<td><span className="badge bg-success">Yes</span></td>
+													<td className="d-none d-md-table-cell">Jan 12th, 2021</td>
+												</tr>
+												<tr>
+													<td>5</td>
+													<td>Alene McCoy</td>
+													<td className="d-none d-xl-table-cell">bassiecooper@gmail.com</td>
+													<td className="d-none d-xl-table-cell">(302) 555-0107</td>
+													<td><span className="badge bg-danger">No</span></td>
+													<td className="d-none d-md-table-cell">-</td>
+												</tr>
 											<tr>
 												<td>6</td>
 												<td>Darlene Robertson</td>
@@ -245,24 +252,24 @@ export default function DashboardInner(props) {
 											</tr>
 											<tr>
 												<td>7</td>
-												<td>Robbie Shapiro</td>
-												<td className="d-none d-xl-table-cell">robertfox@gmail.com</td>
-												<td className="d-none d-xl-table-cell">(671) 555-0110</td>
+												<td>Emeka Matthews</td>
+												<td className="d-none d-xl-table-cell">emex.exmattews@mail.com</td>
+												<td className="d-none d-xl-table-cell">(208) 555-0112</td>
 												<td><span className="badge bg-success">Yes</span></td>
 												<td className="d-none d-md-table-cell">Jan 12th, 2021</td>
 											</tr>
 											<tr>
 												<td>8</td>
-												<td>Project Wombat</td>
-												<td className="d-none d-xl-table-cell">prwombat@gmail.com</td>
+												<td>Alexandra Mattews</td>
+												<td className="d-none d-xl-table-cell">alexmattews@mail.com</td>
 												<td className="d-none d-xl-table-cell">(405) 555-0128</td>
 												<td><span className="badge bg-warning">In progress</span></td>
 												<td className="d-none d-md-table-cell">-</td>
-											</tr>
+											</tr>											
 										</tbody>
 									</table>
 									<div className="view-more d-flex justify-content-center">
-                                    	<button type="button" className="btn-dashboard-2">View more</button>
+                                    	<Link to="/users">	<button type="button" className="btn-dashboard-2">View more</button></Link>
                                 	</div>
 								</div>
 							</div>

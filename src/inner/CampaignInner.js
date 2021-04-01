@@ -1,14 +1,23 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useState, useEffect} from 'react'
 import {providerFunctions} from "../provider/FunctionsProvider"
 import DateTime from "../components/DateTime"
-import CampaignModal from "../components/CampaignModal"
 
 export default function CampaignInner() {
     const {
         showSideBar,
         setShowModal,
-		setModalPage
+		setModalPage,
+        campaign,
+        userCampaign
     } = useContext(providerFunctions)
+
+    useEffect(()=>{
+        userCampaign();
+    },[]);
+
+    useEffect(()=>{
+        console.log(campaign.campaign)
+    },[campaign]);
    
     return (
         <div className={`pagebody ${showSideBar ? "":"expand"}`}>
@@ -39,49 +48,49 @@ export default function CampaignInner() {
                 </div>
 
                 <div className="row">
-						<div className="col-12 col-lg-12 col-xxl-9 d-flex user-tab">
-							<div className="card flex-fill">
-								<div className="card-header table-card-head d-flex justify-content-between">
+                    <div className="col-12 col-lg-12 col-xxl-9 d-flex user-tab">
+                        <div className="card flex-fill">
+                            <div className="card-header table-card-head d-flex justify-content-between">
 
-									<h5 className="card-title mb-0 table-title">Campaign history</h5>
+                                <h5 className="card-title mb-0 table-title">Campaign history</h5>
+                                
+                            </div>
+                            <table className="table table-hover my-1">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">S/N</th>
+                                        <th>Name of Campaign</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Sales Itemization</td>
+                                        <td>2020-11-05</td>
+                                        <td><button type="button" class="btn btn-success camp-form-btn">Submitted</button></td>	
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Weekly Sales</td>
+                                        <td>2020-09-29</td>
+                                        <td><button type="button" class="btn btn-danger camp-form-btn">Declined</button></td>	
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Monthly Sales</td>
+                                        <td>2020-08-15</td>
+                                        <td><button type="button" class="btn btn-secondary camp-form-btn">Pending</button></td>	
+                                    </tr>
                                     
-								</div>
-								<table className="table table-hover my-1">
-									<thead>
-										<tr>
-                                            <th scope="col">S/N</th>
-											<th>Name of Campaign</th>
-											<th>Date</th>
-											<th>Status</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-                                            <td>1</td>
-											<td>Sales Itemization</td>
-                                            <td>2020-11-05</td>
-											<td><button type="button" class="btn btn-success camp-form-btn">Submitted</button></td>	
-										</tr>
-                                        <tr>
-                                            <td>2</td>
-											<td>Weekly Sales</td>
-                                            <td>2020-09-29</td>
-											<td><button type="button" class="btn btn-danger camp-form-btn">Declined</button></td>	
-										</tr>
-                                        <tr>
-                                            <td>3</td>
-											<td>Monthly Sales</td>
-                                            <td>2020-08-15</td>
-											<td><button type="button" class="btn btn-secondary camp-form-btn">Pending</button></td>	
-										</tr>
-										
-									</tbody>
-                                    
-								</table>
-							</div>
-						</div>
-						
-					</div>
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                    </div>
+                    
+                </div>
             
             </div>
         </div>

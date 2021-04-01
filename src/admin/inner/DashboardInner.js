@@ -2,6 +2,8 @@ import React ,{useContext, useState} from 'react'
 import {providerFunctions} from "../../provider/FunctionsProvider"
 import RadialChart from "../../components/RadialChart"
 import StackedBarChart from "../../components/StackedBarChart"
+import {Link} from 'react-router-dom'
+
 export default function DashboardInner(props) {
 	const [showRadial1, setShowRadial1] = useState(false);
 	const [showRadial2, setShowRadial2] = useState(false);
@@ -164,7 +166,7 @@ export default function DashboardInner(props) {
 
 
 					<div className="row">
-						<div className="col-12 col-lg-12 col-xxl-9 d-flex">
+						<div className="col-12 col-lg-12 col-xxl-12 d-flex">
 							<div className="card flex-fill">
 								<div className="card-header table-card-head d-flex justify-content-between">
 
@@ -249,6 +251,9 @@ export default function DashboardInner(props) {
 										</tr>
 									</tbody>
 								</table>
+								<div className="view-more d-flex justify-content-center">
+                                    <Link to="/admin/clients">	<button type="button" className="btn-dashboard-2">View more</button></Link>
+								</div>
 							</div>
 						</div>
 						

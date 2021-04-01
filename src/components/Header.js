@@ -1,12 +1,19 @@
 import React, {useEffect, useState, useContext} from 'react'
 import {providerFunctions} from "../provider/FunctionsProvider"
+import {Link} from "react-router-dom"
 
 
 export default function Header() {
 const {
 	showSideBar,
-    setShowSideBar
+    setShowSideBar,
+	userDetails
 } = useContext(providerFunctions)
+
+console.log(userDetails.user.name);
+
+
+
     return (
         <div className="header" >
             <nav class="navbar navbar-expand navbar-light navbar-bg">
@@ -48,12 +55,18 @@ const {
 
 							<a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
 									<img src="../../assets/img/Ellipse-16.png" class="avatar img-fluid rounded mr-1" alt="Charles Hall" />
-									<span class="text-dark"> Hafis Raji</span>
+									<span class="text-dark">&nbsp; {userDetails.user.name}</span>
 							</a>
 							<ul class="dropdown-menu dropdown-menu-end">
-								<li><button class="dropdown-item" type="button">Action</button></li>
-								<li><button class="dropdown-item" type="button">Another action</button></li>
-								<li><button class="dropdown-item" type="button">Something else here</button></li>
+								<li><Link to="/settings" className="hd-dropdown-lnk">
+										<button class="dropdown-item" type="button">Profile</button>
+									</Link>
+								</li>
+								<li><Link to="/campaign" className="hd-dropdown-lnk">
+										<button class="dropdown-item" type="button">Campaign</button>
+									</Link>
+								</li>
+								<li><Link className="hd-dropdown-lnk"><button class="dropdown-item" type="button">Log Out</button></Link></li>
 							</ul>
 						</div>
 				</div>

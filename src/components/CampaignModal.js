@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {Link} from 'react-router-dom'
 
-export default function CampaignModal() {
+export default function CampaignModal(props) {
 
   const [page, setPage] = useState(1);
   return (
@@ -55,6 +55,10 @@ export default function CampaignModal() {
 
             <span><span className="big-no">2</span>/7</span>
           </div>
+          <div className="my-3 mod-back-lnk">
+            <a className="back-lnk" onClick={()=>{setPage(1)}}>Go back</a>
+          </div>
+          
           <div class="my-2 mod-form">
             <label for="exampleFormControlInput1" class="form-label">Campaign Options</label>
             <select className="form-select form-select-lg mod-select" aria-label="Default select example">
@@ -110,6 +114,11 @@ export default function CampaignModal() {
 
             <span><span className="big-no">3</span>/7</span>
           </div>
+
+          <div className="my-3 mod-back-lnk">
+            <a className="back-lnk" onClick={()=>{setPage(2)}}>Go back</a>
+          </div>
+
           <div class="my-2 mod-form">
             <label for="exampleFormControlInput1" class="form-label">Job Titles</label>
             <input type="text" class="form-control form-control-lg mod-input" id="exampleFormControlInput1" placeholder="e.g. Financial Controllers, Engineer, Developer"/>
@@ -155,6 +164,11 @@ export default function CampaignModal() {
 
             <span><span className="big-no">4</span>/7</span>
           </div>
+
+          <div className="my-3 mod-back-lnk">
+            <a className="back-lnk" onClick={()=>{setPage(3)}}>Go back</a>
+          </div>
+
           <div class="my-2 mod-form">
             <label for="exampleFormControlInput1" class="form-label">Your Connection Request Message</label>
             <textarea type="text" class="form-control form-control-lg mod-input" id="exampleFormControlInput1"/>
@@ -182,6 +196,11 @@ export default function CampaignModal() {
 
             <span><span className="big-no">5</span>/7</span>
           </div>
+
+          <div className="my-3 mod-back-lnk">
+            <a className="back-lnk" onClick={()=>{setPage(4)}}>Go back</a>
+          </div>
+
           <div class="my-2 mod-form">
             <label for="exampleFormControlInput1" class="form-label">Hiring Manager Job Titles</label>
             <input type="text" class="form-control form-control-lg mod-input" id="exampleFormControlInput1" placeholder="e.g. Financial Controllers, Engineer, Developer"/>
@@ -238,6 +257,11 @@ export default function CampaignModal() {
 
             <span><span className="big-no">6</span>/7</span>
           </div>
+
+          <div className="my-3 mod-back-lnk">
+            <a className="back-lnk" onClick={()=>{setPage(5)}}>Go back</a>
+          </div>
+
           <div class="my-2 mod-form">
             <label for="exampleFormControlInput1" class="form-label">Your Connection Request Message</label>
             <textarea type="text" class="form-control form-control-lg mod-input" id="exampleFormControlInput1"/>
@@ -259,10 +283,42 @@ export default function CampaignModal() {
         <div className="last-body">
           <div class="card-header d-flex justify-content-between mod-head">
             <div className="mod-title">
-              <h5>Campaign Submited</h5>
+              <h5>Choose the credit for this Campaign</h5>
+              <p>What would you like to say to your target prospect</p>
             </div>
 
             <span><span className="big-no">7</span>/7</span>
+          </div>
+
+          <div className="my-3 mod-back-lnk">
+            <a className="back-lnk" onClick={()=>{setPage(6)}}>Go back</a>
+          </div>
+
+          <div class="mt-3 mb-2 mod-form">
+            <label for="exampleFormControlInput1" class="form-label">Total Credit on this account is 2,345</label>
+            <input type="text" class="form-control form-control-lg mod-input" id="exampleFormControlInput1" placeholder="Type your preferred credit here"/>
+          </div>
+
+          <div class="my-3 mod-btn">
+            <button onClick={()=>{setPage(8)}}>Submit your campaign</button>
+          </div>
+          
+        </div>
+        
+        }
+
+{page === 8 &&
+        
+        <div className="last-body">
+          <div class="card-header d-flex justify-content-between mod-head">
+            <div className="mod-title">
+              <h5>Campaign Submited</h5>
+            </div>
+
+          </div>
+
+          <div className="my-3 mod-back-lnk">
+            <a className="back-lnk" onClick={()=>{setPage(7)}}>Go back</a>
           </div>
 
           <div className="success-page">
@@ -271,7 +327,7 @@ export default function CampaignModal() {
           </div>
 
           <div className="my-3 mod-btn">
-            <button onClick={()=><Link to="/dashboard"/>}>Go back to Dashboard</button>
+          <Link to="dashboard"> <button onClick={()=>{props.setShowModal(false)}}>Go back to Dashboard</button></Link>
           </div>
           
         </div>

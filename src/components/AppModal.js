@@ -1,7 +1,8 @@
 import React, {useContext} from 'react'
 import {providerFunctions} from "../provider/FunctionsProvider"
-import Adebola from "./Adebola";
+import CreditModal from "./CreditModal";
 import CampaignModal from './CampaignModal';
+import ClickOutside from "react-click-outside";
 
 export default function Modal() {
     const {
@@ -13,21 +14,20 @@ export default function Modal() {
       
     return (
         <div className="modalOverlay">
-
-            <div className="modalClose" onClick={()=>setShowModal(false)}>
-                <i class="bi bi-x-square"></i>
-            </div>
+            
             
             <div className="modalBody">
-                
+                <ClickOutside onClickOutside={()=>setShowModal(false)}>
                 {modalPage === "campaign-modal" &&
-                    <CampaignModal></CampaignModal>
+                    <CampaignModal setShowModal={setShowModal} ></CampaignModal>
                 }
             
-                {modalPage === "adebola" &&
-                    <Adebola userId={userId}></Adebola>
+                {modalPage === "credit-modal" &&
+                    <CreditModal userId={userId}></CreditModal>
                 }
+                </ClickOutside>
             </div>
+            
         </div>
     )
 }

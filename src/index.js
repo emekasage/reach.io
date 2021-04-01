@@ -5,13 +5,22 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from 'react-router-dom'
 import FunctionsProvider from "./provider/FunctionsProvider" 
+import { SnackbarProvider } from 'notistack'
+import Slide from '@material-ui/core/Slide'
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <FunctionsProvider>
-        <App />
-      </FunctionsProvider>
+      <SnackbarProvider maxSnack={3}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
+    }}
+    TransitionComponent={Slide}>
+        <FunctionsProvider>
+            <App />
+        </FunctionsProvider>
+      </SnackbarProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

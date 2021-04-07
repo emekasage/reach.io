@@ -27,7 +27,7 @@
 
 .rectangle-5 {
     width: 536px;
-    height: 334px;
+    height: auto;
     margin: 0 auto;
     padding: 30px;
     background: #FFFFFF;
@@ -245,6 +245,7 @@ button.dropdown-item {
     width: 237px;
     float: left;
     margin-top: 70px;
+    transition-timing-function: ease;
 }
 .sidebar ul{
     padding-left:0;
@@ -256,6 +257,7 @@ button.dropdown-item {
 }
 .sidebar.reduce{
     width:5em;
+    transition-timing-function: ease;
 }
 
 .sidebar.reduce .menu-text, .sidebar.reduce .menu-text-2{

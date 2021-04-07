@@ -1,29 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import {BrowserRouter} from 'react-router-dom'
-import FunctionsProvider from "./provider/FunctionsProvider" 
-import { SnackbarProvider } from 'notistack'
-import Slide from '@material-ui/core/Slide'
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter } from "react-router-dom";
+import FunctionsProvider from "./provider/FunctionsProvider";
+import { SnackbarProvider } from "notistack";
+import Slide from "@material-ui/core/Slide";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <SnackbarProvider maxSnack={3}
-      anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'right',
-    }}
-    TransitionComponent={Slide}>
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        TransitionComponent={Slide}
+      >
         <FunctionsProvider>
-            <App />
+          <App />
         </FunctionsProvider>
       </SnackbarProvider>
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

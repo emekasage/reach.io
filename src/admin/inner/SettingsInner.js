@@ -1,9 +1,31 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { providerFunctions } from "../../provider/FunctionsProvider";
+import { useSnackbar } from "notistack";
 
 export default function SettingsInner() {
-  const { showSideBar } = useContext(providerFunctions);
+  const { enqueueSnackbar } = useSnackbar();
+  const {
+    showSideBar,
+    changeUserPass,
+    setChangeUserPass,
+    changeUserPassword,
+    changeUserDets,
+    setChangeUserDets,
+    changeUserDetails,
+    userDetails,
+  } = useContext(providerFunctions);
 
+  const handleUserPasswordChange = (value, key) => {
+    var sd = { ...changeUserPass };
+    sd[key] = value;
+    setChangeUserPass(sd);
+  };
+  const handleUserDetailsChange = (value, key) => {
+    var sd = { ...changeUserDets };
+    sd[key] = value;
+    setChangeUserDets(sd);
+  };
+  const [confirm_pwd, setConfirm_pwd] = useState("");
   const uploadedImage = useRef(null);
   const imageUploader = useRef(null);
 
@@ -41,7 +63,6 @@ export default function SettingsInner() {
                 <div className="pro-img">
                   <input
                     type="file"
-                    gn
                     accept="image/*"
                     onChange={handleImageUpload}
                     ref={imageUploader}
@@ -66,29 +87,62 @@ export default function SettingsInner() {
                 </div>
 
                 <div className="col-sm-6 pro-edit">
-                  <form>
+                  <form className="pro-details">
+                    <h6>Profile</h6>
                     <div className="mb-3">
                       <input
-                        type="email"
+                        type="text"
                         className="form-control input-bx"
-                        id="exampleInputEmail1"
-                        placeholder="Email"
+                        id="fullname"
+                        name="name"
+                        placeholder={userDetails.user.name}
+                        onChange={(e) =>
+                          handleUserDetailsChange(e.target.value, e.target.name)
+                        }
                       />
                     </div>
                     <div className="mb-3">
                       <input
-                        type="password"
+                        type="tel"
                         className="form-control input-bx"
-                        id="exampleInputPassword1"
-                        placeholder="Password"
+                        id="phone-number"
+                        name="phone"
+                        placeholder={userDetails.user.phone}
+                        onChange={(e) =>
+                          handleUserDetailsChange(e.target.value, e.target.name)
+                        }
                       />
                     </div>
+                    <div className="mt-4">
+                      <button
+                        className="submit-btn"
+                        type="button"
+                        onClick={() => {
+                          changeUserDetails();
+                          enqueueSnackbar("Profile Settings Saved", {
+                            variant: "success",
+                          });
+                        }}
+                      >
+                        Save Settings
+                      </button>
+                    </div>
+                  </form>
+                  <form className="pro-details mt-5">
+                    <h6>Password</h6>
                     <div className="mb-3">
                       <input
                         type="password"
                         className="form-control input-bx"
                         id="exampleInputPassword1"
                         placeholder="Old Password"
+                        name="current_pwd"
+                        onChange={(e) =>
+                          handleUserPasswordChange(
+                            e.target.value,
+                            e.target.name
+                          )
+                        }
                       />
                     </div>
                     <div className="mb-3">
@@ -97,6 +151,13 @@ export default function SettingsInner() {
                         className="form-control input-bx"
                         id="exampleInputPassword1"
                         placeholder="New Password"
+                        name="new_pwd"
+                        onChange={(e) =>
+                          handleUserPasswordChange(
+                            e.target.value,
+                            e.target.name
+                          )
+                        }
                       />
                     </div>
                     <div className="mb-3">
@@ -105,10 +166,26 @@ export default function SettingsInner() {
                         className="form-control input-bx"
                         id="exampleInputPassword1"
                         placeholder="Confirm Password"
+                        onChange={(e) => setConfirm_pwd(e.target.value)}
                       />
                     </div>
                     <div className="mt-4">
-                      <button className="submit-btn" type="button">
+                      <button
+                        className="submit-btn"
+                        type="button"
+                        onClick={() => {
+                          if (confirm_pwd === changeUserPass.new_pwd) {
+                            changeUserPassword();
+                            enqueueSnackbar("Profile Settings Saved", {
+                              variant: "success",
+                            });
+                          } else {
+                            enqueueSnackbar("Password not equal", {
+                              variant: "error",
+                            });
+                          }
+                        }}
+                      >
                         Save Settings
                       </button>
                     </div>

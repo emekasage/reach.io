@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Campaign from "./pages/Campaign";
 import BuyCredit from "./pages/BuyCredit";
 import Signup from "./pages/Signup";
+import ChangePassword from "./pages/ChangePassword";
 
 // Admin Routes
 import AdminLogin from "./pages/LoginAdmin";
@@ -27,6 +28,7 @@ export default function Routes() {
       {showModal && <AppModal></AppModal>}
       <Switch>
         <Route path="/signup" component={Signup} />
+        <Route path="/changepassword" component={ChangePassword} />
         <Route path="/login" component={loggedIn ? Dashboard : Login} />
         <Route
           path="/resetpassword"

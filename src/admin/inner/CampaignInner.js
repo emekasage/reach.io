@@ -14,7 +14,7 @@ export default function DashboardInner() {
     console.log(metrics.users);
   }, [metrics]);
 
-  console.log(metrics);
+  // console.log(metrics);
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>

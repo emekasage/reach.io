@@ -10,13 +10,26 @@ const FunctionsProvider = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const [userId, setUserId] = useState("");
   const [token, setToken] = useState("");
+  const [passwordToken, setPasswordToken] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [allUsers, setAllUsers] = useState("");
   const [userDetails, setUserDetails] = useState({});
   const [metrics, setMetrics] = useState({});
+  const [connectMetrics, setConnectMetrics] = useState({});
   const [campaign, setCampaign] = useState({});
-
+  const [allConnections, setAllConnections] = useState({});
+  const [transaction, setTransaction] = useState({});
   const [signUpData, setSignUpData] = useState({});
+  const [resetPass, setResetPass] = useState({});
+  const [showForgotPasswordSuccess, setShowForgotPasswordSuccess] = useState(
+    ""
+  );
+  const [changePass, setChangePass] = useState({});
+  const [changeUserPass, setChangeUserPass] = useState({
+    current_pwd: "",
+    new_pwd: "",
+  });
+  const [changeUserDets, setChangeUserDets] = useState({});
 
   let history = useHistory();
 
@@ -77,6 +90,7 @@ const FunctionsProvider = (props) => {
           console.log(result.token);
           setToken(result.token);
           localStorage.setItem("token", result.token);
+          history.push("/dashboard");
         } else {
           setLoggedIn(false);
           enqueueSnackbar("Invalid Credientials or Account Disabled", {
@@ -109,8 +123,12 @@ const FunctionsProvider = (props) => {
           console.log(result.token);
           setToken(result.token);
           localStorage.setItem("token", result.token);
+          history.push("/admin/dashboard");
         } else {
           setLoggedIn(false);
+          enqueueSnackbar("Invalid Credientials or Account Disabled", {
+            variant: "error",
+          });
         }
       })
       .catch((error) => console.log("error", error));
@@ -216,6 +234,28 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const connectionMetrics = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/connections/metrics",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        setConnectMetrics(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const userCampaign = () => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
@@ -255,6 +295,169 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const resetPassword = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Authorization", "Bearer null");
+    var raw = JSON.stringify({
+      email: resetPass,
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      redirect: "follow",
+      body: raw,
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/reset-password-request",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        if (
+          result.message ===
+          "Check your inbox, we have sent a link to reset email."
+        ) {
+          setShowForgotPasswordSuccess(result);
+        } else {
+          enqueueSnackbar("User does not exist", { variant: "error" });
+        }
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const changePassword = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var raw = JSON.stringify({
+      email: changePass.email,
+      password: changePass.password,
+      password_confirmation: changePass.password_confirmation,
+      passwordToken: changePass.passwordToken,
+    });
+
+    console.log(raw);
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      redirect: "follow",
+      body: raw,
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/change-password?token=" +
+        passwordToken,
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {
+        console.log(result);
+        enqueueSnackbar("Password Reset Successfull", { variant: "success" });
+        history.push("/login");
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const changeUserDetails = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      name: changeUserDets.name,
+      phone: changeUserDets.phone,
+    });
+
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/user/update-profile",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  const changeUserPassword = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      current_pwd: changeUserPass.current_pwd,
+      new_pwd: changeUserPass.new_pwd,
+    });
+
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/user/update-password",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  const userConnections = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/connections?page=1",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setAllConnections(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const creditTransaction = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/transactions",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setTransaction(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const logout = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -277,6 +480,7 @@ const FunctionsProvider = (props) => {
         enqueueSnackbar("Logged out Successfully", { variant: "success" });
         // alert("logged out");
         // redirect to login
+        history.push("/login");
       })
       .catch((error) => console.log("error", error));
   };
@@ -286,6 +490,8 @@ const FunctionsProvider = (props) => {
         showSideBar,
         setShowSideBar,
         showModal,
+        passwordToken,
+        setPasswordToken,
         setShowModal,
         modalPage,
         setModalPage,
@@ -308,6 +514,29 @@ const FunctionsProvider = (props) => {
         registerUser,
         signUpData,
         setSignUpData,
+        resetPassword,
+        resetPass,
+        setResetPass,
+        showForgotPasswordSuccess,
+        setShowForgotPasswordSuccess,
+        changePass,
+        setChangePass,
+        changePassword,
+        changeUserPass,
+        setChangeUserPass,
+        changeUserPassword,
+        changeUserDetails,
+        changeUserDets,
+        setChangeUserDets,
+        connectionMetrics,
+        connectMetrics,
+        setConnectMetrics,
+        userConnections,
+        allConnections,
+        setAllConnections,
+        creditTransaction,
+        transaction,
+        setTransaction,
       }}
     >
       {props.children}

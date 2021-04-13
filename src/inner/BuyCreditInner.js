@@ -1,11 +1,72 @@
-import React, { useContext } from "react";
+/* eslint-disable react/jsx-key */
+import React, { useContext, useEffect, useState } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import BarChart from "../components/BarChart";
+import moment from "moment";
 
 export default function BuyCreditInner() {
-  const { showSideBar, setShowModal, setModalPage } = useContext(
-    providerFunctions
-  );
+  const {
+    showSideBar,
+    setShowModal,
+    setModalPage,
+    creditTransaction,
+    transaction,
+  } = useContext(providerFunctions);
+
+  useEffect(() => {
+    creditTransaction();
+  }, []);
+
+  const [creditData, setCreditData] = useState([]);
+
+  useEffect(() => {
+    console.log(transaction.transaction);
+    if (typeof transaction.transaction !== "undefined") {
+      if (typeof transaction.transaction.data !== "undefined") {
+        setCreditData(transaction.transaction.data);
+      }
+    }
+  }, [transaction]);
+
+  useEffect(() => {
+    console.log(creditData);
+  }, [creditData]);
+
+  const [paginatedClients, setpaginatedClients] = useState([]);
+  const [TransactionToDisplay, setTransactionToDisplay] = useState([]);
+  const [page] = useState(1);
+  const [perPage] = useState(10);
+  const [, setPageCount] = useState(0);
+  const [, setNumberOfClient] = useState(0);
+  const [viewAll] = useState(false);
+
+  useEffect(() => {
+    getpaginatedClients(page);
+  }, [page, creditData]);
+
+  useEffect(() => {
+    if (viewAll) {
+      setTransactionToDisplay(creditData);
+    } else {
+      setTransactionToDisplay(paginatedClients);
+    }
+  }, [viewAll, creditData, paginatedClients]);
+
+  const getpaginatedClients = (page) => {
+    var no_of_clients = creditData.length;
+    setNumberOfClient(no_of_clients);
+    setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
+    var cc = creditData.filter((thisdata, index) => {
+      var pageFirst = (page - 1) * perPage;
+      var lastItem = page * perPage - 1;
+      if (index >= pageFirst && index <= lastItem) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    setpaginatedClients(cc);
+  };
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -90,7 +151,7 @@ export default function BuyCreditInner() {
 
           <div className="heading-col user-val">
             <h5 style={{ paddingTop: "20px" }}>
-              <strong>Latest Transactions</strong>
+              <strong>Latest transaction</strong>
             </h5>
           </div>
 
@@ -149,54 +210,22 @@ export default function BuyCreditInner() {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-up-right-circle"></i>
-                            </td>
-                            <td>Jan 12</td>
-                            <td>2,470</td>
-                            <td>$328.85</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-up-right-circle"></i>
-                            </td>
-                            <td>Feb 8</td>
-                            <td>4,875</td>
-                            <td>$275.43</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-up-right-circle"></i>
-                            </td>
-                            <td>Feb 23</td>
-                            <td>5,466</td>
-                            <td>$928.41</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-up-right-circle"></i>
-                            </td>
-                            <td>Feb 26</td>
-                            <td>2,096</td>
-                            <td>$473.81</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-up-right-circle"></i>
-                            </td>
-                            <td>Mar 9</td>
-                            <td>3,679</td>
-                            <td>$525.52</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-up-right-circle"></i>
-                            </td>
-                            <td>Mar 26</td>
-                            <td>4,688</td>
-                            <td>$635.32</td>
-                          </tr>
+                          {TransactionToDisplay.map((thisTransactionData) => {
+                            return (
+                              <tr>
+                                <td>
+                                  <i className="bi bi-arrow-up-right-circle"></i>
+                                </td>
+                                <td>
+                                  {moment(
+                                    thisTransactionData.created_at
+                                  ).format("MMM Do YY")}
+                                </td>
+                                <td>2,470</td>
+                                <td>{thisTransactionData.cost}</td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>

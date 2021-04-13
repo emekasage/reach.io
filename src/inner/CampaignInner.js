@@ -1,6 +1,8 @@
-import React, { useContext, useEffect } from "react";
+/* eslint-disable react/jsx-key */
+import React, { useContext, useEffect, useState } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import DateTime from "../components/DateTime";
+import moment from "moment";
 
 export default function CampaignInner() {
   const {
@@ -15,9 +17,56 @@ export default function CampaignInner() {
     userCampaign();
   }, []);
 
+  const [campaignData, setCampaignData] = useState([]);
+  const [campaignToDisplay, setCampaignToDisplay] = useState([]);
+  const [paginatedCampaign, setpaginatedCampaign] = useState([]);
+  const [page] = useState(1);
+  const [perPage] = useState(10);
+  const [, setPageCount] = useState(0);
+  const [, setNumberOfCampaign] = useState(0);
+  const [viewAll] = useState(false);
+
   useEffect(() => {
     console.log(campaign.campaign);
+    if (typeof campaign.campaign !== "undefined") {
+      if (typeof campaign.campaign.data !== "undefined") {
+        console.log(campaign.campaign);
+        setCampaignData(campaign.campaign.data);
+      }
+    }
   }, [campaign]);
+
+  useEffect(() => {
+    console.log(campaignData);
+  }, [campaignData]);
+
+  useEffect(() => {
+    getpaginatedCampaign(page);
+  }, [page, campaignData]);
+
+  useEffect(() => {
+    if (viewAll) {
+      setCampaignToDisplay(campaignData);
+    } else {
+      setCampaignToDisplay(paginatedCampaign);
+    }
+  }, [viewAll, campaignData, paginatedCampaign]);
+
+  const getpaginatedCampaign = (page) => {
+    var no_of_campaign = campaignData.length;
+    setNumberOfCampaign(no_of_campaign);
+    setPageCount(Math.ceil(Number(no_of_campaign) / Number(perPage)));
+    var cc = campaignData.filter((thisdata, index) => {
+      var pageFirst = (page - 1) * perPage;
+      var lastItem = page * perPage - 1;
+      if (index >= pageFirst && index <= lastItem) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    setpaginatedCampaign(cc);
+  };
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -73,45 +122,22 @@ export default function CampaignInner() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Sales Itemization</td>
-                    <td>2020-11-05</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-success camp-form-btn"
-                      >
-                        Submitted
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Weekly Sales</td>
-                    <td>2020-09-29</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-danger camp-form-btn"
-                      >
-                        Declined
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Monthly Sales</td>
-                    <td>2020-08-15</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-secondary camp-form-btn"
-                      >
-                        Pending
-                      </button>
-                    </td>
-                  </tr>
+                  {campaignToDisplay.map((thisCampaignData, index) => {
+                    return (
+                      <tr>
+                        <td>
+                          {!viewAll
+                            ? (page - 1) * perPage + (index + 1)
+                            : index + 1}
+                        </td>
+                        <td>{thisCampaignData.name}</td>
+                        <td>
+                          {moment(thisCampaignData.created_at).format("lll")}
+                        </td>
+                        <td>{thisCampaignData.campaign_status}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

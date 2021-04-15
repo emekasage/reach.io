@@ -9,6 +9,8 @@ const FunctionsProvider = (props) => {
   const [modalPage, setModalPage] = useState("");
   const { enqueueSnackbar } = useSnackbar();
   const [userId, setUserId] = useState("");
+  const [campaignId, setCampaignId] = useState();
+  const [imageFile, setImageFile] = useState([]);
   const [token, setToken] = useState("");
   const [passwordToken, setPasswordToken] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
@@ -16,11 +18,16 @@ const FunctionsProvider = (props) => {
   const [userDetails, setUserDetails] = useState({});
   const [metrics, setMetrics] = useState({});
   const [connectMetrics, setConnectMetrics] = useState({});
-  const [campaign, setCampaign] = useState({});
+  const [campaign, setCampaign] = useState({
+    campaign: { data: [] },
+  });
   const [allConnections, setAllConnections] = useState({});
   const [transaction, setTransaction] = useState({});
   const [signUpData, setSignUpData] = useState({});
   const [resetPass, setResetPass] = useState({});
+  const [managedCampaigns, setManagedCampaigns] = useState({
+    campaign: { data: [] },
+  });
   const [showForgotPasswordSuccess, setShowForgotPasswordSuccess] = useState(
     ""
   );
@@ -153,10 +160,12 @@ const FunctionsProvider = (props) => {
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
+        login(signUpData.email, signUpData.password);
         //put snackbar here
         enqueueSnackbar("Sign Up Successfull", { variant: "success" });
+        setShowModal(true);
+        setModalPage("user_registered");
         //redirect to login
-        history.push("/login");
       })
       .catch((error) => console.log("error", error));
   };
@@ -213,6 +222,58 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const approveCampaign = (campaignId) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/approve-campaign/" +
+        campaignId,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        campaignManagement();
+        enqueueSnackbar("Campaign Approved Successfully", {
+          variant: "success",
+        });
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const declineCampaign = (campaignId) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/cancel-campaign/" +
+        campaignId,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        campaignManagement();
+        enqueueSnackbar("Campaign Declined Successfully", {
+          variant: "success",
+        });
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const getMetrics = () => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
@@ -250,7 +311,6 @@ const FunctionsProvider = (props) => {
     )
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
         setConnectMetrics(result);
       })
       .catch((error) => console.log("error", error));
@@ -437,6 +497,51 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const uploadImage = (file) => {
+    console.log(file);
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    var formdata = new FormData();
+    formdata.append("avatar", file, file.name);
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/user/upload-image",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  const campaignManagement = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/campaigns",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setManagedCampaigns(result);
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const creditTransaction = () => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
@@ -537,6 +642,16 @@ const FunctionsProvider = (props) => {
         creditTransaction,
         transaction,
         setTransaction,
+        uploadImage,
+        imageFile,
+        setImageFile,
+        campaignManagement,
+        managedCampaigns,
+        setManagedCampaigns,
+        approveCampaign,
+        campaignId,
+        setCampaignId,
+        declineCampaign,
       }}
     >
       {props.children}

@@ -13,6 +13,8 @@ export default function SettingsInner() {
     setChangeUserDets,
     changeUserDetails,
     userDetails,
+    setImageFile,
+    uploadImage,
   } = useContext(providerFunctions);
 
   const handleUserPasswordChange = (value, key) => {
@@ -31,6 +33,7 @@ export default function SettingsInner() {
 
   const handleImageUpload = (e) => {
     const [file] = e.target.files;
+    console.log(file.name);
     if (file) {
       const reader = new FileReader();
       const { current } = uploadedImage;
@@ -40,6 +43,9 @@ export default function SettingsInner() {
       };
       reader.readAsDataURL(file);
     }
+    console.log(file.name);
+    setImageFile("");
+    uploadImage(file);
   };
 
   return (
@@ -71,12 +77,38 @@ export default function SettingsInner() {
                       display: "none",
                     }}
                   />
-                  <img
-                    src="assets/img/profile-avatar.png"
-                    alt="Avatar"
-                    className="image"
-                    ref={uploadedImage}
-                  />
+                  {userDetails.user !== "undefined" && (
+                    <span>
+                      <img
+                        src={
+                          userDetails.user.avatar !== "undefined"
+                            ? userDetails.user.avatar
+                            : "../../assets/img/profile-avatar.png"
+                        }
+                        style={{
+                          background: "url(" + userDetails.user.avatar + " ) ",
+                          width: "6em",
+                          height: "6em",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          borderRadius: "50%",
+                          margin: "0 auto",
+                        }}
+                        className="image"
+                        ref={uploadedImage}
+                      ></img>
+                      {/* <img
+                        src={
+                          userDetails.user.avatar !== "undefined"
+                            ? userDetails.user.avatar
+                            : "assets/img/profile-avatar.png"
+                        }
+                        alt="Avatar"
+                        className="image"
+                        ref={uploadedImage}
+                      /> */}
+                    </span>
+                  )}
                   <div
                     className="overlay"
                     onClick={() => imageUploader.current.click()}

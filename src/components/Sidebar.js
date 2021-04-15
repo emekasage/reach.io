@@ -1,9 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function Sidebar() {
   const { showSideBar, logout } = useContext(providerFunctions);
+  const [showTooltip, setShowToolTip] = useState(false);
+
+  const handleLogout = () => {
+    setShowToolTip(true);
+  };
   return (
     <div id="sidebar-nav" className={`sidebar ${showSideBar ? "" : "reduce"}`}>
       <div className="nav-options">
@@ -62,9 +67,35 @@ export default function Sidebar() {
           </ul>
           <ul className="navigate-log">
             <li>
-              <div className="nav2" onClick={() => logout()}>
+              <div className="nav2">
                 <i className="bi bi-box-arrow-right menu-img-2"></i>
-                <span className="menu-text-2">Log Out</span>
+                <span
+                  className="menu-text-2"
+                  onClick={() => {
+                    handleLogout();
+                  }}
+                >
+                  Log Out
+                  {showTooltip && (
+                    <div className="position-absolute tooltipCont tooltipCont">
+                      <button
+                        className="btn btn-info button"
+                        onClick={() => {
+                          setShowToolTip(false);
+                          !handleLogout();
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => logout()}
+                        className="btn btn-danger"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </span>
               </div>
             </li>
           </ul>

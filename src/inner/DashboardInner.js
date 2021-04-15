@@ -1,9 +1,9 @@
-/* eslint-disable react/jsx-key */
 import React, { useContext, useState, useEffect } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import RadialChart from "../components/RadialChart";
 import StackedBarChart from "../components/StackedBarChart";
 import { Link } from "react-router-dom";
+import { CSVLink } from "react-csv";
 
 export default function DashboardInner() {
   const [showRadial1, setShowRadial1] = useState(false);
@@ -35,57 +35,21 @@ export default function DashboardInner() {
     userConnections();
   }, []);
 
-  const [clientsData, setClientsData] = useState([]);
+  const [connectionsData, setConnectionsData] = useState([]);
 
   useEffect(() => {
-    console.log(allConnections.allConnections);
+    // console.log(allConnections.allConnections);
     if (typeof allConnections.allConnections !== "undefined") {
       if (typeof allConnections.allConnections.data !== "undefined") {
-        console.log(allConnections.allConnections);
-        setClientsData(allConnections.allConnections.data);
+        // console.log(allConnections.allConnections);
+        setConnectionsData(allConnections.allConnections.data);
       }
     }
   }, [allConnections]);
 
   useEffect(() => {
-    console.log(clientsData);
-  }, [clientsData]);
-
-  const [paginatedClients, setpaginatedClients] = useState([]);
-  const [clientsToDisplay, setClientsToDisplay] = useState([]);
-  const [page] = useState(1);
-  const [perPage] = useState(10);
-  const [, setPageCount] = useState(0);
-  const [, setNumberOfClient] = useState(0);
-  const [viewAll] = useState(false);
-
-  useEffect(() => {
-    getpaginatedClients(page);
-  }, [page, clientsData]);
-
-  useEffect(() => {
-    if (viewAll) {
-      setClientsToDisplay(clientsData);
-    } else {
-      setClientsToDisplay(paginatedClients);
-    }
-  }, [viewAll, clientsData, paginatedClients]);
-
-  const getpaginatedClients = (page) => {
-    var no_of_clients = clientsData.length;
-    setNumberOfClient(no_of_clients);
-    setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
-    var cc = clientsData.filter((thisdata, index) => {
-      var pageFirst = (page - 1) * perPage;
-      var lastItem = page * perPage - 1;
-      if (index >= pageFirst && index <= lastItem) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    setpaginatedClients(cc);
-  };
+    // console.log(connectionsData);
+  }, [connectionsData]);
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -349,9 +313,15 @@ export default function DashboardInner() {
                         <option value="3">Connected Status</option>
                         <option value="3">Connected on</option>
                       </select>
-                      <button type="button" className="btn-dashboard">
-                        Dashboard list
-                      </button>
+                      <CSVLink
+                        data={connectionsData}
+                        download="Reachio-Clients-list.csv"
+                        className="csv-link"
+                      >
+                        <button type="button" className="btn-dashboard">
+                          Dashboard list
+                        </button>
+                      </CSVLink>
                     </div>
                   </div>
                   <div className="table-responsive">
@@ -373,26 +343,24 @@ export default function DashboardInner() {
                         </tr>
                       </thead>
                       <tbody>
-                        {clientsToDisplay.map((thisClientData, index) => {
+                        {connectionsData.map((thisConnectionData, index) => {
                           return (
-                            <tr>
-                              <td>
-                                {!viewAll
-                                  ? (page - 1) * perPage + (index + 1)
-                                  : index + 1}
-                              </td>
-                              <td>{thisClientData.Name}</td>
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td>{thisConnectionData.Name}</td>
                               <td className="d-none d-xl-table-cell">
-                                {thisClientData.ContactEmail}
+                                {thisConnectionData.ContactEmail}
                               </td>
                               <td className="d-none d-xl-table-cell">
-                                {thisClientData.ContactMobile}
+                                {thisConnectionData.ContactMobile}
                               </td>
                               <td>
-                                <span>{thisClientData.ConnectionStatus}</span>
+                                <span>
+                                  {thisConnectionData.ConnectionStatus}
+                                </span>
                               </td>
                               <td className="d-none d-md-table-cell">
-                                {thisClientData.ConnectedOn}
+                                {thisConnectionData.ConnectedOn}
                               </td>
                             </tr>
                           );

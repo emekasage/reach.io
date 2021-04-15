@@ -12,21 +12,21 @@ export default function ConnectionsInner() {
     userConnections();
   }, []);
 
-  const [clientsData, setClientsData] = useState([]);
+  const [connectionsData, setConnectionsData] = useState([]);
 
   useEffect(() => {
-    console.log(allConnections.allConnections);
+    // console.log(allConnections.allConnections);
     if (typeof allConnections.allConnections !== "undefined") {
       if (typeof allConnections.allConnections.data !== "undefined") {
-        console.log(allConnections.allConnections);
-        setClientsData(allConnections.allConnections.data);
+        // console.log(allConnections.allConnections);
+        setConnectionsData(allConnections.allConnections.data);
       }
     }
   }, [allConnections]);
 
   useEffect(() => {
-    console.log(clientsData);
-  }, [clientsData]);
+    console.log(connectionsData);
+  }, [connectionsData]);
 
   const [paginatedClients, setpaginatedClients] = useState([]);
   const [clientsToDisplay, setClientsToDisplay] = useState([]);
@@ -35,24 +35,44 @@ export default function ConnectionsInner() {
   const [pageCount, setPageCount] = useState(0);
   const [, setNumberOfClient] = useState(0);
   const [viewAll, setViewAll] = useState(false);
+  const [rows, setRows] = useState([]);
+  const [searchData, setSearchData] = useState("");
+
+  useEffect(() => {
+    if (typeof connectionsData[0] !== "undefined") {
+      let tempdata = connectionsData.filter((thisdata) => {
+        var zz = thisdata.Name.toLowerCase();
+        var mm = thisdata.ContactEmail.toLowerCase();
+        var yy = searchData.toLowerCase();
+        if (zz.includes(yy)) {
+          return true;
+        } else if (mm.includes(yy)) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      setRows(tempdata);
+    }
+  }, [connectionsData, searchData]);
 
   useEffect(() => {
     getpaginatedClients(page);
-  }, [page, clientsData]);
+  }, [page, rows]);
 
   useEffect(() => {
     if (viewAll) {
-      setClientsToDisplay(clientsData);
+      setClientsToDisplay(rows);
     } else {
       setClientsToDisplay(paginatedClients);
     }
-  }, [viewAll, clientsData, paginatedClients]);
+  }, [viewAll, connectionsData, paginatedClients]);
 
   const getpaginatedClients = (page) => {
-    var no_of_clients = clientsData.length;
+    var no_of_clients = rows.length;
     setNumberOfClient(no_of_clients);
     setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
-    var cc = clientsData.filter((thisdata, index) => {
+    var cc = rows.filter((thisdata, index) => {
       var pageFirst = (page - 1) * perPage;
       var lastItem = page * perPage - 1;
       if (index >= pageFirst && index <= lastItem) {
@@ -128,7 +148,10 @@ export default function ConnectionsInner() {
                       type="text"
                       className="form-control header-form"
                       placeholder="Search..."
-                      aria-label="Search"
+                      value={searchData}
+                      onChange={(e) => {
+                        setSearchData(e.target.value);
+                      }}
                     />
                   </div>
                   <button type="button" className="btn-dashboard">

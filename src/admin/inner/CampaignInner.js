@@ -1,20 +1,29 @@
 import React, { useContext, useState, useEffect } from "react";
 import { providerFunctions } from "../../provider/FunctionsProvider";
 import DateTime from "../../components/DateTime";
+import moment from "moment";
 
 export default function DashboardInner() {
   const [page, setPage] = useState(1);
-  const { getMetrics, metrics, showSideBar } = useContext(providerFunctions);
+  const [toshow, settoshow] = useState({});
+  const {
+    getMetrics,
+    metrics,
+    showSideBar,
+    managedCampaigns,
+    campaignManagement,
+    approveCampaign,
+    declineCampaign,
+  } = useContext(providerFunctions);
 
   useEffect(() => {
     getMetrics();
+    campaignManagement();
   }, []);
 
   useEffect(() => {
-    console.log(metrics.users);
+    // console.log(metrics.users);
   }, [metrics]);
-
-  // console.log(metrics);
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -199,171 +208,43 @@ export default function DashboardInner() {
                     <h5 className="card-title mb-0 table-title">Campaign</h5>
                   </div>
                   <table className="table table-hover my-1">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="custom-control-input camp-chckbx"
-                            id="customCheck1"
-                          />
-                        </td>
-                        <td>Microsoft</td>
-                        <td>Candidate LinkedIn Engage-</td>
-                        <td>2020-11-05</td>
-                        <td>
-                          <a
-                            className="camp-form-lnk"
-                            onClick={() => {
-                              setPage(2);
-                            }}
-                          >
-                            View details
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="custom-control-input camp-chckbx"
-                            id="customCheck1"
-                          />
-                        </td>
-                        <td>Microsoft</td>
-                        <td>Candidate LinkedIn Engage-</td>
-                        <td>2020-11-05</td>
-                        <td>
-                          <a
-                            className="camp-form-lnk"
-                            onClick={() => {
-                              setPage(2);
-                            }}
-                          >
-                            View details
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="custom-control-input camp-chckbx"
-                            id="customCheck1"
-                          />
-                        </td>
-                        <td>Microsoft</td>
-                        <td>Candidate LinkedIn Engage-</td>
-                        <td>2020-11-05</td>
-                        <td>
-                          <a
-                            className="camp-form-lnk"
-                            onClick={() => {
-                              setPage(2);
-                            }}
-                          >
-                            View details
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="custom-control-input camp-chckbx"
-                            id="customCheck1"
-                          />
-                        </td>
-                        <td>Microsoft</td>
-                        <td>Candidate LinkedIn Engage-</td>
-                        <td>2020-11-05</td>
-                        <td>
-                          <a className="camp-form-lnk">View details</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="custom-control-input camp-chckbx"
-                            id="customCheck1"
-                          />
-                        </td>
-                        <td>Microsoft</td>
-                        <td>Candidate LinkedIn Engage-</td>
-                        <td>2020-11-05</td>
-                        <td>
-                          <a className="camp-form-lnk">View details</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="custom-control-input camp-chckbx"
-                            id="customCheck1"
-                          />
-                        </td>
-                        <td>Microsoft</td>
-                        <td>Candidate LinkedIn Engage-</td>
-                        <td>2020-11-05</td>
-                        <td>
-                          <a className="camp-form-lnk">View details</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="custom-control-input camp-chckbx"
-                            id="customCheck1"
-                          />
-                        </td>
-                        <td>Microsoft</td>
-                        <td>Candidate LinkedIn Engage-</td>
-                        <td>2020-11-05</td>
-                        <td>
-                          <a className="camp-form-lnk">View details</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="custom-control-input camp-chckbx"
-                            id="customCheck1"
-                          />
-                        </td>
-                        <td>Microsoft</td>
-                        <td>Candidate LinkedIn Engage-</td>
-                        <td>2020-11-05</td>
-                        <td>
-                          <a className="camp-form-lnk">View details</a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="custom-control-input camp-chckbx"
-                            id="customCheck1"
-                          />
-                        </td>
-                        <td>Microsoft</td>
-                        <td>Candidate LinkedIn Engage-</td>
-                        <td>2020-11-05</td>
-                        <td>
-                          <a
-                            className="camp-form-lnk"
-                            onClick={() => {
-                              setPage(2);
-                            }}
-                          >
-                            View details
-                          </a>
-                        </td>
-                      </tr>
-                    </tbody>
+                    {typeof managedCampaigns.campaign.data !== "undefined" && (
+                      <tbody>
+                        {managedCampaigns.campaign.data.map(
+                          (thisManagedCampaigns, index) => {
+                            return (
+                              <tr key={index}>
+                                <td>
+                                  <input
+                                    type="checkbox"
+                                    className="custom-control-input camp-chckbx"
+                                    id="customCheck1"
+                                  />
+                                </td>
+                                <td>{thisManagedCampaigns.company}</td>
+                                <td>{thisManagedCampaigns.name}</td>
+                                <td>
+                                  {moment(
+                                    thisManagedCampaigns.created_at
+                                  ).format("lll")}
+                                </td>
+                                <td>
+                                  <a
+                                    className="camp-form-lnk"
+                                    onClick={() => {
+                                      settoshow(thisManagedCampaigns);
+                                      setPage(2);
+                                    }}
+                                  >
+                                    View details
+                                  </a>
+                                </td>
+                              </tr>
+                            );
+                          }
+                        )}
+                      </tbody>
+                    )}
                   </table>
                 </div>
               </div>
@@ -389,62 +270,62 @@ export default function DashboardInner() {
                       <div className="col-sm-9">
                         <div className="card-header d-flex justify-content-between can-details">
                           <div className="status-txt">
-                            <h4>Candidate LinkedIn Engage</h4>
-                            <p>From Cameron Williamson</p>
+                            <h4>{toshow.name}</h4>
+                            <p>From {toshow.company}</p>
                           </div>
                           <div className="status-btn">
-                            <button>Campaign Status: Pending</button>
+                            <span>
+                              Campaign Status: {toshow.campaign_status}
+                            </span>
                           </div>
                         </div>
                         <div className="gcgc">
                           <h4 className="my-3">About you</h4>
                           <div className="my-4">
                             <p className="faded-p">Email address</p>
-                            <p className="norm-p">
-                              cameronwilliamson@gmail.com
-                            </p>
+                            <p className="norm-p">{toshow.email}</p>
                           </div>
 
                           <div className="my-4">
                             <p className="faded-p">First Name and Last Name</p>
-                            <p className="norm-p">Cameron Williamson</p>
+                            <p className="norm-p">{toshow.name}</p>
                           </div>
 
                           <div className="my-4">
                             <p className="faded-p">LinkedIn username</p>
-                            <p className="norm-p">Cameron Williamson</p>
+                            <p className="norm-p">{toshow.linkdn_username}</p>
                           </div>
 
                           <div className="my-4">
                             <p className="faded-p">LinkedIn password</p>
-                            <p className="norm-p">cameron1234</p>
+                            <p className="norm-p">{toshow.linkdn_password}</p>
                           </div>
 
                           <h4 className="my-3 bb-h4">About your campaign</h4>
                           <div className="my-4">
                             <p className="faded-p">Candidate Options</p>
-                            <p className="norm-p">Candidate Linkedln Engage</p>
+                            <p className="norm-p">{toshow.campaign_options}</p>
                           </div>
 
                           <div className="my-4">
                             <p className="faded-p">Campaign Durations</p>
-                            <p className="norm-p">5 days</p>
+                            <p className="norm-p">{toshow.campaign_duration}</p>
                           </div>
 
                           <div className="my-4">
                             <p className="faded-p">CRM</p>
-                            <p className="norm-p">Cameron Williamson Limited</p>
+                            <p className="norm-p">{toshow.crm}</p>
                           </div>
 
                           <h4 className="my-3 bb-h4">Candidate Acquisition</h4>
                           <div className="my-4">
                             <p className="faded-p">Job Title</p>
-                            <p className="norm-p">Engineer</p>
+                            <p className="norm-p">{toshow.job_titles}</p>
                           </div>
 
                           <div className="my-4">
                             <p className="faded-p">Skills and Keywords</p>
-                            <p className="norm-p">Communication</p>
+                            <p className="norm-p">{toshow.skills}</p>
                           </div>
 
                           <div className="my-4">
@@ -454,14 +335,12 @@ export default function DashboardInner() {
 
                           <div className="my-4">
                             <p className="faded-p">Industry</p>
-                            <p className="norm-p">Communication</p>
+                            <p className="norm-p">{toshow.industry}</p>
                           </div>
 
                           <div className="my-4">
                             <p className="faded-p">Location</p>
-                            <p className="norm-p">
-                              UK, Austin, 100 miles around Munich
-                            </p>
+                            <p className="norm-p">{toshow.location}</p>
                           </div>
 
                           <h4 className="my-3 bb-h4">
@@ -472,22 +351,68 @@ export default function DashboardInner() {
                               Your Connection Request Message
                             </p>
                             <p className="norm-p lng-p">
-                              Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit. Ut faucibus ultrices non mattis. Mi suscipit
-                              venenatis donec amet, vel. Duis vel eget fermentum
-                              sit sagittis, arcu, eros, elementum. Dignissim
-                              duis ullamcorper commodo nisl. Dui.
+                              {toshow.connection_request_message}
                             </p>
                           </div>
 
                           <div className="my-4">
                             <p className="faded-p">Follow up message</p>
                             <p className="norm-p lng-p">
-                              Lorem ipsum dolor sit amet, consectetur adipiscing
-                              elit. Ut faucibus ultrices non mattis. Mi suscipit
-                              venenatis donec amet, vel. Duis vel eget fermentum
-                              sit sagittis, arcu, eros, elementum. Dignissim
-                              duis ullamcorper commodo nisl. Dui.
+                              {toshow.follow_up_message}
+                            </p>
+                          </div>
+                          <h4 className="my-3 bb-h4">Client Acquisition</h4>
+                          <div className="my-4">
+                            <p className="faded-p">Job Title</p>
+                            <p className="norm-p">
+                              {toshow.hiring_manager_job_titles}
+                            </p>
+                          </div>
+
+                          <div className="my-4">
+                            <p className="faded-p">Skills and Keywords</p>
+                            <p className="norm-p">
+                              {toshow.hiring_manager_skills}
+                            </p>
+                          </div>
+
+                          <div className="my-4">
+                            <p className="faded-p">Industry</p>
+                            <p className="norm-p">
+                              {toshow.hiring_manager_industry}
+                            </p>
+                          </div>
+
+                          <div className="my-4">
+                            <p className="faded-p">Company SIze</p>
+                            <p className="norm-p">
+                              {toshow.hiring_manager_company_size}
+                            </p>
+                          </div>
+
+                          <div className="my-4">
+                            <p className="faded-p">Location</p>
+                            <p className="norm-p">
+                              {toshow.hiring_manager_location}
+                            </p>
+                          </div>
+
+                          <h4 className="my-3 bb-h4">
+                            Company Linkedln Message
+                          </h4>
+                          <div className="my-4">
+                            <p className="faded-p">
+                              Your Connection Request Message
+                            </p>
+                            <p className="norm-p lng-p">
+                              {toshow.hiring_manager_connection_request_message}
+                            </p>
+                          </div>
+
+                          <div className="my-4">
+                            <p className="faded-p">Follow up message</p>
+                            <p className="norm-p lng-p">
+                              {toshow.hiring_manager_follow_up_message}
                             </p>
                           </div>
                         </div>
@@ -498,57 +423,23 @@ export default function DashboardInner() {
                             <h6>Actions</h6>
                           </div>
                           <div className="card-body action-btns">
-                            <button className="approve-btn">Approve</button>
-                            <button className="decline-btn">Decline</button>
+                            <button
+                              className="approve-btn"
+                              onClick={() => approveCampaign(toshow.id)}
+                            >
+                              Approve
+                            </button>
+                            <button
+                              className="decline-btn"
+                              onClick={() => declineCampaign(toshow.id)}
+                            >
+                              Decline
+                            </button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  {/* <div className="col-sm-9">
-                                    <div className="card-header d-flex justify-content-between can-details">
-                                        <div className="status-txt">
-                                            <h4>Candidate LinkedIn Engage</h4>
-                                            <p>From Cameron Williamson</p>
-                                        </div>
-                                        <div className="status-btn">
-                                            <button>Campaign Status: Pending</button>
-                                        </div>
-                                    </div>
-
-                                    <div className="gcgc">
-                                        <h4>About you</h4>
-                                        <div className="my-2">
-                                            <p className="faded-p">Email address</p>
-                                            <p>cameronwilliamson@gmail.com</p>
-                                        </div>
-
-                                        <div className="my-2">
-                                            <p className="faded-p">First Name and Last Name</p>
-                                            <p>Cameron Williamson</p>
-                                        </div> 
-
-                                        <div className="my-2">
-                                            <p className="faded-p">LinkedIn username</p>
-                                            <p>Cameron Williamson</p>
-                                        </div> 
-
-                                        <div className="my-2">
-                                            <p className="faded-p">LinkedIn password</p>
-                                            <p>cameron1234</p>
-                                        </div> 
-                                    </div>
-                                </div>
-
-                                <div className="col-sm-3">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card title</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                        </div>
-                                    </div>
-                                </div> */}
                 </div>
               </div>
             </div>

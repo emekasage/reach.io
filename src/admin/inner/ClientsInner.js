@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { providerFunctions } from "../../provider/FunctionsProvider";
 import DateTime from "../../components/DateTime";
 import { Link } from "react-router-dom";
+import { CSVLink } from "react-csv";
 
 export default function ClientsInner() {
   const {
@@ -32,15 +33,19 @@ export default function ClientsInner() {
   const [pageCount, setPageCount] = useState(0);
   const [, setNumberOfClient] = useState(0);
   const [viewAll, setViewAll] = useState(false);
-  const [, setRows] = useState([]);
+  const [rows, setRows] = useState([]);
   const [searchData, setSearchData] = useState("");
+  const [userProf, setUserProf] = useState({});
 
   useEffect(() => {
     if (typeof clientsData[0] !== "undefined") {
       let tempdata = clientsData.filter((thisdata) => {
         var zz = thisdata.name.toLowerCase();
+        var mm = thisdata.email.toLowerCase();
         var yy = searchData.toLowerCase();
         if (zz.includes(yy)) {
+          return true;
+        } else if (mm.includes(yy)) {
           return true;
         } else {
           return false;
@@ -52,21 +57,21 @@ export default function ClientsInner() {
 
   useEffect(() => {
     getpaginatedClients(page);
-  }, [page, clientsData]);
+  }, [page, rows]);
 
   useEffect(() => {
     if (viewAll) {
-      setClientsToDisplay(clientsData);
+      setClientsToDisplay(rows);
     } else {
       setClientsToDisplay(paginatedClients);
     }
   }, [viewAll, clientsData, paginatedClients]);
 
   const getpaginatedClients = (page) => {
-    var no_of_clients = clientsData.length;
+    var no_of_clients = rows.length;
     setNumberOfClient(no_of_clients);
     setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
-    var cc = clientsData.filter((thisdata, index) => {
+    var cc = rows.filter((thisdata, index) => {
       var pageFirst = (page - 1) * perPage;
       var lastItem = page * perPage - 1;
       if (index >= pageFirst && index <= lastItem) {
@@ -143,16 +148,22 @@ export default function ClientsInner() {
                         <input
                           type="text"
                           className="form-control search-field"
-                          placeholder="Search by email or phone number"
+                          placeholder="Search by email or name"
                           value={searchData}
                           onChange={(e) => {
                             setSearchData(e.target.value);
                           }}
                         />
                       </div>
-                      <button type="button" className="btn-dashboard">
-                        Dashboard list
-                      </button>
+                      <CSVLink
+                        data={clientsData}
+                        download="Reachio-Clients-list.csv"
+                        className="csv-link"
+                      >
+                        <button type="button" className="btn-dashboard">
+                          Dashboard list
+                        </button>
+                      </CSVLink>
                     </div>
                   </div>
                   <table className="table table-hover my-1 table-responsive">
@@ -173,7 +184,7 @@ export default function ClientsInner() {
                     <tbody>
                       {clientsToDisplay.map((thisClientData, index) => {
                         return (
-                          <tr>
+                          <tr key={index}>
                             <td>
                               {!viewAll
                                 ? (page - 1) * perPage + (index + 1)
@@ -183,6 +194,8 @@ export default function ClientsInner() {
                               <div
                                 className="user-lnk"
                                 onClick={() => {
+                                  setUserProf(thisClientData);
+                                  console.log(clientsToDisplay);
                                   setPage(2);
                                 }}
                               >
@@ -193,6 +206,7 @@ export default function ClientsInner() {
                               <div
                                 className="user-lnk"
                                 onClick={() => {
+                                  setUserProf(thisClientData);
                                   setPage(2);
                                 }}
                               >
@@ -203,6 +217,8 @@ export default function ClientsInner() {
                               <div
                                 className="user-lnk"
                                 onClick={() => {
+                                  setUserProf(thisClientData);
+                                  console.log(userProf);
                                   setPage(2);
                                 }}
                               >
@@ -279,10 +295,49 @@ export default function ClientsInner() {
                   >
                     Go back
                   </a>
-                  <div className="card-header table-card-head d-flex justify-content-between">
+                  <div className="card-header table-card-head d-flex justify-content-between usr-pfl">
                     <div className="user-info">
-                      <img src="" alt="display-picture" />
-                      <div className="user-txt-info"></div>
+                      <img
+                        src={
+                          userProf.avatar !== "undefined"
+                            ? userProf.avatar
+                            : "../../assets/img/profile-avatar.png"
+                        }
+                        style={{
+                          background: "url(" + userProf.avatar + " ) ",
+                          width: "5em",
+                          height: "5em",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          borderRadius: "50%",
+                          margin: "0 auto",
+                        }}
+                        alt="display-picture"
+                      />
+                      <div className="user-txt-info">
+                        <h6>{userProf.name}</h6>
+                        <p>{userProf.email}</p>
+                        <p>{userProf.phone}</p>
+                      </div>
+                    </div>
+                    <div className="user-campdets">
+                      <div className="camp-wrds">
+                        <p>Campaign</p>
+                        <p>Connections</p>
+                      </div>
+                      <div className="camp-nos">
+                        <p>11</p>
+                        <p>10</p>
+                      </div>
+                    </div>
+                    <div className="admin-actions">
+                      <button className="admin-activate">Activate User</button>
+                      <button
+                        className="admin-ban"
+                        onClick={() => banUser(userProf.id)}
+                      >
+                        Ban User
+                      </button>
                     </div>
                   </div>
                 </div>

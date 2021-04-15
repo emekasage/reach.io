@@ -1,10 +1,10 @@
-/* eslint-disable react/jsx-key */
 import React, { useContext, useState, useEffect } from "react";
 import { providerFunctions } from "../../provider/FunctionsProvider";
 import RadialChart from "../../components/RadialChart";
 import StackedBarChart from "../../components/StackedBarChart";
 import { Link } from "react-router-dom";
 import moment from "moment";
+import { CSVLink } from "react-csv";
 
 export default function DashboardInner() {
   const [showRadial1, setShowRadial1] = useState(false);
@@ -12,12 +12,7 @@ export default function DashboardInner() {
   const [showRadial3, setShowRadial3] = useState(false);
   const [showRadial4, setShowRadial4] = useState(false);
   const [clientsData, setClientsData] = useState([]);
-  const [, setpaginatedClients] = useState([]);
-  const [clientsToDisplay, setClientsToDisplay] = useState([]);
-  const [page] = useState(1);
-  const [perPage] = useState(10);
-  const [, setNumberOfClient] = useState(0);
-  const [viewAll] = useState(false);
+
   const {
     showSideBar,
     allUsers,
@@ -36,14 +31,6 @@ export default function DashboardInner() {
   }, [allUsers]);
 
   useEffect(() => {
-    getpaginatedClients(page);
-  }, [page, clientsData]);
-
-  useEffect(() => {
-    setClientsToDisplay(clientsData);
-  }, [clientsData]);
-
-  useEffect(() => {
     connectionMetrics();
   }, []);
 
@@ -53,21 +40,6 @@ export default function DashboardInner() {
 
   // console.log(connectMetrics);
 
-  const getpaginatedClients = (page) => {
-    var no_of_clients = clientsData.length;
-    setNumberOfClient(no_of_clients);
-    var cc = clientsData.filter((thisdata, index) => {
-      var pageFirst = (page - 1) * perPage;
-      var lastItem = page * perPage - 1;
-      if (index >= pageFirst && index <= lastItem) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    setpaginatedClients(cc);
-  };
-
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
       <div className="dashboardbox">
@@ -76,22 +48,8 @@ export default function DashboardInner() {
             <div className="d-flex justify-content-between inner-text">
               <div className="heading-col">
                 <h5>
-                  <strong>Overview:</strong> Campaign 1
+                  <strong>Overview:</strong>
                 </h5>
-              </div>
-
-              <div className="text-drop">
-                <span className="text-drop-p">Change Campaign:</span>
-
-                <select
-                  className="form-select form-select-sm"
-                  aria-label="Default select example"
-                >
-                  <option selected>Campaign 1</option>
-                  <option value="1">Campaign 2</option>
-                  <option value="2">Campaign 3</option>
-                  <option value="3">Campaign 4</option>
-                </select>
               </div>
             </div>
             <div className="row">
@@ -313,9 +271,15 @@ export default function DashboardInner() {
                 <div className="card flex-fill">
                   <div className="card-header table-card-head d-flex justify-content-between">
                     <h5 className="card-title mb-0 table-title">Clients</h5>
-                    <button type="button" className="btn-dashboard">
-                      Dashboard list
-                    </button>
+                    <CSVLink
+                      data={clientsData}
+                      download="Reachio-Clients-list.csv"
+                      className="csv-link"
+                    >
+                      <button type="button" className="btn-dashboard">
+                        Dashboard list
+                      </button>
+                    </CSVLink>
                   </div>
                   <table className="table table-hover my-1">
                     <thead>
@@ -333,14 +297,10 @@ export default function DashboardInner() {
                       </tr>
                     </thead>
                     <tbody>
-                      {clientsToDisplay.map((thisClientData, index) => {
+                      {clientsData.map((thisClientData, index) => {
                         return (
-                          <tr>
-                            <td>
-                              {!viewAll
-                                ? (page - 1) * perPage + (index + 1)
-                                : index + 1}
-                            </td>
+                          <tr key={index}>
+                            <td>{index + 1}</td>
                             <td>{thisClientData.name}</td>
                             <td className="d-none d-xl-table-cell">
                               {thisClientData.email}

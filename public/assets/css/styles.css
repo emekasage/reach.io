@@ -750,6 +750,81 @@ a.clientback-lnk {
   cursor: pointer;
 }
 
+/* User Profile on Admin Dashboard */
+.usr-pfl {
+  margin: 0 20px;
+}
+
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  border-right: 1px solid #e6e8f1;
+}
+
+img.avatar-profile {
+  width: auto;
+  height: 75%;
+}
+
+.user-txt-info {
+  text-align: left;
+  padding: 0 30px;
+}
+
+.user-txt-info h6 {
+  color: #555 !important;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.user-txt-info p {
+  color: #999 !important;
+}
+
+.user-campdets {
+  display: flex;
+  justify-content: space-between;
+  border-right: 1px solid #e6e8f1;
+}
+
+.camp-wrds {
+  text-align: start;
+  color: #777;
+  font: 18px/22px "Nunito";
+}
+
+.camp-nos {
+  text-align: right;
+  padding: 0 50px;
+  color: #555;
+  font: 18px/22px "Nunito";
+  font-weight: 600;
+}
+
+.admin-actions {
+  display: grid;
+}
+
+button.admin-activate {
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border: 1px solid #5a0288;
+  background: #5a0288;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 3px;
+}
+
+button.admin-ban {
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  border: 1px solid #5a0288;
+  background: #fff;
+  color: #5a0288;
+  font-weight: 600;
+  border-radius: 3px;
+}
+
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
   .dashboard-attr {
     width: 75%;
@@ -809,12 +884,6 @@ a.clientback-lnk {
 
 .pro-img {
   position: relative;
-}
-
-.image {
-  height: 100%;
-  width: 10%;
-  border-radius: 50%;
 }
 
 .overlay {
@@ -990,7 +1059,7 @@ a.back-lnk {
   align-items: flex-start;
 }
 
-.status-btn button {
+.status-btn span {
   background: linear-gradient(86.57deg, #5a0288 -4.44%, #b8019d 105.07%);
   padding: 11px 25px;
   color: #fff;
@@ -1348,6 +1417,37 @@ button.cred-btn {
   border: 1px solid #e5e5e5;
   background: #fff;
   color: #333;
+}
+
+/***User Register Modal ***/
+button.yes-btn {
+  padding: 10px 25px;
+  background: #5a0288;
+  color: #fff;
+  font-family: "Nunito";
+  font-weight: 600;
+  border: 1px solid #5a0288;
+  margin-right: 50px;
+}
+
+button.yes-btn:hover {
+  background: #fff;
+  color: #5a0288;
+}
+
+button.no-btn {
+  padding: 10px 25px;
+  background: #5a0288;
+  color: #fff;
+  font-family: "Nunito";
+  font-weight: 600;
+  border: 1px solid #5a0288;
+  margin-left: 50px;
+}
+
+button.no-btn:hover {
+  background: #fff;
+  color: #5a0288;
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {

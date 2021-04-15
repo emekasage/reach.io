@@ -101,9 +101,17 @@ export default function Header() {
                 aria-expanded="false"
               >
                 <img
-                  src="../../assets/img/Ellipse-16.png"
-                  className="avatar img-fluid rounded mr-1"
-                  alt="Charles Hall"
+                  src={userDetails.user.avatar}
+                  alt={userDetails.user.name}
+                  style={{
+                    background: "url(" + userDetails.user.avatar + " ) ",
+                    width: "2.5em",
+                    height: "2.5em",
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    borderRadius: "50%",
+                    margin: "0 auto",
+                  }}
                 />
               </a>
               <ul className="dropdown-menu dropdown-menu-end">

@@ -37,6 +37,12 @@ export default function DashboardInner() {
 
   const [connectionsData, setConnectionsData] = useState([]);
 
+  const handleChange = (e) => {
+    if (e.target.value == "Name") {
+      console.log(connectionsData);
+    }
+  };
+
   useEffect(() => {
     // console.log(allConnections.allConnections);
     if (typeof allConnections.allConnections !== "undefined") {
@@ -303,15 +309,18 @@ export default function DashboardInner() {
                       <select
                         className="form-select form-select-sm col-select"
                         aria-label="Default select example"
+                        onChange={handleChange}
                       >
                         <option selected hidden>
                           Select a column
                         </option>
-                        <option value="1">Name</option>
-                        <option value="2">Email Address</option>
-                        <option value="3">Phone Numbers</option>
-                        <option value="3">Connected Status</option>
-                        <option value="3">Connected on</option>
+                        <option value="Name">Name</option>
+                        <option value="Email Address">Email Address</option>
+                        <option value="Phone Numbers">Phone Numbers</option>
+                        <option value="Connected Status">
+                          Connected Status
+                        </option>
+                        <option value="Connected on">Connected on</option>
                       </select>
                       <CSVLink
                         data={connectionsData}

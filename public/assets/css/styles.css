@@ -287,6 +287,7 @@ button.dropdown-item {
 .sidebar.reduce .nav {
   width: 5em;
 }
+
 .nav-options {
   position: fixed;
 }
@@ -368,6 +369,25 @@ ul {
   font-size: 16px;
   padding-left: 10px;
 }
+
+.tooltipCont {
+  display: flow-root;
+  position: absolute;
+  margin-left: -29px;
+  padding: 5px 10px;
+  font-family: "Nunito";
+}
+
+.tooltipCont .btn-info {
+  margin: 0 5px;
+  font-size: 14px;
+}
+
+.tooltipCont .btn-danger {
+  font-size: 14px;
+}
+
+/****** END OF SIDEBAR STYLING ******/
 
 .pagebody {
   width: calc(100% - 237px);

@@ -4,11 +4,17 @@ import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function Sidebar() {
   const { showSideBar, logout } = useContext(providerFunctions);
-  const [showTooltip, setShowToolTip] = useState(false);
+  const [showToolTip, setshowToolTip] = useState(false);
 
   const handleLogout = () => {
-    setShowToolTip(true);
+    setshowToolTip(true);
   };
+
+  const handleCancel = () => {
+    console.log("working");
+    setshowToolTip(false);
+  };
+
   return (
     <div id="sidebar-nav" className={`sidebar ${showSideBar ? "" : "reduce"}`}>
       <div className="nav-options">
@@ -68,34 +74,28 @@ export default function Sidebar() {
           <ul className="navigate-log">
             <li>
               <div className="nav2">
-                <i className="bi bi-box-arrow-right menu-img-2"></i>
-                <span
-                  className="menu-text-2"
-                  onClick={() => {
-                    handleLogout();
-                  }}
-                >
+                <i
+                  className="bi bi-box-arrow-right menu-img-2"
+                  onClick={handleLogout}
+                ></i>
+                <span className="menu-text-2" onClick={handleLogout}>
                   Log Out
-                  {showTooltip && (
-                    <div className="position-absolute tooltipCont tooltipCont">
-                      <button
-                        className="btn btn-info button"
-                        onClick={() => {
-                          setShowToolTip(false);
-                          !handleLogout();
-                        }}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={() => logout()}
-                        className="btn btn-danger"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
                 </span>
+                {showToolTip ? (
+                  <div className="tooltipCont">
+                    <button
+                      className="btn btn-info button"
+                      onClick={handleCancel}
+                    >
+                      Cancel
+                    </button>
+                    <button onClick={() => logout()} className="btn btn-danger">
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  ""
+                )}
               </div>
             </li>
           </ul>

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import DateTime from "../components/DateTime";
+import moment from "moment";
 
 export default function CampaignInner() {
   const {
@@ -14,10 +15,6 @@ export default function CampaignInner() {
   useEffect(() => {
     userCampaign();
   }, []);
-
-  useEffect(() => {
-    console.log(campaign.campaign);
-  }, [campaign]);
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -72,47 +69,22 @@ export default function CampaignInner() {
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Sales Itemization</td>
-                    <td>2020-11-05</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-success camp-form-btn"
-                      >
-                        Submitted
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Weekly Sales</td>
-                    <td>2020-09-29</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-danger camp-form-btn"
-                      >
-                        Declined
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Monthly Sales</td>
-                    <td>2020-08-15</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-secondary camp-form-btn"
-                      >
-                        Pending
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
+                {typeof campaign.campaign.data !== "undefined" && (
+                  <tbody>
+                    {campaign.campaign.data.map((thisCampaignData, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{thisCampaignData.name}</td>
+                          <td>
+                            {moment(thisCampaignData.created_at).format("lll")}
+                          </td>
+                          <td>{thisCampaignData.campaign_status}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                )}
               </table>
             </div>
           </div>

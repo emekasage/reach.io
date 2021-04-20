@@ -126,14 +126,14 @@ export default function Header() {
                   </span>
                 </li>
                 <li style={{ paddingTop: "5px" }}>
-                  <Link to="/settings" className="hd-dropdown-lnk">
+                  <Link to="/admin/settings" className="hd-dropdown-lnk">
                     <button className="dropdown-item" type="button">
                       Profile
                     </button>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/campaign" className="hd-dropdown-lnk">
+                  <Link to="/admin/campaign" className="hd-dropdown-lnk">
                     <button className="dropdown-item" type="button">
                       Campaign
                     </button>

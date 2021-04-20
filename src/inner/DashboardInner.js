@@ -3,17 +3,59 @@ import { providerFunctions } from "../provider/FunctionsProvider";
 import RadialChart from "../components/RadialChart";
 import StackedBarChart from "../components/StackedBarChart";
 import { Link } from "react-router-dom";
+import { CSVLink } from "react-csv";
 
 export default function DashboardInner() {
   const [showRadial1, setShowRadial1] = useState(false);
   const [showRadial2, setShowRadial2] = useState(false);
   const [showRadial3, setShowRadial3] = useState(false);
   const [showRadial4, setShowRadial4] = useState(false);
-  const { showSideBar, getAllUsers } = useContext(providerFunctions);
+  const {
+    showSideBar,
+    getAllUsers,
+    connectionMetrics,
+    connectMetrics,
+    userConnections,
+    allConnections,
+  } = useContext(providerFunctions);
 
   useEffect(() => {
     getAllUsers();
   });
+
+  useEffect(() => {
+    connectionMetrics();
+  }, []);
+
+  useEffect(() => {
+    // console.log(connectMetrics.noOfConnections);
+  }, [connectMetrics]);
+
+  useEffect(() => {
+    userConnections();
+  }, []);
+
+  const [connectionsData, setConnectionsData] = useState([]);
+
+  const handleChange = (e) => {
+    if (e.target.value == "Name") {
+      console.log(connectionsData);
+    }
+  };
+
+  useEffect(() => {
+    // console.log(allConnections.allConnections);
+    if (typeof allConnections.allConnections !== "undefined") {
+      if (typeof allConnections.allConnections.data !== "undefined") {
+        // console.log(allConnections.allConnections);
+        setConnectionsData(allConnections.allConnections.data);
+      }
+    }
+  }, [allConnections]);
+
+  useEffect(() => {
+    // console.log(connectionsData);
+  }, [connectionsData]);
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -56,7 +98,7 @@ export default function DashboardInner() {
                             className="d-flex justify-content-between top-card-content"
                           >
                             <h5 className="card-title mb-4">
-                              No. of Emails Collected
+                              No. of Connections
                             </h5>
                             <i className="bi bi-circle-half moon"></i>
                           </div>
@@ -66,8 +108,10 @@ export default function DashboardInner() {
                             }`}
                           >
                             <div className="mb-1 mid-card-content">
-                              <h1 className="mt-1 mb-3">100</h1>
-                              <span className="text-success"> +34% </span>
+                              <h1 className="mt-1 mb-3">
+                                {connectMetrics.noOfConnections}
+                              </h1>
+                              <span className="text-success"> +0% </span>
                             </div>
                             <div className="mb-1">
                               <span className="text-muted">
@@ -80,10 +124,10 @@ export default function DashboardInner() {
                               showRadial1 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="50" />
+                            <RadialChart value="0" />
 
                             <span className="percentage d-flex justify-content-center">
-                              25%
+                              0%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -112,8 +156,10 @@ export default function DashboardInner() {
                             }`}
                           >
                             <div className="mb-1 mid-card-content">
-                              <h1 className="mt-1 mb-3">100</h1>
-                              <span className="text-success"> +34% </span>
+                              <h1 className="mt-1 mb-3">
+                                {connectMetrics.noOfTelephone}
+                              </h1>
+                              <span className="text-success"> +0% </span>
                             </div>
                             <div className="mb-1">
                               <span className="text-muted">
@@ -126,9 +172,9 @@ export default function DashboardInner() {
                               showRadial2 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="50" />
+                            <RadialChart value="0" />
                             <span className="percentage d-flex justify-content-center">
-                              25%
+                              0%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -158,8 +204,10 @@ export default function DashboardInner() {
                             }`}
                           >
                             <div className="mb-1 mid-card-content">
-                              <h1 className="mt-1 mb-3">100</h1>
-                              <span className="text-success"> +34% </span>
+                              <h1 className="mt-1 mb-3">
+                                {connectMetrics.noOfEmailsCollected}
+                              </h1>
+                              <span className="text-success"> +0% </span>
                             </div>
                             <div className="mb-1">
                               <span className="text-muted">
@@ -172,10 +220,10 @@ export default function DashboardInner() {
                               showRadial3 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="50" />
+                            <RadialChart value="0" />
 
                             <span className="percentage d-flex justify-content-center">
-                              25%
+                              0%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -204,8 +252,10 @@ export default function DashboardInner() {
                             }`}
                           >
                             <div className="mb-1 mid-card-content">
-                              <h1 className="mt-1 mb-3">100</h1>
-                              <span className="text-success"> +34% </span>
+                              <h1 className="mt-1 mb-3">
+                                {connectMetrics.noOfFirstReplies}
+                              </h1>
+                              <span className="text-success"> +0% </span>
                             </div>
                             <div className="mb-1">
                               <span className="text-muted">
@@ -218,10 +268,10 @@ export default function DashboardInner() {
                               showRadial4 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="50" />
+                            <RadialChart value="0" />
 
                             <span className="percentage d-flex justify-content-center">
-                              25%
+                              0%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -259,19 +309,28 @@ export default function DashboardInner() {
                       <select
                         className="form-select form-select-sm col-select"
                         aria-label="Default select example"
+                        onChange={handleChange}
                       >
                         <option selected hidden>
                           Select a column
                         </option>
-                        <option value="1">Name</option>
-                        <option value="2">Email Address</option>
-                        <option value="3">Phone Numbers</option>
-                        <option value="3">Connected Status</option>
-                        <option value="3">Connected on</option>
+                        <option value="Name">Name</option>
+                        <option value="Email Address">Email Address</option>
+                        <option value="Phone Numbers">Phone Numbers</option>
+                        <option value="Connected Status">
+                          Connected Status
+                        </option>
+                        <option value="Connected on">Connected on</option>
                       </select>
-                      <button type="button" className="btn-dashboard">
-                        Dashboard list
-                      </button>
+                      <CSVLink
+                        data={connectionsData}
+                        download="Reachio-Clients-list.csv"
+                        className="csv-link"
+                      >
+                        <button type="button" className="btn-dashboard">
+                          Dashboard list
+                        </button>
+                      </CSVLink>
                     </div>
                   </div>
                   <div className="table-responsive">
@@ -293,130 +352,28 @@ export default function DashboardInner() {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>Cameron Williamson</td>
-                          <td className="d-none d-xl-table-cell">
-                            camwilliamson@gmail.com
-                          </td>
-                          <td className="d-none d-xl-table-cell">
-                            (405) 555-0128
-                          </td>
-                          <td>
-                            <span className="badge bg-success">Yes</span>
-                          </td>
-                          <td className="d-none d-md-table-cell">
-                            Jan 12th, 2021
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>Savannah Nguyen</td>
-                          <td className="d-none d-xl-table-cell">
-                            robertfox@gmail.com
-                          </td>
-                          <td className="d-none d-xl-table-cell">
-                            (208) 555-0112
-                          </td>
-                          <td>
-                            <span className="badge bg-success">Yes</span>
-                          </td>
-                          <td className="d-none d-md-table-cell">
-                            Jan 12th, 2021
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>Brooklyn Simmons</td>
-                          <td className="d-none d-xl-table-cell">
-                            ronaldrich@gmail.com
-                          </td>
-                          <td className="d-none d-xl-table-cell">
-                            (603) 555-0123
-                          </td>
-                          <td>
-                            <span className="badge bg-danger">No</span>
-                          </td>
-                          <td className="d-none d-md-table-cell">-</td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td>Courtney Henry</td>
-                          <td className="d-none d-xl-table-cell">
-                            bassiecooper@gmail.com
-                          </td>
-                          <td className="d-none d-xl-table-cell">
-                            (201) 555-0124
-                          </td>
-                          <td>
-                            <span className="badge bg-success">Yes</span>
-                          </td>
-                          <td className="d-none d-md-table-cell">
-                            Jan 12th, 2021
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>5</td>
-                          <td>Alene McCoy</td>
-                          <td className="d-none d-xl-table-cell">
-                            bassiecooper@gmail.com
-                          </td>
-                          <td className="d-none d-xl-table-cell">
-                            (302) 555-0107
-                          </td>
-                          <td>
-                            <span className="badge bg-danger">No</span>
-                          </td>
-                          <td className="d-none d-md-table-cell">-</td>
-                        </tr>
-                        <tr>
-                          <td>6</td>
-                          <td>Darlene Robertson</td>
-                          <td className="d-none d-xl-table-cell">
-                            robertfox@gmail.com
-                          </td>
-                          <td className="d-none d-xl-table-cell">
-                            (671) 555-0110
-                          </td>
-                          <td>
-                            <span className="badge bg-success">Yes</span>
-                          </td>
-                          <td className="d-none d-md-table-cell">
-                            Jan 12th, 2021
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>7</td>
-                          <td>Emeka Matthews</td>
-                          <td className="d-none d-xl-table-cell">
-                            emex.exmattews@mail.com
-                          </td>
-                          <td className="d-none d-xl-table-cell">
-                            (208) 555-0112
-                          </td>
-                          <td>
-                            <span className="badge bg-success">Yes</span>
-                          </td>
-                          <td className="d-none d-md-table-cell">
-                            Jan 12th, 2021
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>8</td>
-                          <td>Alexandra Mattews</td>
-                          <td className="d-none d-xl-table-cell">
-                            alexmattews@mail.com
-                          </td>
-                          <td className="d-none d-xl-table-cell">
-                            (405) 555-0128
-                          </td>
-                          <td>
-                            <span className="badge bg-warning">
-                              In progress
-                            </span>
-                          </td>
-                          <td className="d-none d-md-table-cell">-</td>
-                        </tr>
+                        {connectionsData.map((thisConnectionData, index) => {
+                          return (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td>{thisConnectionData.Name}</td>
+                              <td className="d-none d-xl-table-cell">
+                                {thisConnectionData.ContactEmail}
+                              </td>
+                              <td className="d-none d-xl-table-cell">
+                                {thisConnectionData.ContactMobile}
+                              </td>
+                              <td>
+                                <span>
+                                  {thisConnectionData.ConnectionStatus}
+                                </span>
+                              </td>
+                              <td className="d-none d-md-table-cell">
+                                {thisConnectionData.ConnectedOn}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                     <div className="view-more d-flex justify-content-center">

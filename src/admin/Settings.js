@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "../components/Header";
+import Header from "../components/HeaderAdmin";
 import Sidebar from "../components/SidebarAdmin";
 import SettingsInner from "./inner/SettingsInner";
 

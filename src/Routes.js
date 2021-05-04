@@ -17,6 +17,7 @@ import AdminDashboard from "./admin/Dashboard";
 import AdminUsers from "./admin/Clients";
 import AdminSettings from "./admin/Settings";
 import AdminCampaign from "./admin/Campaign";
+import AdminRoles from "./admin/Roles";
 import { providerFunctions } from "./provider/FunctionsProvider";
 import AppModal from "./components/AppModal";
 
@@ -62,6 +63,10 @@ export default function Routes() {
         <Route
           path="/admin/campaign"
           component={loggedIn ? AdminCampaign : AdminLogin}
+        />
+        <Route
+          path="/admin/roles"
+          component={loggedIn ? AdminRoles : AdminLogin}
         />
       </Switch>
     </div>

@@ -9,6 +9,8 @@ export default function DashboardInner() {
   const {
     getMetrics,
     metrics,
+    // setShowModal,
+    // setModalPage,
     showSideBar,
     managedCampaigns,
     campaignManagement,
@@ -42,7 +44,7 @@ export default function DashboardInner() {
         {page === 1 && (
           <div>
             <div className="row">
-              <div className="col-xl-11 col-xxl-12 d-flex camp-flex">
+              <div className="col-xl-12 col-xxl-12 d-flex camp-flex">
                 <div className="w-100">
                   <div className="row orobo">
                     <div className="camp-build">
@@ -222,7 +224,7 @@ export default function DashboardInner() {
                                   />
                                 </td>
                                 <td>{thisManagedCampaigns.company}</td>
-                                <td>{thisManagedCampaigns.name}</td>
+                                <td>{thisManagedCampaigns.campaign_name}</td>
                                 <td>
                                   {moment(
                                     thisManagedCampaigns.created_at
@@ -232,6 +234,7 @@ export default function DashboardInner() {
                                   <a
                                     className="camp-form-lnk"
                                     onClick={() => {
+                                      // console.log(thisManagedCampaigns);
                                       settoshow(thisManagedCampaigns);
                                       setPage(2);
                                     }}
@@ -278,6 +281,17 @@ export default function DashboardInner() {
                               Campaign Status: {toshow.campaign_status}
                             </span>
                           </div>
+                          {/* <div className="status-btn">
+                            <span
+                              className="view-canreq"
+                              onClick={() => {
+                                setShowModal(true);
+                                setModalPage("view_request");
+                              }}
+                            >
+                              View Cancel Request
+                            </span>
+                          </div> */}
                         </div>
                         <div className="gcgc">
                           <h4 className="my-3">About you</h4>
@@ -435,6 +449,12 @@ export default function DashboardInner() {
                             >
                               Decline
                             </button>
+                            {/* <button
+                              className="delcamp-btn"
+                              onClick={() => declineCampaign(toshow.id)}
+                            >
+                              Delete
+                            </button> */}
                           </div>
                         </div>
                       </div>

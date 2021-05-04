@@ -17,6 +17,7 @@ export default function DashboardInner() {
     connectMetrics,
     userConnections,
     allConnections,
+    userDetails,
   } = useContext(providerFunctions);
 
   useEffect(() => {
@@ -36,12 +37,9 @@ export default function DashboardInner() {
   }, []);
 
   const [connectionsData, setConnectionsData] = useState([]);
-
-  const handleChange = (e) => {
-    if (e.target.value == "Name") {
-      console.log(connectionsData);
-    }
-  };
+  const [campaignIds, setCampaignIds] = useState([]);
+  const [campaignIdFilter, setCampaignIdFilter] = useState("");
+  const [viewAll] = useState(false);
 
   useEffect(() => {
     // console.log(allConnections.allConnections);
@@ -55,7 +53,37 @@ export default function DashboardInner() {
 
   useEffect(() => {
     // console.log(connectionsData);
+    getCampaignsId();
   }, [connectionsData]);
+
+  useEffect(() => {
+    if (typeof connectionsData[0] !== "undefined") {
+      let tempdata = connectionsData.filter((thisdata) => {
+        if (
+          Number(campaignIdFilter) !== Number(thisdata.campaign_id) &&
+          !viewAll
+        ) {
+          if (campaignIdFilter !== "") {
+            console.log(Number(campaignIdFilter), Number(thisdata.campaign_id));
+            return false;
+          }
+        }
+      });
+      tempdata;
+    }
+  }, [connectionsData, campaignIdFilter]);
+
+  const onlyUnique = (value, index, self) => {
+    return self.indexOf(value) === index;
+  };
+  const getCampaignsId = () => {
+    var allC = [];
+    for (var i = 0; i < connectionsData.length; i++) {
+      allC.push(connectionsData[i].campaign_id);
+    }
+    var unique = allC.filter(onlyUnique);
+    setCampaignIds(unique);
+  };
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -64,15 +92,12 @@ export default function DashboardInner() {
           <div className="container-fluid p-0">
             <div className="d-flex justify-content-between inner-text">
               <div className="heading-col">
-                <h5>
-                  <strong>Overview:</strong> Campaign 1
-                </h5>
                 <h5 className="cred-rem">
-                  <strong>Credit Remaining:</strong> 2000
+                  <strong>Credit Remaining:</strong> {userDetails.user.credits}
                 </h5>
               </div>
 
-              <div className="text-drop">
+              {/* <div className="text-drop">
                 <span className="text-drop-p">Change Campaign:</span>
 
                 <select
@@ -84,7 +109,7 @@ export default function DashboardInner() {
                   <option value="2">Campaign 3</option>
                   <option value="3">Campaign 4</option>
                 </select>
-              </div>
+              </div> */}
             </div>
             <div className="row">
               <div className="col-xl-6 col-xxl-5 d-flex">
@@ -309,18 +334,16 @@ export default function DashboardInner() {
                       <select
                         className="form-select form-select-sm col-select"
                         aria-label="Default select example"
-                        onChange={handleChange}
+                        onChange={(e) => setCampaignIdFilter(e.target.value)}
                       >
                         <option selected hidden>
-                          Select a column
+                          Select a campaign
                         </option>
-                        <option value="Name">Name</option>
-                        <option value="Email Address">Email Address</option>
-                        <option value="Phone Numbers">Phone Numbers</option>
-                        <option value="Connected Status">
-                          Connected Status
-                        </option>
-                        <option value="Connected on">Connected on</option>
+                        {campaignIds.map((thisCampaignId, index) => {
+                          <option value={thisCampaignId} key={index}>
+                            {thisCampaignId}
+                          </option>;
+                        })}
                       </select>
                       <CSVLink
                         data={connectionsData}

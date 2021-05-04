@@ -12,30 +12,40 @@ export default function ClientsInner() {
     showSideBar,
     allUsers,
     getAllUsers,
+    getUserInfo,
   } = useContext(providerFunctions);
-
-  useEffect(() => {
-    getAllUsers();
-  }, []);
-  useEffect(() => {
-    if (typeof allUsers.Users !== "undefined") {
-      setClientsData(allUsers.Users);
-      console.log(allUsers.Users);
-    }
-  }, [allUsers]);
-
   const [clientsData, setClientsData] = useState([]);
 
   const [paginatedClients, setpaginatedClients] = useState([]);
   const [clientsToDisplay, setClientsToDisplay] = useState([]);
+  const [innerPage, setInnerPage] = useState(1);
   const [page, setPage] = useState(1);
   const [perPage] = useState(10);
   const [pageCount, setPageCount] = useState(0);
-  const [, setNumberOfClient] = useState(0);
   const [viewAll, setViewAll] = useState(false);
   const [rows, setRows] = useState([]);
   const [searchData, setSearchData] = useState("");
   const [userProf, setUserProf] = useState({});
+  const [userCD, setUserCD] = useState({});
+  useEffect(() => {
+    getAllUsers();
+  }, []);
+
+  useEffect(() => {
+    if (typeof allUsers.Users !== "undefined") {
+      setClientsData(allUsers.Users);
+      // console.log(allUsers.Users);
+    }
+  }, [allUsers]);
+
+  useEffect(() => {
+    if (typeof userProf.id !== "undefined") {
+      getUserInfo(userProf.id).then((u) => {
+        setUserCD(u);
+        return u;
+      });
+    }
+  }, [userProf]);
 
   useEffect(() => {
     if (typeof clientsData[0] !== "undefined") {
@@ -69,7 +79,6 @@ export default function ClientsInner() {
 
   const getpaginatedClients = (page) => {
     var no_of_clients = rows.length;
-    setNumberOfClient(no_of_clients);
     setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
     var cc = rows.filter((thisdata, index) => {
       var pageFirst = (page - 1) * perPage;
@@ -118,7 +127,7 @@ export default function ClientsInner() {
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
       <div className="container-fluid p-0">
-        {page === 1 && (
+        {innerPage === 1 && (
           <div>
             <div className="d-flex justify-content-between user-val">
               <div className="heading-col">
@@ -190,15 +199,13 @@ export default function ClientsInner() {
                                 ? (page - 1) * perPage + (index + 1)
                                 : index + 1}
                             </td>
-                            <td>
-                              <div
-                                className="user-lnk"
-                                onClick={() => {
-                                  setUserProf(thisClientData);
-                                  console.log(clientsToDisplay);
-                                  setPage(2);
-                                }}
-                              >
+                            <td
+                              onClick={() => {
+                                setUserProf(thisClientData);
+                                setInnerPage(2);
+                              }}
+                            >
+                              <div className="user-lnk">
                                 {thisClientData.name}
                               </div>
                             </td>
@@ -207,7 +214,7 @@ export default function ClientsInner() {
                                 className="user-lnk"
                                 onClick={() => {
                                   setUserProf(thisClientData);
-                                  setPage(2);
+                                  setInnerPage(2);
                                 }}
                               >
                                 {thisClientData.email}
@@ -218,8 +225,7 @@ export default function ClientsInner() {
                                 className="user-lnk"
                                 onClick={() => {
                                   setUserProf(thisClientData);
-                                  console.log(userProf);
-                                  setPage(2);
+                                  setInnerPage(2);
                                 }}
                               >
                                 {thisClientData.phone}
@@ -271,7 +277,7 @@ export default function ClientsInner() {
           </div>
         )}
 
-        {page === 2 && (
+        {innerPage === 2 && (
           <div>
             <div className="d-flex justify-content-between user-val">
               <div className="heading-col">
@@ -290,7 +296,7 @@ export default function ClientsInner() {
                   <a
                     className="clientback-lnk"
                     onClick={() => {
-                      setPage(1);
+                      setInnerPage(1);
                     }}
                   >
                     Go back
@@ -304,7 +310,10 @@ export default function ClientsInner() {
                             : "../../assets/img/profile-avatar.png"
                         }
                         style={{
-                          background: "url(" + userProf.avatar + " ) ",
+                          background:
+                            "url(" +
+                            userProf.avatar +
+                            "../../assets/img/profile-avatar.png)",
                           width: "5em",
                           height: "5em",
                           backgroundSize: "cover",
@@ -315,6 +324,7 @@ export default function ClientsInner() {
                         alt="display-picture"
                       />
                       <div className="user-txt-info">
+                        {/* {JSON.stringify(userCD)} */}
                         <h6>{userProf.name}</h6>
                         <p>{userProf.email}</p>
                         <p>{userProf.phone}</p>
@@ -326,12 +336,18 @@ export default function ClientsInner() {
                         <p>Connections</p>
                       </div>
                       <div className="camp-nos">
-                        <p>11</p>
-                        <p>10</p>
+                        <p>{userCD.campaigns}</p>
+                        <p>{userCD.connections}</p>
                       </div>
                     </div>
                     <div className="admin-actions">
-                      <button className="admin-activate">Activate User</button>
+                      {/* <button className="admin-activate">Delete User</button> */}
+                      <button
+                        className="admin-activate"
+                        onClick={() => activateUser(userProf.id)}
+                      >
+                        Activate User
+                      </button>
                       <button
                         className="admin-ban"
                         onClick={() => banUser(userProf.id)}
@@ -342,6 +358,22 @@ export default function ClientsInner() {
                   </div>
                 </div>
               </div>
+            </div>
+            <div className="campaign-dets">
+              <h5>Campaign</h5>
+
+              <p>
+                Campaign Submitted <strong>({userCD.campaignSubmitted})</strong>
+              </p>
+              <p>
+                Campaign Completed <strong>({userCD.campaignCompleted})</strong>
+              </p>
+              <p>
+                Campaign Approved <strong>({userCD.campaignApproved})</strong>
+              </p>
+              <p>
+                Campaign Declined <strong>({userCD.campaignDeclined})</strong>
+              </p>
             </div>
           </div>
         )}

@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import DateTime from "../components/DateTime";
 import moment from "moment";
+import { Link } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 export default function CampaignInner() {
   const {
@@ -10,10 +12,14 @@ export default function CampaignInner() {
     setModalPage,
     campaign,
     userCampaign,
+    setCampaignId,
+    cancelCampaign,
   } = useContext(providerFunctions);
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     userCampaign();
+    cancelCampaign();
   }, []);
 
   return (
@@ -34,7 +40,7 @@ export default function CampaignInner() {
           <div className="group-img-txt">
             <img src="assets/img/Group-camp-1.png" />
             <div className="camp-img-txt">
-              <p>Submit your desired campain</p>
+              <p>Submit your desired campaign</p>
               <h4>Start the process now</h4>
             </div>
           </div>
@@ -53,7 +59,7 @@ export default function CampaignInner() {
         </div>
 
         <div className="row">
-          <div className="col-12 col-lg-12 col-xxl-9 d-flex user-tab">
+          <div className="col-12 col-lg-12 col-xxl-12 d-flex user-tab">
             <div className="card flex-fill">
               <div className="card-header table-card-head d-flex justify-content-between">
                 <h5 className="card-title mb-0 table-title">
@@ -66,7 +72,10 @@ export default function CampaignInner() {
                     <th scope="col">S/N</th>
                     <th>Name of Campaign</th>
                     <th>Date</th>
+                    <th>Credits</th>
+                    <th>Linkedln User</th>
                     <th>Status</th>
+                    <th>Request Cancellation</th>
                   </tr>
                 </thead>
                 {typeof campaign.campaign.data !== "undefined" && (
@@ -75,11 +84,93 @@ export default function CampaignInner() {
                       return (
                         <tr key={index}>
                           <td>{index + 1}</td>
-                          <td>{thisCampaignData.name}</td>
+                          <td>{thisCampaignData.campaign_name}</td>
                           <td>
                             {moment(thisCampaignData.created_at).format("lll")}
                           </td>
+                          <td>
+                            {thisCampaignData.campaign_status ===
+                              "approved" && <span>---</span>}
+                            {thisCampaignData.campaign_status ===
+                              "cancelled" && <span>---</span>}
+                            {thisCampaignData.campaign_status === "pending" && (
+                              <a
+                                className="camp-form-lnk"
+                                onClick={() => {
+                                  setShowModal(true);
+                                  setModalPage("assign_credit");
+                                  setCampaignId(thisCampaignData.id);
+                                }}
+                              >
+                                Assign Credits
+                              </a>
+                            )}
+                          </td>
+                          <td>
+                            {thisCampaignData.campaign_status ===
+                              "approved" && <span>---</span>}
+                            {thisCampaignData.campaign_status ===
+                              "cancelled" && <span>---</span>}
+                            {thisCampaignData.campaign_status === "pending" && (
+                              <a
+                                className="camp-form-lnk"
+                                onClick={() => {
+                                  setShowModal(true);
+                                  setModalPage("assign_user");
+                                  setCampaignId(thisCampaignData.id);
+                                }}
+                              >
+                                Assign/Add User
+                              </a>
+                            )}
+                          </td>
                           <td>{thisCampaignData.campaign_status}</td>
+                          <td>
+                            {thisCampaignData.campaign_status === "pending" && (
+                              <Link to="#" className="table-icons">
+                                <i
+                                  className="bi bi-x-circle-fill"
+                                  onClick={() => {
+                                    setShowModal(true);
+                                    setModalPage("cancel_campaign");
+                                    setCampaignId(thisCampaignData.id);
+                                  }}
+                                ></i>
+                              </Link>
+                            )}
+                            {thisCampaignData.campaign_status ===
+                              "approved" && (
+                              <Link to="#" className="table-icons">
+                                <i
+                                  className="bi bi-dash-circle-fill"
+                                  onClick={() =>
+                                    enqueueSnackbar(
+                                      "Approved Campaigns cannot be cancelled",
+                                      {
+                                        variant: "error",
+                                      }
+                                    )
+                                  }
+                                ></i>
+                              </Link>
+                            )}
+                            {thisCampaignData.campaign_status ===
+                              "cancelled" && (
+                              <Link to="#" className="table-icons">
+                                <i
+                                  className="bi bi-dash-circle-fill"
+                                  onClick={() =>
+                                    enqueueSnackbar(
+                                      "Cancelled Campaigns cannot be cancelled",
+                                      {
+                                        variant: "error",
+                                      }
+                                    )
+                                  }
+                                ></i>
+                              </Link>
+                            )}
+                          </td>
                         </tr>
                       );
                     })}

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function Sidebar() {
-  const { logout, showSideBar } = useContext(providerFunctions);
+  const { adminLogout, showSideBar } = useContext(providerFunctions);
   const [showToolTip, setshowToolTip] = useState(false);
 
   const handleLogout = () => {
@@ -38,6 +38,16 @@ export default function Sidebar() {
               >
                 <i className="bi bi-people menu-img"></i>
                 <span className="menu-text">Users</span>
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/admin/roles"
+                className="nav"
+                activeClassName="nav--active"
+              >
+                <i className="bi bi-clipboard-data menu-img"></i>
+                <span className="menu-text">Roles</span>
               </NavLink>
             </li>
 
@@ -80,7 +90,10 @@ export default function Sidebar() {
                     >
                       Cancel
                     </button>
-                    <button onClick={() => logout()} className="btn btn-danger">
+                    <button
+                      onClick={() => adminLogout()}
+                      className="btn btn-danger"
+                    >
                       Logout
                     </button>
                   </div>

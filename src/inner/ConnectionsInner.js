@@ -2,23 +2,25 @@
 import React, { useContext, useState, useEffect } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import DateTime from "../components/DateTime";
+import { CSVLink } from "react-csv";
 
 export default function ConnectionsInner() {
   const { showSideBar, userConnections, allConnections } = useContext(
     providerFunctions
   );
 
+  const [campaignIdFilter, setCampaignIdFilter] = useState("");
+
   useEffect(() => {
     userConnections();
   }, []);
 
   const [connectionsData, setConnectionsData] = useState([]);
-
+  const [campaignIds, setCampaignIds] = useState([]);
   useEffect(() => {
     // console.log(allConnections.allConnections);
     if (typeof allConnections.allConnections !== "undefined") {
       if (typeof allConnections.allConnections.data !== "undefined") {
-        // console.log(allConnections.allConnections);
         setConnectionsData(allConnections.allConnections.data);
       }
     }
@@ -33,7 +35,6 @@ export default function ConnectionsInner() {
   const [page, setPage] = useState(1);
   const [perPage] = useState(10);
   const [pageCount, setPageCount] = useState(0);
-  const [, setNumberOfClient] = useState(0);
   const [viewAll, setViewAll] = useState(false);
   const [rows, setRows] = useState([]);
   const [searchData, setSearchData] = useState("");
@@ -44,6 +45,17 @@ export default function ConnectionsInner() {
         var zz = thisdata.Name.toLowerCase();
         var mm = thisdata.ContactEmail.toLowerCase();
         var yy = searchData.toLowerCase();
+
+        if (
+          Number(campaignIdFilter) !== Number(thisdata.campaign_id) &&
+          !viewAll
+        ) {
+          if (campaignIdFilter !== "") {
+            console.log(Number(campaignIdFilter), Number(thisdata.campaign_id));
+            return false;
+          }
+        }
+
         if (zz.includes(yy)) {
           return true;
         } else if (mm.includes(yy)) {
@@ -54,15 +66,19 @@ export default function ConnectionsInner() {
       });
       setRows(tempdata);
     }
-  }, [connectionsData, searchData]);
+  }, [connectionsData, searchData, campaignIdFilter]);
 
   useEffect(() => {
     getpaginatedClients(page);
   }, [page, rows]);
+  // clientsToDisplay
+  useEffect(() => {
+    getCampaignsId();
+  }, [clientsToDisplay]);
 
   useEffect(() => {
     if (viewAll) {
-      setClientsToDisplay(rows);
+      setClientsToDisplay(connectionsData);
     } else {
       setClientsToDisplay(paginatedClients);
     }
@@ -70,7 +86,6 @@ export default function ConnectionsInner() {
 
   const getpaginatedClients = (page) => {
     var no_of_clients = rows.length;
-    setNumberOfClient(no_of_clients);
     setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
     var cc = rows.filter((thisdata, index) => {
       var pageFirst = (page - 1) * perPage;
@@ -83,7 +98,17 @@ export default function ConnectionsInner() {
     });
     setpaginatedClients(cc);
   };
-
+  const onlyUnique = (value, index, self) => {
+    return self.indexOf(value) === index;
+  };
+  const getCampaignsId = () => {
+    var allC = [];
+    for (var i = 0; i < connectionsData.length; i++) {
+      allC.push(connectionsData[i].campaign_id);
+    }
+    var unique = allC.filter(onlyUnique);
+    setCampaignIds(unique);
+  };
   const showPaginationList = () => {
     let arr = Array.apply(null, { length: pageCount }).map(Number.call, Number);
     return (
@@ -136,6 +161,22 @@ export default function ConnectionsInner() {
               <div className="card-header table-card-head d-flex justify-content-between">
                 <h5 className="card-title mb-0 table-title">Connections</h5>
                 <div className="dashboard-attr">
+                  <select
+                    className="form-select form-select-sm camp-select"
+                    aria-label="Default select example"
+                    onChange={(e) => setCampaignIdFilter(e.target.value)}
+                  >
+                    <option selected value="">
+                      Select a campaign
+                    </option>
+                    {campaignIds.map((thisCampaignId, index) => {
+                      return (
+                        <option value={thisCampaignId} key={index}>
+                          {thisCampaignId}
+                        </option>
+                      );
+                    })}
+                  </select>
                   <div className="input-group input-group-navbar">
                     <img
                       src="assets/img/search-1.svg"
@@ -154,11 +195,18 @@ export default function ConnectionsInner() {
                       }}
                     />
                   </div>
-                  <button type="button" className="btn-dashboard">
-                    Dashboard list
-                  </button>
+                  <CSVLink
+                    data={connectionsData}
+                    download="Reachio-Clients-list.csv"
+                    className="csv-link"
+                  >
+                    <button type="button" className="btn-dashboard">
+                      Dashboard list
+                    </button>
+                  </CSVLink>
                 </div>
               </div>
+
               <table className="table table-hover my-1">
                 <thead>
                   <tr>

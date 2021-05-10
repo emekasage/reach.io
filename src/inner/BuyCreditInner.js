@@ -11,6 +11,7 @@ export default function BuyCreditInner() {
     setModalPage,
     creditTransaction,
     transaction,
+    userDetails,
   } = useContext(providerFunctions);
 
   useEffect(() => {
@@ -82,7 +83,7 @@ export default function BuyCreditInner() {
         <div className="credit-dtls">
           <div className="total-credit">
             <h6>Your total credit</h6>
-            <p>12,340</p>
+            <p>{userDetails.user.credits}</p>
           </div>
 
           <div className="credit-btn d-flex align-items-center">

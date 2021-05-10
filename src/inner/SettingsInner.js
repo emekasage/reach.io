@@ -81,12 +81,15 @@ export default function SettingsInner() {
                     <span>
                       <img
                         src={
-                          userDetails.user.avatar !== "undefined"
+                          userDetails.user.avatar !== ""
                             ? userDetails.user.avatar
                             : "../../assets/img/profile-avatar.png"
                         }
                         style={{
-                          background: "url(" + userDetails.user.avatar + " ) ",
+                          background:
+                            "url(" +
+                            userDetails.user.avatar +
+                            "../../assets/img/profile-avatar.png)",
                           width: "6em",
                           height: "6em",
                           backgroundSize: "cover",

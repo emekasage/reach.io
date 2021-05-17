@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 
 import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
@@ -63,6 +63,7 @@ export default function Routes() {
           path="/admin/campaign"
           component={loggedIn ? AdminCampaign : AdminLogin}
         />
+        <Redirect to="/login" />
       </Switch>
     </div>
   );

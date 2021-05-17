@@ -30,6 +30,14 @@ export default function BuyCreditInner() {
   }, [transaction]);
 
   useEffect(() => {
+    console.log(userDetails);
+    if (typeof userDetails.userCredit !== "undefined") {
+      console.log(userDetails.userCredit);
+      // setCreditData(transaction.transaction.data);
+    }
+  }, [transaction]);
+
+  useEffect(() => {
     console.log(creditData);
   }, [creditData]);
 
@@ -37,8 +45,6 @@ export default function BuyCreditInner() {
   const [TransactionToDisplay, setTransactionToDisplay] = useState([]);
   const [page] = useState(1);
   const [perPage] = useState(10);
-  const [, setPageCount] = useState(0);
-  const [, setNumberOfClient] = useState(0);
   const [viewAll] = useState(false);
 
   useEffect(() => {
@@ -54,9 +60,9 @@ export default function BuyCreditInner() {
   }, [viewAll, creditData, paginatedClients]);
 
   const getpaginatedClients = (page) => {
-    var no_of_clients = creditData.length;
-    setNumberOfClient(no_of_clients);
-    setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
+    // var no_of_clients = creditData.length;
+    // setNumberOfClient(no_of_clients);
+    // setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
     var cc = creditData.filter((thisdata, index) => {
       var pageFirst = (page - 1) * perPage;
       var lastItem = page * perPage - 1;
@@ -83,7 +89,7 @@ export default function BuyCreditInner() {
         <div className="credit-dtls">
           <div className="total-credit">
             <h6>Your total credit</h6>
-            <p>{userDetails.user.credits}</p>
+            <p>{userDetails.userCredit.amount}</p>
           </div>
 
           <div className="credit-btn d-flex align-items-center">
@@ -205,8 +211,8 @@ export default function BuyCreditInner() {
                         <thead>
                           <tr>
                             <th style={{ width: "10%" }}>S/N</th>
-                            <th style={{ width: "10%" }}>Date</th>
-                            <th style={{ width: "70%" }}>Credit</th>
+                            <th style={{ width: "30%" }}>Date</th>
+                            <th style={{ width: "50%" }}>Credit</th>
                             <th style={{ width: "10%" }}>Cost</th>
                           </tr>
                         </thead>
@@ -220,10 +226,13 @@ export default function BuyCreditInner() {
                                 <td>
                                   {moment(
                                     thisTransactionData.created_at
-                                  ).format("MMM Do YY")}
+                                  ).format("lll")}
                                 </td>
-                                <td>2,470</td>
                                 <td>{thisTransactionData.cost}</td>
+                                <td>
+                                  {"£"}
+                                  {thisTransactionData.amount}
+                                </td>
                               </tr>
                             );
                           })}

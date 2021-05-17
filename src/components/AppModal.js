@@ -7,6 +7,11 @@ import AssignCreditsModal from "./AssignCreditsModal";
 import AssignUserModal from "./AssignUserModal";
 import RequestCancelModal from "./RequestCancelModal";
 import ViewCancelRequestModal from "./ViewCancelRequestModal";
+import CreateUserModal from "./CreateUserModal";
+import DeleteUserModal from "./DeleteUserModal";
+import CreateRolesModal from "./CreateRolesModal";
+import DeleteRoleModal from "./DeleteRoleModal";
+import UpdateRoleModal from "./UpdateRoleModal";
 import ClickOutside from "react-click-outside";
 
 export default function Modal() {
@@ -52,6 +57,37 @@ export default function Modal() {
               setShowModal={setShowModal}
               userId={userId}
             ></ViewCancelRequestModal>
+          )}
+
+          {modalPage === "create_user" && (
+            <CreateUserModal
+              setShowModal={setShowModal}
+              userId={userId}
+            ></CreateUserModal>
+          )}
+          {modalPage === "create_role" && (
+            <CreateRolesModal
+              setShowModal={setShowModal}
+              userId={userId}
+            ></CreateRolesModal>
+          )}
+          {modalPage === "delete_user" && (
+            <DeleteUserModal
+              setShowModal={setShowModal}
+              userId={userId}
+            ></DeleteUserModal>
+          )}
+          {modalPage === "delete_role" && (
+            <DeleteRoleModal
+              setShowModal={setShowModal}
+              userId={userId}
+            ></DeleteRoleModal>
+          )}
+          {modalPage === "update_role" && (
+            <UpdateRoleModal
+              setShowModal={setShowModal}
+              userId={userId}
+            ></UpdateRoleModal>
           )}
         </ClickOutside>
       </div>

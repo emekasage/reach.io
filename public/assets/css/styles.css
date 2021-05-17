@@ -317,11 +317,6 @@ ul {
   color: #fff;
 }
 
-/* ul li .nav:focus, ul li a.nav:active,  a.nav.active{
-    background-color: #5A0288 !important;
-    color: #fff !important;
-} */
-
 .menu-img {
   padding-right: 4px;
   font-size: large;
@@ -663,7 +658,7 @@ ul.recharts-default-legend {
 
 .input-group-navbar2 {
   position: relative;
-  width: 350px !important;
+  width: 200px !important;
 }
 
 .input-group-navbar2 input {
@@ -898,8 +893,75 @@ button.admin-ban {
 /*******************
 *** ADMIN ROLES ***
 *******************/
-button .user-plus {
+
+/* Role Nav */
+.role-nav {
+  width: 50%;
+  margin: 0 auto !important;
+}
+
+.role-nav ul li {
+  display: inline;
+  text-align: center;
+}
+
+ul#pills-tab02 {
+  margin: 10px auto !important;
+}
+
+ul#pills-tab02:hover {
+  background: #fff !important;
+}
+
+button.nav-link.usr-btn.active {
+  padding: 0.2rem 1rem;
+  background: #5a0288 !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+button.usr-btn {
+  padding: 0.2rem 1rem;
+  background: #efefef !important;
+  font-weight: 600;
+}
+
+button.usr-btn:hover {
+  background: rgba(90, 2, 136, 0.8);
+}
+
+i.bi.bi-trash {
   font-size: 20px;
+  cursor: pointer;
+  padding-left: 5px;
+}
+
+i.bi.bi-trash:hover {
+  color: rgba(90, 2, 136, 0.8);
+}
+
+.form-check.prm-chck {
+  display: flex;
+  text-align: start;
+  margin-left: 5px;
+}
+
+.roltab-icons {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.bi.bi-pencil-square {
+  padding-right: 5px;
+}
+
+.bi.bi-pencil-square:hover {
+  color: rgba(90, 2, 136, 0.8);
+}
+
+/*End of Role Nav */
+button .user-plus {
+  font-size: 15px;
   padding-right: 5px;
 }
 
@@ -1502,6 +1564,8 @@ span.big-no {
   font-family: "Nunito";
 }
 
+/*** CREDIT MODAL ***/
+
 .card.crd-pay {
   margin: 25px 50px;
 }
@@ -1548,16 +1612,75 @@ span.big-no {
   color: #091e42;
 }
 
-button.paypal-btn {
-  background: #f2ba36;
-  border: 1px solid #e5e5e5;
+.paycrd-btn {
+  padding: 10px 45px;
 }
 
-button.cred-btn {
-  border: 1px solid #e5e5e5;
-  background: #fff;
-  color: #333;
+.paycrd-btn button {
+  width: 100%;
+  font-family: "Nunito" !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  padding: 7px;
+  margin-bottom: 40px;
+  cursor: pointer;
 }
+
+.stripe-btn {
+  background: #fff;
+  border: 2px solid #635bff;
+  position: relative;
+  display: inline-block;
+}
+
+button.stripe-btn img.hover-img {
+  display: none;
+  position: absolute;
+  left: 215.6px;
+  z-index: 100;
+}
+
+button.stripe-btn:hover {
+  border: 2px solid #0a2540;
+}
+
+button.stripe-btn:hover img.hover-img {
+  display: inline-block;
+}
+
+.form-group.crd-dets {
+  text-align: start;
+  padding: 0 45px;
+  font-family: "Nunito";
+}
+
+.crd-dets-head,
+.credamount {
+  padding: 15px !important;
+}
+
+.row.sub-crd-dets {
+  justify-content: space-between !important;
+  display: flex;
+  padding: 10px 45px;
+  text-align: start;
+  font-family: "Nunito";
+}
+
+input.form-control.month {
+  margin-right: 10px;
+}
+
+.cool-crd {
+  font-size: 20px;
+}
+
+i.bi.bi-question-circle-fill {
+  font-size: 12px;
+  padding-left: 3px;
+}
+
+/* End of Credit Modal */
 
 /***User Register Modal ***/
 button.yes-btn {

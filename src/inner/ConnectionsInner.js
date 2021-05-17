@@ -172,7 +172,7 @@ export default function ConnectionsInner() {
                     {campaignIds.map((thisCampaignId, index) => {
                       return (
                         <option value={thisCampaignId} key={index}>
-                          {thisCampaignId}
+                          {thisCampaignId.campaign_name}
                         </option>
                       );
                     })}

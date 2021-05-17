@@ -4,17 +4,25 @@ import { providerFunctions } from "../../provider/FunctionsProvider";
 import DateTime from "../../components/DateTime";
 import { Link } from "react-router-dom";
 import { CSVLink } from "react-csv";
+import moment from "moment";
 
 export default function ClientsInner() {
   const {
     banUser,
     activateUser,
     showSideBar,
+    setUserId,
     allUsers,
     getAllUsers,
     getUserInfo,
+    setShowModal,
+    setModalPage,
+    managedRoles,
+    rolesManagement,
+    setRoleId,
   } = useContext(providerFunctions);
   const [clientsData, setClientsData] = useState([]);
+  const [rolesData, setRolesData] = useState([]);
 
   const [paginatedClients, setpaginatedClients] = useState([]);
   const [clientsToDisplay, setClientsToDisplay] = useState([]);
@@ -29,6 +37,7 @@ export default function ClientsInner() {
   const [userCD, setUserCD] = useState({});
   useEffect(() => {
     getAllUsers();
+    rolesManagement();
   }, []);
 
   useEffect(() => {
@@ -37,6 +46,15 @@ export default function ClientsInner() {
       // console.log(allUsers.Users);
     }
   }, [allUsers]);
+
+  useEffect(() => {
+    // console.log(managedRoles.Roles);
+    if (typeof managedRoles.Roles !== "undefined") {
+      if (typeof managedRoles.Roles.data !== "undefined") {
+        setRolesData(managedRoles.Roles.data);
+      }
+    }
+  }, [managedRoles]);
 
   useEffect(() => {
     if (typeof userProf.id !== "undefined") {
@@ -132,7 +150,7 @@ export default function ClientsInner() {
             <div className="d-flex justify-content-between user-val">
               <div className="heading-col">
                 <h5>
-                  <strong>Clients</strong>
+                  <strong>Admin</strong>
                 </h5>
               </div>
               <div className="date-form">
@@ -143,133 +161,271 @@ export default function ClientsInner() {
             <div className="row">
               <div className="col-12 col-lg-12 col-xxl-12 d-flex user-tab">
                 <div className="card flex-fill">
-                  <div className="card-header table-card-head d-flex justify-content-between">
-                    <h5 className="card-title mb-0 table-title">Clients</h5>
-                    <div className="dashboard-attr">
-                      <div className="input-group input-group-navbar2">
-                        <img
-                          src="../../assets/img/search-1.svg"
-                          alt=""
-                          width="30"
-                          height="50"
-                          className="search-icon"
-                        />
-                        <input
-                          type="text"
-                          className="form-control search-field"
-                          placeholder="Search by email or name"
-                          value={searchData}
-                          onChange={(e) => {
-                            setSearchData(e.target.value);
-                          }}
-                        />
-                      </div>
-                      <CSVLink
-                        data={clientsData}
-                        download="Reachio-Clients-list.csv"
-                        className="csv-link"
-                      >
-                        <button type="button" className="btn-dashboard">
-                          Dashboard list
-                        </button>
-                      </CSVLink>
-                    </div>
-                  </div>
-                  <table className="table table-hover my-1 table-responsive">
-                    <thead>
-                      <tr>
-                        <th scope="col">S/N</th>
-                        <th>Name</th>
-                        <th className="d-none d-xl-table-cell">
-                          Email Address
-                        </th>
-                        <th className="d-none d-xl-table-cell">
-                          Phone Numbers
-                        </th>
-                        <th className="d-none d-xl-table-cell">Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {clientsToDisplay.map((thisClientData, index) => {
-                        return (
-                          <tr key={index}>
-                            <td>
-                              {!viewAll
-                                ? (page - 1) * perPage + (index + 1)
-                                : index + 1}
-                            </td>
-                            <td
-                              onClick={() => {
-                                setUserProf(thisClientData);
-                                setInnerPage(2);
-                              }}
-                            >
-                              <div className="user-lnk">
-                                {thisClientData.name}
-                              </div>
-                            </td>
-                            <td className="d-none d-xl-table-cell">
-                              <div
-                                className="user-lnk"
-                                onClick={() => {
-                                  setUserProf(thisClientData);
-                                  setInnerPage(2);
-                                }}
-                              >
-                                {thisClientData.email}
-                              </div>
-                            </td>
-                            <td className="d-none d-xl-table-cell">
-                              <div
-                                className="user-lnk"
-                                onClick={() => {
-                                  setUserProf(thisClientData);
-                                  setInnerPage(2);
-                                }}
-                              >
-                                {thisClientData.phone}
-                              </div>
-                            </td>
-                            <td className="d-none d-xl-table-cell">
-                              {thisClientData.status}
-                            </td>
-                            <td>
-                              {thisClientData.status === "inactive" && (
-                                <Link to="#" className="table-icons">
-                                  <i
-                                    className="bi-box-arrow-in-right tabic"
-                                    onClick={() =>
-                                      activateUser(thisClientData.id)
-                                    }
-                                  ></i>
-                                </Link>
-                              )}
-                              {thisClientData.status === "active" && (
-                                <Link to="#" className="table-icons">
-                                  <i
-                                    className="bi bi-slash-circle tabic"
-                                    onClick={() => banUser(thisClientData.id)}
-                                  ></i>
-                                </Link>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                  <div className="d-flex justify-content-between table-feat">
-                    <div
-                      className="view-more-link"
-                      onClick={() => setViewAll(!viewAll)}
+                  <div className="role-nav">
+                    <ul
+                      className="nav nav-pills role-tabs"
+                      id="pills-tab02"
+                      role="tablist"
                     >
-                      {" "}
-                      {!viewAll ? "View all" : "Show Less"}{" "}
+                      <li className="nav-item one-user">
+                        <button
+                          className="nav-link active mx-1 usr-btn"
+                          id="pills-user-tab"
+                          data-bs-toggle="pill"
+                          data-bs-target="#pills-users"
+                          type="button"
+                          role="tab"
+                          aria-controls="pills-home"
+                          aria-selected="true"
+                        >
+                          Users
+                        </button>
+                      </li>
+                      <li className="nav-item two-role">
+                        <button
+                          className="nav-link mx-1 usr-btn"
+                          id="pills-role-tab"
+                          data-bs-toggle="pill"
+                          data-bs-target="#pills-roles"
+                          type="button"
+                          role="tab"
+                          aria-controls="pills-home"
+                          aria-selected="false"
+                        >
+                          Roles
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="tab-content" id="pills-tabContent">
+                    {/* USERS TAB */}
+                    <div
+                      className="tab-pane fade show active"
+                      id="pills-users"
+                      role="tabpanel"
+                      aria-labelledby="pills-user-tab"
+                    >
+                      <div className="card-header table-card-head d-flex justify-content-between">
+                        <h5 className="card-title mb-0 table-title">Clients</h5>
+                        <div className="dashboard-attr">
+                          <div className="input-group input-group-navbar2">
+                            <img
+                              src="../../assets/img/search-1.svg"
+                              alt=""
+                              width="30"
+                              height="50"
+                              className="search-icon"
+                            />
+                            <input
+                              type="text"
+                              className="form-control search-field"
+                              placeholder="Search by email or name"
+                              value={searchData}
+                              onChange={(e) => {
+                                setSearchData(e.target.value);
+                              }}
+                            />
+                          </div>
+                          <CSVLink
+                            data={clientsData}
+                            download="Reachio-Clients-list.csv"
+                            className="csv-link"
+                          >
+                            <button type="button" className="btn-dashboard">
+                              Dashboard list
+                            </button>
+                          </CSVLink>
+                          <button
+                            type="button"
+                            className="btn-dashboard"
+                            onClick={() => {
+                              setShowModal(true);
+                              setModalPage("create_user");
+                            }}
+                          >
+                            <i className="bi bi-person-plus user-plus"></i>
+                            Add New User
+                          </button>
+                        </div>
+                      </div>
+                      <table className="table table-hover my-1 table-responsive">
+                        <thead>
+                          <tr>
+                            <th scope="col">S/N</th>
+                            <th style={{ width: "25%" }}>Name</th>
+                            <th style={{ width: "25%" }}>Email Address</th>
+                            <th style={{ width: "20%" }}>Phone Numbers</th>
+                            <th style={{ width: "10%" }}>Status</th>
+                            <th style={{ width: "15%" }}>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {clientsToDisplay.map((thisClientData, index) => {
+                            return (
+                              <tr key={index}>
+                                <td>
+                                  {!viewAll
+                                    ? (page - 1) * perPage + (index + 1)
+                                    : index + 1}
+                                </td>
+                                <td
+                                  onClick={() => {
+                                    setUserProf(thisClientData);
+                                    setInnerPage(2);
+                                  }}
+                                >
+                                  <div className="user-lnk">
+                                    {thisClientData.name}
+                                  </div>
+                                </td>
+                                <td className="d-none d-xl-table-cell">
+                                  <div
+                                    className="user-lnk"
+                                    onClick={() => {
+                                      setUserProf(thisClientData);
+                                      setInnerPage(2);
+                                    }}
+                                  >
+                                    {thisClientData.email}
+                                  </div>
+                                </td>
+                                <td className="d-none d-xl-table-cell">
+                                  <div
+                                    className="user-lnk"
+                                    onClick={() => {
+                                      setUserProf(thisClientData);
+                                      setInnerPage(2);
+                                    }}
+                                  >
+                                    {thisClientData.phone}
+                                  </div>
+                                </td>
+                                <td className="d-none d-xl-table-cell">
+                                  {thisClientData.status}
+                                </td>
+                                <td>
+                                  {thisClientData.status === "inactive" && (
+                                    <Link to="#" className="table-icons">
+                                      <i
+                                        className="bi-box-arrow-in-right tabic"
+                                        onClick={() =>
+                                          activateUser(thisClientData.id)
+                                        }
+                                      ></i>
+                                    </Link>
+                                  )}
+                                  {thisClientData.status === "active" && (
+                                    <Link to="#" className="table-icons">
+                                      <i
+                                        className="bi bi-slash-circle tabic"
+                                        onClick={() =>
+                                          banUser(thisClientData.id)
+                                        }
+                                      ></i>
+                                    </Link>
+                                  )}
+                                  <i
+                                    className="bi bi-trash"
+                                    onClick={() => {
+                                      setShowModal(true);
+                                      setModalPage("delete_user");
+                                      setUserId(thisClientData.id);
+                                    }}
+                                  ></i>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                      <div className="d-flex justify-content-between table-feat">
+                        <div
+                          className="view-more-link"
+                          onClick={() => setViewAll(!viewAll)}
+                        >
+                          {" "}
+                          {!viewAll ? "View all" : "Show Less"}{" "}
+                        </div>
+                        <nav aria-label="Page navigation example">
+                          {viewAll ? "" : showPaginationList()}
+                        </nav>
+                      </div>
                     </div>
-                    <nav aria-label="Page navigation example">
-                      {viewAll ? "" : showPaginationList()}
-                    </nav>
+                    {/* ROLES TAB */}
+                    <div
+                      className="tab-pane fade"
+                      id="pills-roles"
+                      role="tabpanel"
+                      aria-labelledby="pills-role-tab"
+                    >
+                      <div className="card-header table-card-head d-flex justify-content-between">
+                        <h5 className="card-title mb-0 table-title">
+                          Roles and Permissions
+                        </h5>
+                        <div className="dashboard-attr">
+                          <button
+                            type="button"
+                            className="btn-dashboard"
+                            onClick={() => {
+                              setShowModal(true);
+                              setModalPage("create_role");
+                            }}
+                          >
+                            <i className="bi bi-person-plus user-plus"></i>
+                            New Roles and Permissions
+                          </button>
+                        </div>
+                      </div>
+                      <table className="table table-hover my-1 table-responsive">
+                        <thead>
+                          <tr>
+                            <th scope="col">S/N</th>
+                            <th style={{ width: "25%" }}>Role Name</th>
+                            <th style={{ width: "30%" }}>Created On</th>
+                            <th style={{ width: "35%" }}>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {rolesData.map((thisRolesData, index) => {
+                            return (
+                              <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>
+                                  <div className="user-lnk">
+                                    {thisRolesData.name}
+                                  </div>
+                                </td>
+                                <td className="created-on">
+                                  {moment(thisRolesData.created_at).format(
+                                    "lll"
+                                  )}
+                                </td>
+                                <td className="d-none d-xl-table-cell">
+                                  <div className="roltab-icons">
+                                    <i
+                                      className="bi bi-pencil-square roltab1"
+                                      onClick={() => {
+                                        setShowModal(true);
+                                        setModalPage("update_role");
+                                        setRoleId(thisRolesData.id);
+                                      }}
+                                    ></i>
+                                    <i
+                                      className="bi bi-trash roltab2"
+                                      onClick={() => {
+                                        setShowModal(true);
+                                        setModalPage("delete_role");
+                                        setRoleId(thisRolesData.id);
+                                      }}
+                                    ></i>
+                                  </div>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>

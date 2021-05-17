@@ -9,8 +9,8 @@ export default function DashboardInner() {
   const {
     getMetrics,
     metrics,
-    // setShowModal,
-    // setModalPage,
+    setShowModal,
+    setModalPage,
     showSideBar,
     managedCampaigns,
     campaignManagement,
@@ -281,7 +281,7 @@ export default function DashboardInner() {
                               Campaign Status: {toshow.campaign_status}
                             </span>
                           </div>
-                          {/* <div className="status-btn">
+                          <div className="status-btn">
                             <span
                               className="view-canreq"
                               onClick={() => {
@@ -291,7 +291,7 @@ export default function DashboardInner() {
                             >
                               View Cancel Request
                             </span>
-                          </div> */}
+                          </div>
                         </div>
                         <div className="gcgc">
                           <h4 className="my-3">About you</h4>

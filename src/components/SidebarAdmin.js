@@ -36,18 +36,8 @@ export default function Sidebar() {
                 className="nav"
                 activeClassName="nav--active"
               >
-                <i className="bi bi-people menu-img"></i>
-                <span className="menu-text">Users</span>
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/admin/roles"
-                className="nav"
-                activeClassName="nav--active"
-              >
                 <i className="bi bi-clipboard-data menu-img"></i>
-                <span className="menu-text">Roles</span>
+                <span className="menu-text">Admin</span>
               </NavLink>
             </li>
 

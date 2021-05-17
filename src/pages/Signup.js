@@ -49,6 +49,18 @@ export default function Login() {
               </div>
               <div className="mb-3">
                 <input
+                  type="text"
+                  className="form-control input-bx"
+                  onChange={(e) =>
+                    handleSignUpChange(e.target.value, e.target.name)
+                  }
+                  name="company"
+                  id="company-name"
+                  placeholder="Company"
+                />
+              </div>
+              <div className="mb-3">
+                <input
                   type="password"
                   className="form-control input-bx"
                   name="password"

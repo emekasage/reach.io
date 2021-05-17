@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-
+import React, { useState, useContext } from "react";
+import Checkout from "./Checkout";
+import { providerFunctions } from "../provider/FunctionsProvider";
 export default function CreditModal() {
+  const { credit, setCredit } = useContext(providerFunctions);
   const [page, setPage] = useState(1);
   return (
     <div>
@@ -9,6 +11,7 @@ export default function CreditModal() {
           <div className="card-header d-flex justify-content-between mod-head">
             <div className="mod-title">
               <h4>Select a Package</h4>
+              {JSON.stringify(credit)}
             </div>
           </div>
           <div className="my-3 mod-check">
@@ -18,10 +21,19 @@ export default function CreditModal() {
                 type="radio"
                 name="flexRadioDefault"
                 id="flexRadioDefault1"
-                checked
+                value="99"
+                onChange={() => {
+                  setCredit({ credit: 1000, value: 99 });
+                  console.log(32233);
+                }}
               />
               <label className="form-check-label" htmlFor="flexRadioDefault1">
-                2,909 for $345
+                <div className="pckg">
+                  <span className="pckg-name">Starter</span>
+                  <span className="pckg-value">
+                    &nbsp;- 1,000 credits for £99
+                  </span>
+                </div>
               </label>
             </div>
           </div>
@@ -30,11 +42,19 @@ export default function CreditModal() {
               <input
                 className="form-check-input"
                 type="radio"
+                value="299"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
+                onChange={() => {
+                  setCredit({ credit: 4500, value: 299 });
+                  console.log("Yaba");
+                }}
               />
               <label className="form-check-label" htmlFor="flexRadioDefault2">
-                2,909 for $345
+                <div className="pckg">
+                  <span>Individual</span>
+                  <span> &nbsp;- 4,500 credits for £299</span>
+                </div>
               </label>
             </div>
           </div>
@@ -43,11 +63,18 @@ export default function CreditModal() {
               <input
                 className="form-check-input"
                 type="radio"
+                value="999"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
+                onChange={() => {
+                  setCredit({ credit: 20000, value: 999 });
+                }}
               />
               <label className="form-check-label" htmlFor="flexRadioDefault2">
-                2,909 for $345
+                <div className="pckg">
+                  <span>Team</span>
+                  <span> &nbsp;- 20,000 credits for £999</span>
+                </div>
               </label>
             </div>
           </div>
@@ -56,24 +83,18 @@ export default function CreditModal() {
               <input
                 className="form-check-input"
                 type="radio"
+                value="1899"
                 name="flexRadioDefault"
                 id="flexRadioDefault2"
+                onChange={() => {
+                  setCredit({ credit: 50000, value: 1899 });
+                }}
               />
               <label className="form-check-label" htmlFor="flexRadioDefault2">
-                2,909 for $345
-              </label>
-            </div>
-          </div>
-          <div className="my-3 mod-check">
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="flexRadioDefault"
-                id="flexRadioDefault2"
-              />
-              <label className="form-check-label" htmlFor="flexRadioDefault2">
-                2,909 for $345
+                <div className="pckg">
+                  <span>Professional</span>
+                  <span> &nbsp;- 50,000 credits for £1899</span>
+                </div>
               </label>
             </div>
           </div>
@@ -91,19 +112,21 @@ export default function CreditModal() {
 
       {page === 2 && (
         <div>
-          <div className="card-header d-flex justify-content-between mod-head">
+          <div className="card-header d-flex justify-content-between crd-dets-head">
             <div className="mod-title">
               <h4>Payment Method</h4>
             </div>
 
-            <a
-              className="back-lnk"
-              onClick={() => {
-                setPage(1);
-              }}
-            >
-              Go back
-            </a>
+            <div className="crd-lnk">
+              <a
+                className="back-lnk"
+                onClick={() => {
+                  setPage(1);
+                }}
+              >
+                Go back
+              </a>
+            </div>
           </div>
           <div className="card crd-pay">
             <div className="card-body inner-crd-pay">
@@ -113,38 +136,54 @@ export default function CreditModal() {
               </div>
               <div className="crd-pay-list">
                 <div className="crd-value">
-                  <p>2909 Credit</p>
+                  <p>{credit.credit} Credit</p>
                   <p>Tax</p>
                 </div>
                 <div className="crd-value">
-                  <p>$395</p>
+                  <p>£{credit.value}</p>
                   <p>Nil</p>
                 </div>
               </div>
               <div className="crd-subtotal">
                 <p>Subtotal</p>
-                <p>$395</p>
+                <p>£{credit.value}</p>
               </div>
             </div>
           </div>
-          <div className="my-2 mod-btn">
-            <button
-              className="paypal-btn"
+          <div className="my-2 paycrd-btn">
+            <Checkout
+              credit={credit}
+              className="stripe-btn"
               onClick={() => {
-                setPage(2);
+                setPage(3);
               }}
-            >
-              <img src="../../assets/img/group-paypal.svg" alt="" />
-            </button>
-            <button
-              className="cred-btn"
-              onClick={() => {
-                setPage(2);
-              }}
-            >
-              <i className="bi bi-credit-card-2-back"></i>
-              &nbsp;Debit or Credit Card
-            </button>
+            />
+          </div>
+        </div>
+      )}
+
+      {page === 3 && (
+        <div>
+          <div className="card-header d-flex justify-content-between crd-dets-head">
+            <div className="mod-title">
+              <h4>Card Details</h4>
+            </div>
+
+            <div className="crd-lnk">
+              <a
+                className="back-lnk"
+                onClick={() => {
+                  setPage(2);
+                }}
+              >
+                Go back
+              </a>
+            </div>
+          </div>
+
+          <div className="success-page">
+            <i className="bi bi-check-circle"></i>
+            <p>You have successfully created a new user.</p>
           </div>
         </div>
       )}

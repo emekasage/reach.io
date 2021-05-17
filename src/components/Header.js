@@ -101,7 +101,11 @@ export default function Header() {
                 aria-expanded="false"
               >
                 <img
-                  src={userDetails.user.avatar}
+                  src={
+                    userDetails.user.avatar !== null
+                      ? userDetails.user.avatar
+                      : "https://www.seekpng.com/png/detail/514-5147412_default-avatar-icon.png"
+                  }
                   alt={userDetails.user.name}
                   style={{
                     background: "url(" + userDetails.user.avatar + " ) ",

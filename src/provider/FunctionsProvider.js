@@ -5,10 +5,12 @@ import { useHistory } from "react-router-dom";
 
 const FunctionsProvider = (props) => {
   const [showSideBar, setShowSideBar] = useState(true);
+  const [credit, setCredit] = useState({ credit: 0, value: 0 });
   const [showModal, setShowModal] = useState(false);
   const [modalPage, setModalPage] = useState("");
   const { enqueueSnackbar } = useSnackbar();
   const [userId, setUserId] = useState("");
+  const [roleId, setRoleId] = useState("");
   const [campaignId, setCampaignId] = useState(null);
   const [imageFile, setImageFile] = useState([]);
   const [token, setToken] = useState("");
@@ -33,20 +35,23 @@ const FunctionsProvider = (props) => {
   const [managedRoles, setManagedRoles] = useState({
     Roles: { data: [] },
   });
+  const [allPermissions, setAllPermissions] = useState({});
   const [showForgotPasswordSuccess, setShowForgotPasswordSuccess] = useState(
     ""
   );
 
   const [creditMessage, setCreditMessage] = useState([]);
   const [assignUserMessage, setAssignUserMessage] = useState({});
+  const [deleteUserMessage, setDeleteUserMessage] = useState("");
+  const [buyCreditMessage, setBuyCreditMessage] = useState("");
   const [creditStatus, setCreditStatus] = useState(false);
   const [changePass, setChangePass] = useState({});
   const [changeUserPass, setChangeUserPass] = useState({
     current_pwd: "",
     new_pwd: "",
   });
-
   const [changeUserDets, setChangeUserDets] = useState({});
+  const [utilization, setUtilization] = useState({});
   const [cancellationMsg, setCancellationMsg] = useState([]);
   const [cancellationStatus, setCancellationStatus] = useState(false);
 
@@ -90,11 +95,11 @@ const FunctionsProvider = (props) => {
       .then((result) => {
         setUserDetails(result);
         setLoggedIn(true);
-        // alert("User Logged In");
         enqueueSnackbar("Log in Successfull", { variant: "success" });
       })
       .catch((error) => console.log("error", error));
   };
+
   const login = (email, password) => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -343,6 +348,7 @@ const FunctionsProvider = (props) => {
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
   };
+  /* End of Create Campain */
 
   const approveCampaign = (campaignId) => {
     var myHeaders = new Headers();
@@ -392,6 +398,39 @@ const FunctionsProvider = (props) => {
         enqueueSnackbar("Campaign Declined Successfully", {
           variant: "success",
         });
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const createUser = (newUser) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      name: newUser.name,
+      email: newUser.email,
+      company: newUser.company,
+      password: newUser.password,
+      confirm_password: newUser.confirm_password,
+      roles: newUser.role,
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/user/create",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {
+        getAllUsers();
+        console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -552,6 +591,28 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const deleteUser = (userId) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/user/" + userId,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setDeleteUserMessage(result);
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const getUserInfo = async (userId) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
@@ -591,7 +652,6 @@ const FunctionsProvider = (props) => {
       .then((response) => response.json())
       .then((result) => {
         setLinkedlnUsers(result);
-        // console.log();
       })
       .catch((error) => console.log("error", error));
   };
@@ -814,6 +874,101 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const createRoles = (newRole, newRoleName) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      name: newRoleName,
+      permission: newRole,
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/role/add/",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  const deleteRole = (roleId) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/role/delete/" + roleId,
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const updateRole = (changeRole, roleId) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      name: changeRole.name,
+      permission: [1, 2, 3, 4],
+    });
+
+    var requestOptions = {
+      method: "PUT",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/role/update/" + roleId,
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  const getPermission = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/permissions",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setAllPermissions(result);
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const rolesManagement = () => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
@@ -831,6 +986,48 @@ const FunctionsProvider = (props) => {
       .then((response) => response.json())
       .then((result) => {
         setManagedRoles(result);
+        // console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const purchaseCredits = (
+    amount,
+    stripe_token,
+    exp_month,
+    exp_year,
+    card_no,
+    cvc
+  ) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      amount: amount,
+      stripeToken: stripe_token,
+      card: {
+        exp_month: exp_month,
+        exp_year: exp_year,
+        number: card_no,
+        cvc: cvc,
+      },
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/purchase-credits",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {
+        getUserDetails();
         console.log(result);
       })
       .catch((error) => console.log("error", error));
@@ -853,6 +1050,28 @@ const FunctionsProvider = (props) => {
       .then((response) => response.json())
       .then((result) => {
         setTransaction(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const creditUtilization = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/campaign-transactions",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {
+        setUtilization(result);
+        console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -945,6 +1164,8 @@ const FunctionsProvider = (props) => {
         resetPassword,
         resetPass,
         creditMessage,
+        credit,
+        setCredit,
         setResetPass,
         showForgotPasswordSuccess,
         setShowForgotPasswordSuccess,
@@ -996,6 +1217,24 @@ const FunctionsProvider = (props) => {
         rolesManagement,
         managedRoles,
         setManagedRoles,
+        createUser,
+        deleteUser,
+        createRoles,
+        getPermission,
+        allPermissions,
+        setAllPermissions,
+        deleteUserMessage,
+        setDeleteUserMessage,
+        deleteRole,
+        roleId,
+        setRoleId,
+        updateRole,
+        purchaseCredits,
+        creditUtilization,
+        buyCreditMessage,
+        setBuyCreditMessage,
+        setUtilization,
+        utilization,
       }}
     >
       {props.children}

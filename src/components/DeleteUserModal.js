@@ -30,7 +30,7 @@ export default function DeleteUserModal(props) {
       {page === 1 && (
         <div>
           <div className="cancelcamp">
-            <h5 key>
+            <h5>
               {/* {JSON.stringify(clientsData.name)} */}
               Are you sure you want to delete this {clientsData.name}
               user?

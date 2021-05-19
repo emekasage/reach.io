@@ -276,6 +276,7 @@ const FunctionsProvider = (props) => {
     )
       .then((response) => response.json())
       .then((result) => {
+        getUserDetails();
         console.log(result);
         // setCreditMessage(result);
         if (typeof result.error == "undefined") {
@@ -848,7 +849,10 @@ const FunctionsProvider = (props) => {
       requestOptions
     )
       .then((response) => response.json())
-      .then((result) => console.log(result))
+      .then((result) => {
+        getUserDetails();
+        console.log(result);
+      })
       .catch((error) => console.log("error", error));
   };
 
@@ -1071,7 +1075,7 @@ const FunctionsProvider = (props) => {
       .then((response) => response.text())
       .then((result) => {
         setUtilization(result);
-        console.log(result);
+        // console.log(result);
       })
       .catch((error) => console.log("error", error));
   };

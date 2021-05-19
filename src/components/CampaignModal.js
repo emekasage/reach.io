@@ -5,6 +5,11 @@ export default function CampaignModal(props) {
   const { createCampaign } = useContext(providerFunctions);
 
   const [page, setPage] = useState(1);
+  const [showCheckMark, setshowCheckMark] = useState(false);
+
+  const handleCheckMark = () => {
+    setshowCheckMark(true);
+  };
 
   const [campaignDetails, setCampaignDetails] = useState({
     name: "",
@@ -63,7 +68,7 @@ export default function CampaignModal(props) {
             <div className="card-header d-flex justify-content-between mod-head">
               <div className="mod-title">
                 <h5>About you</h5>
-                <p>who are you trying to target?</p>
+                <p>Kindly enter a Campaign name</p>
               </div>
 
               <span>
@@ -91,27 +96,7 @@ export default function CampaignModal(props) {
               />
             </div>
 
-            <div className="my-2 mod-form">
-              <label htmlFor="exampleFormControlInput1" className="form-label">
-                Email Address*
-              </label>
-              <input
-                type="email"
-                className="form-control form-control-lg mod-input"
-                value={
-                  typeof campaignDetails["email"] === "undefined"
-                    ? ""
-                    : campaignDetails["email"]
-                }
-                onChange={(e) => {
-                  var cc = { ...campaignDetails };
-                  cc.email = e.target.value;
-                  setCampaignDetails(cc);
-                }}
-                id="campaign_email"
-              />
-            </div>
-            <div className="my-2 mod-form">
+            {/* <div className="my-2 mod-form">
               <label htmlFor="exampleFormControlInput1" className="form-label">
                 Company Name*
               </label>
@@ -130,7 +115,7 @@ export default function CampaignModal(props) {
                 }}
                 id="campaign_company"
               />
-            </div>
+            </div> */}
             {/* <div className="my-2 mod-form">
               <label htmlFor="exampleFormControlInput1" className="form-label">
                 Attach any file that you might want to share
@@ -196,6 +181,13 @@ export default function CampaignModal(props) {
               }}
             >
               <h6>Company Search</h6>
+              {showCheckMark ? (
+                <div className="check-icon">
+                  <i className="bi bi-check-circle"></i>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
             <div
               className="my-3 mod-check"
@@ -245,7 +237,7 @@ export default function CampaignModal(props) {
             <div className="card-header d-flex justify-content-between mod-head">
               <div className="mod-title">
                 <h5>Company Search</h5>
-                <p>Search filters</p>
+                <p>Use the search filters to find your target companies</p>
               </div>
 
               <span>
@@ -326,23 +318,31 @@ export default function CampaignModal(props) {
             </div>
             <div className="my-2 mod-form">
               <label htmlFor="exampleFormControlInput1" className="form-label">
-                Headquarters Region
+                Leadership Hire
               </label>
-              <input
-                type="text"
-                className="form-control form-control-lg mod-input"
-                id="exampleFormControlInput1"
+              <select
+                className="form-select form-select-lg mod-select"
+                aria-label="Default select example"
                 onChange={(e) => {
                   var cc = { ...campaignDetails };
-                  cc.duration = e.target.value;
+                  cc.crm = e.target.value;
                   setCampaignDetails(cc);
                 }}
                 value={
-                  typeof campaignDetails["duration"] === "undefined"
+                  typeof campaignDetails["crm"] === "undefined"
                     ? ""
-                    : campaignDetails["duration"]
+                    : campaignDetails["crm"]
                 }
-              />
+              >
+                <option selected hidden className="slct-plchldr">
+                  Choose
+                </option>
+                <option value="1">Past 30 days</option>
+                <option value="2">Past 60 days</option>
+                <option value="3">Past 90 days</option>
+                <option value="3">Past Year</option>
+                <option value="3">Custom date range</option>
+              </select>
             </div>
             <div className="my-2 mod-form">
               <label htmlFor="exampleFormControlInput1" className="form-label">
@@ -573,6 +573,7 @@ export default function CampaignModal(props) {
               <button
                 onClick={() => {
                   setPage(2);
+                  handleCheckMark();
                 }}
               >
                 Finish

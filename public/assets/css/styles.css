@@ -1442,6 +1442,8 @@ button.assign-btn {
   border: 1px solid #efefef;
   margin: 0 50px;
   padding: 15px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .mod-check:hover {
@@ -1498,6 +1500,15 @@ button.assign-btn {
   color: #5a0288;
   font-size: 14px;
   font-weight: 600;
+}
+
+.check-icon {
+  padding: 0 15px;
+}
+
+.check-icon .bi-check-circle {
+  font-size: 20px;
+  color: #09d105;
 }
 /* end of new create campaign */
 

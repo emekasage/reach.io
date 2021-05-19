@@ -33,7 +33,7 @@ export default function AssignCreditsModal(props) {
       <div className="d-flex justify-content-between mod-head">
         <div className="total-credit">
           <h6>Your total credit</h6>
-          <p>{userDetails.user.credits}</p>
+          <p>{userDetails.userCredit.amount}</p>
         </div>
       </div>
 

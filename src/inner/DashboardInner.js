@@ -69,7 +69,7 @@ export default function DashboardInner() {
           }
         }
       });
-      tempdata;
+      // tempdata;
     }
   }, [connectionsData, campaignIdFilter]);
 

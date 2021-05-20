@@ -81,9 +81,9 @@ export default function SettingsInner() {
                     <span>
                       <img
                         src={
-                          userDetails.user.avatar !== "undefined"
+                          userDetails.user.avatar !== null
                             ? userDetails.user.avatar
-                            : "../../assets/img/profile-avatar.png"
+                            : "https://www.seekpng.com/png/detail/514-5147412_default-avatar-icon.png"
                         }
                         style={{
                           background: "url(" + userDetails.user.avatar + " ) ",

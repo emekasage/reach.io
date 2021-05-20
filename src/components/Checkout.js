@@ -55,7 +55,7 @@ export default function Checkout() {
         stripeKey="pk_test_51I78LwI1IGg378hlHDoOdRJgHbw6izVv1uIiSwNeMx4VcwR0QEM8eodskwAfx9TFikxoFLDQhbJYNvZHiFPU1OiQ00s3WcCXG9"
         token={onToken}
         label={"Make Payment £" + credit.value}
-        success_url="./pages/Dashboard"
+        success_url="https://example.com/success"
       ></StripeCheckout>
     </div>
   );

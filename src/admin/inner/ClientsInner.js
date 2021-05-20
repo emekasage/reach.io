@@ -461,9 +461,9 @@ export default function ClientsInner() {
                     <div className="user-info">
                       <img
                         src={
-                          userProf.avatar !== "undefined"
+                          userProf.avatar !== null
                             ? userProf.avatar
-                            : "../../assets/img/profile-avatar.png"
+                            : "https://www.seekpng.com/png/detail/514-5147412_default-avatar-icon.png"
                         }
                         style={{
                           background:

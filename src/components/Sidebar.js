@@ -11,7 +11,7 @@ export default function Sidebar() {
   };
 
   const handleCancel = () => {
-    console.log("working");
+    // console.log("working");
     setshowToolTip(false);
   };
 

@@ -12,13 +12,17 @@ export default function BuyCreditInner() {
     creditTransaction,
     transaction,
     userDetails,
+    creditUtilization,
+    utilization,
   } = useContext(providerFunctions);
 
   useEffect(() => {
     creditTransaction();
+    creditUtilization();
   }, []);
 
   const [creditData, setCreditData] = useState([]);
+  const [creditUsed, setCreditUsed] = useState([]);
 
   useEffect(() => {
     console.log(transaction.transaction);
@@ -30,7 +34,17 @@ export default function BuyCreditInner() {
   }, [transaction]);
 
   useEffect(() => {
-    console.log(userDetails);
+    console.log(utilization.transaction);
+    if (typeof utilization.transaction !== "undefined") {
+      if (typeof utilization.transaction.data !== "undefined") {
+        setCreditUsed(utilization.transaction.data);
+        console.log(utilization.transaction.data);
+      }
+    }
+  }, [utilization]);
+
+  useEffect(() => {
+    // console.log(userDetails);
     if (typeof userDetails.userCredit !== "undefined") {
       console.log(userDetails.userCredit);
       // setCreditData(transaction.transaction.data);
@@ -39,6 +53,7 @@ export default function BuyCreditInner() {
 
   useEffect(() => {
     console.log(creditData);
+    console.log(creditUsed);
   }, [creditData]);
 
   const [paginatedClients, setpaginatedClients] = useState([]);
@@ -132,17 +147,17 @@ export default function BuyCreditInner() {
                     >
                       <li>
                         <a className="dropdown-item" href="#">
-                          Action
+                          Last Week
                         </a>
                       </li>
                       <li>
                         <a className="dropdown-item" href="#">
-                          Another action
+                          Last 2 Weeks
                         </a>
                       </li>
                       <li>
                         <a className="dropdown-item" href="#">
-                          Something else here
+                          Last 3 Weeks
                         </a>
                       </li>
                     </ul>
@@ -257,54 +272,18 @@ export default function BuyCreditInner() {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-down-left-circle"></i>
-                            </td>
-                            <td>Jan 12</td>
-                            <td>Candidate LinkedIn Engage-</td>
-                            <td>2,470</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-down-left-circle"></i>
-                            </td>
-                            <td>Feb 8</td>
-                            <td>Candidate LinkedIn Engage-</td>
-                            <td>4,875</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-down-left-circle"></i>
-                            </td>
-                            <td>Feb 23</td>
-                            <td>Candidate LinkedIn Engage-</td>
-                            <td>5,466</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-down-left-circle"></i>
-                            </td>
-                            <td>Feb 26</td>
-                            <td>Candidate LinkedIn Engage-</td>
-                            <td>2,096</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-down-left-circle"></i>
-                            </td>
-                            <td>Mar 9</td>
-                            <td>Candidate LinkedIn Engage-</td>
-                            <td>3,679</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <i className="bi bi-arrow-down-left-circle"></i>
-                            </td>
-                            <td>Mar 26</td>
-                            <td>Candidate LinkedIn Engage-</td>
-                            <td>4,688</td>
-                          </tr>
+                          {creditUsed.map((thisCreditUsed) => {
+                            return (
+                              <tr>
+                                <td>
+                                  <i className="bi bi-arrow-down-left-circle"></i>
+                                </td>
+                                <td>{thisCreditUsed}</td>
+                                <td>{thisCreditUsed}</td>
+                                <td>{thisCreditUsed}</td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>

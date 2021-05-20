@@ -107,3 +107,5 @@ dist
 # react build
 build/
 dist/
+
+.env

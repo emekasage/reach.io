@@ -279,8 +279,8 @@ export default function BuyCreditInner() {
                                   <i className="bi bi-arrow-down-left-circle"></i>
                                 </td>
                                 <td>{thisCreditUsed}</td>
-                                <td>Candidate LinkedIn Engage-</td>
-                                <td>2,470</td>
+                                <td>{thisCreditUsed}</td>
+                                <td>{thisCreditUsed}</td>
                               </tr>
                             );
                           })}

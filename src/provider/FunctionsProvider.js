@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
@@ -90,7 +91,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch("https://reachio-api-v1.herokuapp.com/api/user", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "/user", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setUserDetails(result);
@@ -113,7 +114,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch("https://reachio-api-v1.herokuapp.com/api/login", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "/login", requestOptions)
       .then((response) => {
         console.log(response);
         return response.json();
@@ -146,7 +147,7 @@ const FunctionsProvider = (props) => {
       body: raw,
       redirect: "follow",
     };
-    fetch("https://reachio-api-v1.herokuapp.com/api/signin", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "/signin", requestOptions)
       .then((response) => {
         console.log(response);
         return response.json();
@@ -182,7 +183,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch("https://reachio-api-v1.herokuapp.com/api/register", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "/register", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
@@ -210,7 +211,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/user/" + userId + "/ban",
+      process.env.REACT_APP_API_URL + "/admin/user/" + userId + "/ban",
       requestOptions
     )
       .then((response) => response.text())
@@ -238,9 +239,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/user/" +
-        userId +
-        "/activate",
+      process.env.REACT_APP_API_URL + "/admin/user/" + userId + "/activate",
       requestOptions
     )
       .then((response) => response.text())
@@ -270,8 +269,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/assign-credit/" +
-        campaignId,
+      process.env.REACT_APP_API_URL + "/campaign/assign-credit/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -341,12 +339,12 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/create",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/campaign/create", requestOptions)
       .then((response) => response.json())
-      .then((result) => console.log(result))
+      .then((result) => {
+        userCampaign();
+        console.log(result);
+      })
       .catch((error) => console.log("error", error));
   };
   /* End of Create Campain */
@@ -362,8 +360,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/approve-campaign/" +
-        campaignId,
+      process.env.REACT_APP_API_URL + "/admin/approve-campaign/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -388,8 +385,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/cancel-campaign/" +
-        campaignId,
+      process.env.REACT_APP_API_URL + "/admin/cancel-campaign/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -424,10 +420,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/user/create",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/admin/user/create", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         getAllUsers();
@@ -446,10 +439,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/metrics",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/admin/metrics", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setMetrics(result);
@@ -468,7 +458,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/connections/metrics",
+      process.env.REACT_APP_API_URL + "/connections/metrics",
       requestOptions
     )
       .then((response) => response.json())
@@ -488,7 +478,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch("https://reachio-api-v1.herokuapp.com/api/campaigns", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "/campaigns", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setCampaign(result);
@@ -506,7 +496,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/" + campaign_id,
+      process.env.REACT_APP_API_URL + "/campaign/" + campaign_id,
       requestOptions
     )
       .then((response) => response.text())
@@ -531,10 +521,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/cancel",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/campaign/cancel", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -562,10 +549,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/request/camp",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/admin/request/camp", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -581,10 +565,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/users",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/admin/users", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAllUsers(result);
@@ -603,7 +584,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/user/" + userId,
+      process.env.REACT_APP_API_URL + "/admin/user/" + userId,
       requestOptions
     )
       .then((response) => response.json())
@@ -625,7 +606,7 @@ const FunctionsProvider = (props) => {
     };
 
     await fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/user/" + userId,
+      process.env.REACT_APP_API_URL + "/admin/user/" + userId,
       requestOptions
     )
       .then((response) => response.json())
@@ -646,10 +627,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaigns/linkedin-users",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/linkedin-users", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setLinkedlnUsers(result);
@@ -674,7 +652,8 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/assign/linkedin-user/" +
+      process.env.REACT_APP_API_URL +
+        "/campaign/assign/linkedin-user/" +
         campaignId,
       requestOptions
     )
@@ -705,7 +684,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/reset-password-request",
+      process.env.REACT_APP_API_URL + "/reset-password-request",
       requestOptions
     )
       .then((response) => response.json())
@@ -745,8 +724,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/change-password?token=" +
-        passwordToken,
+      process.env.REACT_APP_API_URL + "/change-password?token=" + passwordToken,
       requestOptions
     )
       .then((response) => response.text())
@@ -776,7 +754,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/user/update-profile",
+      process.env.REACT_APP_API_URL + "/user/update-profile",
       requestOptions
     )
       .then((response) => response.text())
@@ -802,7 +780,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/user/update-password",
+      process.env.REACT_APP_API_URL + "/user/update-password",
       requestOptions
     )
       .then((response) => response.text())
@@ -819,10 +797,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/connections?page=1",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/connections?page=1", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAllConnections(result);
@@ -844,10 +819,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/user/upload-image",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/user/upload-image", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         getUserDetails();
@@ -866,10 +838,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/campaigns",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/admin/campaigns", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setManagedCampaigns(result);
@@ -895,10 +864,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/role/add/",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/admin/role/add/", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -915,7 +881,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/role/delete/" + roleId,
+      process.env.REACT_APP_API_URL + "/admin/role/delete/" + roleId,
       requestOptions
     )
       .then((response) => response.text())
@@ -943,7 +909,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/role/update/" + roleId,
+      process.env.REACT_APP_API_URL + "/admin/role/update/" + roleId,
       requestOptions
     )
       .then((response) => response.text())
@@ -961,10 +927,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/permissions",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/admin/permissions", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAllPermissions(result);
@@ -983,10 +946,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/roles",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/admin/roles", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setManagedRoles(result);
@@ -1025,10 +985,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/purchase-credits",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/purchase-credits", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         getUserDetails();
@@ -1047,10 +1004,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/transactions",
-      requestOptions
-    )
+    fetch(process.env.REACT_APP_API_URL + "/transactions", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setTransaction(result);
@@ -1069,7 +1023,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign-transactions",
+      process.env.REACT_APP_API_URL + "/campaign-transactions",
       requestOptions
     )
       .then((response) => response.text())
@@ -1092,7 +1046,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch("https://reachio-api-v1.herokuapp.com/api/logout", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "/logout", requestOptions)
       .then((response) => response.text())
       .then(() => {
         setLoggedIn(false);
@@ -1119,7 +1073,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch("https://reachio-api-v1.herokuapp.com/api/logout", requestOptions)
+    fetch(process.env.REACT_APP_API_URL + "/logout", requestOptions)
       .then((response) => response.text())
       .then(() => {
         setLoggedIn(false);

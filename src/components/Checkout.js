@@ -2,7 +2,9 @@ import React, { useContext } from "react";
 import StripeCheckout from "react-stripe-checkout";
 import { providerFunctions } from "../provider/FunctionsProvider";
 export default function Checkout() {
-  const { credit, purchaseCredits } = useContext(providerFunctions);
+  const { credit, purchaseCredits, setPaymentStatus } = useContext(
+    providerFunctions
+  );
   const onToken = (token, addresses) => {
     console.log(token);
     console.log(addresses);
@@ -14,6 +16,7 @@ export default function Checkout() {
       token.card.last4,
       122
     );
+    setPaymentStatus(true);
     // TODO: Send the token information and any other
     // relevant information to your payment process
     // server, wait for the response, and update the UI

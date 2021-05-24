@@ -16,16 +16,92 @@ export default function DashboardInner() {
     campaignManagement,
     approveCampaign,
     declineCampaign,
+    viewCancelCampaign,
   } = useContext(providerFunctions);
+  const [campaignData, setCampaignData] = useState([]);
+  const [paginatedClients, setpaginatedClients] = useState([]);
+  const [campaignsToDisplay, setCampaignsToDisplay] = useState([]);
+  const [innerPage, setInnerPage] = useState(1);
+  const [perPage] = useState(10);
+  const [pageCount, setPageCount] = useState(0);
+  const [viewAll, setViewAll] = useState(false);
+  const [rows] = useState([]);
 
   useEffect(() => {
     getMetrics();
     campaignManagement();
+    viewCancelCampaign();
   }, []);
 
   useEffect(() => {
-    // console.log(metrics.users);
-  }, [metrics]);
+    console.log(managedCampaigns.campaign);
+    if (typeof managedCampaigns.campaign !== "undefined") {
+      if (typeof managedCampaigns.campaign.data !== "undefined") {
+        setCampaignData(managedCampaigns.campaign.data);
+        console.log(managedCampaigns.campaign.data);
+      }
+    }
+  }, [managedCampaigns]);
+
+  useEffect(() => {
+    getpaginatedClients(page);
+  }, [page, rows]);
+
+  useEffect(() => {
+    if (viewAll) {
+      setCampaignsToDisplay(rows);
+    } else {
+      setCampaignsToDisplay(paginatedClients);
+    }
+  }, [viewAll, campaignData, paginatedClients]);
+
+  const getpaginatedClients = (page) => {
+    var no_of_clients = rows.length;
+    setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
+    var cc = rows.filter((thisdata, index) => {
+      var pageFirst = (page - 1) * perPage;
+      var lastItem = page * perPage - 1;
+      if (index >= pageFirst && index <= lastItem) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    setpaginatedClients(cc);
+  };
+
+  const showPaginationList = () => {
+    let arr = Array.apply(null, { length: pageCount }).map(Number.call, Number);
+    return (
+      <ul className="pgntr">
+        <li
+          className="page-item page-link"
+          onClick={() => (page !== 1 ? setPage(page - 1) : "")}
+        >
+          Prev
+        </li>
+        {arr.map((item) => {
+          return (
+            // eslint-disable-next-line react/jsx-key
+            <li
+              className={`page-item  page-link ${
+                page === item + 1 ? "active" : ""
+              }`}
+              onClick={() => setPage(item + 1)}
+            >
+              {item + 1}
+            </li>
+          );
+        })}
+        <li
+          className="page-item page-link"
+          onClick={() => (page !== pageCount ? setPage(page + 1) : "")}
+        >
+          Next
+        </li>
+      </ul>
+    );
+  };
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -41,7 +117,7 @@ export default function DashboardInner() {
           </div>
         </div>
 
-        {page === 1 && (
+        {innerPage === 1 && (
           <div>
             <div className="row">
               <div className="col-xl-12 col-xxl-12 d-flex camp-flex">
@@ -212,16 +288,14 @@ export default function DashboardInner() {
                   <table className="table table-hover my-1">
                     {typeof managedCampaigns.campaign.data !== "undefined" && (
                       <tbody>
-                        {managedCampaigns.campaign.data.map(
+                        {campaignsToDisplay.map(
                           (thisManagedCampaigns, index) => {
                             return (
                               <tr key={index}>
                                 <td>
-                                  <input
-                                    type="checkbox"
-                                    className="custom-control-input camp-chckbx"
-                                    id="customCheck1"
-                                  />
+                                  {!viewAll
+                                    ? (page - 1) * perPage + (index + 1)
+                                    : index + 1}
                                 </td>
                                 <td>{thisManagedCampaigns.company}</td>
                                 <td>{thisManagedCampaigns.campaign_name}</td>
@@ -236,7 +310,7 @@ export default function DashboardInner() {
                                     onClick={() => {
                                       // console.log(thisManagedCampaigns);
                                       settoshow(thisManagedCampaigns);
-                                      setPage(2);
+                                      setInnerPage(2);
                                     }}
                                   >
                                     View details
@@ -249,13 +323,25 @@ export default function DashboardInner() {
                       </tbody>
                     )}
                   </table>
+                  <div className="d-flex justify-content-between table-feat">
+                    <div
+                      className="view-more-link"
+                      onClick={() => setViewAll(!viewAll)}
+                    >
+                      {" "}
+                      {!viewAll ? "View all" : "Show Less"}{" "}
+                    </div>
+                    <nav aria-label="Page navigation example">
+                      {viewAll ? "" : showPaginationList()}
+                    </nav>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         )}
 
-        {page === 2 && (
+        {innerPage === 2 && (
           <div>
             <div className="row">
               <div className="col-lg-12 col-xxl-12 camp-status">
@@ -263,7 +349,7 @@ export default function DashboardInner() {
                   <a
                     className="back-lnk"
                     onClick={() => {
-                      setPage(1);
+                      setInnerPage(1);
                     }}
                   >
                     Go back

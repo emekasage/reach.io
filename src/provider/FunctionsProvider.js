@@ -5,6 +5,8 @@ import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 
 const FunctionsProvider = (props) => {
+  const [paymentStatus, setPaymentStatus] = useState(false);
+  const [paymentMessage, setPaymentMessage] = useState("");
   const [showSideBar, setShowSideBar] = useState(true);
   const [credit, setCredit] = useState({ credit: 0, value: 0 });
   const [showModal, setShowModal] = useState(false);
@@ -23,6 +25,15 @@ const FunctionsProvider = (props) => {
   const [userDetails, setUserDetails] = useState({});
   const [metrics, setMetrics] = useState({});
   const [connectMetrics, setConnectMetrics] = useState({});
+  const [connectGraph, setConnectGraph] = useState({
+    mon: 0,
+    tue: 0,
+    wed: 0,
+    thur: 0,
+    fri: 0,
+    sat: 0,
+    sun: 0,
+  });
   const [campaign, setCampaign] = useState({
     campaign: { data: [] },
   });
@@ -468,6 +479,24 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const connectionGraph = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(process.env.REACT_APP_API_URL + "/connections/graph", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setConnectGraph(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const userCampaign = () => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
@@ -550,7 +579,26 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(process.env.REACT_APP_API_URL + "/admin/request/camp", requestOptions)
-      .then((response) => response.text())
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  const viewSingleCampaignRequest = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      process.env.REACT_APP_API_URL + "/admin/request/camp/" + requestId,
+      requestOptions
+    )
+      .then((response) => response.json())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
   };
@@ -986,10 +1034,10 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(process.env.REACT_APP_API_URL + "/purchase-credits", requestOptions)
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((result) => {
+        setPaymentMessage(result);
         getUserDetails();
-        console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -1026,10 +1074,9 @@ const FunctionsProvider = (props) => {
       process.env.REACT_APP_API_URL + "/campaign-transactions",
       requestOptions
     )
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((result) => {
         setUtilization(result);
-        // console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -1193,6 +1240,14 @@ const FunctionsProvider = (props) => {
         setBuyCreditMessage,
         setUtilization,
         utilization,
+        connectionGraph,
+        paymentStatus,
+        setPaymentStatus,
+        paymentMessage,
+        setPaymentMessage,
+        connectGraph,
+        setConnectGraph,
+        viewSingleCampaignRequest,
       }}
     >
       {props.children}

@@ -76,7 +76,7 @@ export default function App() {
         <Tooltip />
         <Legend />
         <Bar dataKey="pv" barSize={30} fill="#5A0288" radius={[3, 3, 0, 0]} />
-        <Bar dataKey="uv" barSize={30} fill="#F5F5F5" radius={[3, 3, 0, 0]} />
+        <Bar dataKey="uv" barSize={30} fill="#0dc5ff" radius={[3, 3, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   );

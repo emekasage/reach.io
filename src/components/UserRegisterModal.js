@@ -12,7 +12,15 @@ export default function UserRegisterModal(props) {
 
       <div className="my-3 justify-content-between mod-regbtn">
         <Link to="campaign">
-          <button className="yes-btn">Yes</button>
+          <button
+            className="yes-btn"
+            onClick={() => {
+              // eslint-disable-next-line react/prop-types
+              props.setShowModal(false);
+            }}
+          >
+            Yes
+          </button>
         </Link>
         <button
           className="no-btn"

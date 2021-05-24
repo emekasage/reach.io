@@ -1,8 +1,20 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Checkout from "./Checkout";
 import { providerFunctions } from "../provider/FunctionsProvider";
 export default function CreditModal() {
-  const { credit, setCredit } = useContext(providerFunctions);
+  const {
+    credit,
+    setCredit,
+    paymentStatus,
+    setPaymentStatus,
+    paymentMessage,
+  } = useContext(providerFunctions);
+  useEffect(() => {
+    if (paymentStatus) {
+      setPage(3);
+      setPaymentStatus(false);
+    }
+  }, [paymentStatus]);
   const [page, setPage] = useState(1);
   return (
     <div>
@@ -11,7 +23,7 @@ export default function CreditModal() {
           <div className="card-header d-flex justify-content-between mod-head">
             <div className="mod-title">
               <h4>Select a Package</h4>
-              {JSON.stringify(credit)}
+              {/* {JSON.stringify(credit)} */}
             </div>
           </div>
           <div className="my-3 mod-check">
@@ -181,9 +193,11 @@ export default function CreditModal() {
             </div>
           </div>
 
-          <div className="success-page">
+          <div className="success-page mb-3">
             <i className="bi bi-check-circle"></i>
-            <p>You have successfully created a new user.</p>
+            {/* <p>Payment was successfull</p> */}
+            <p>{JSON.stringify(paymentMessage.message)}</p>
+            <p className="pb-5">Balance: {paymentMessage.balance}</p>
           </div>
         </div>
       )}

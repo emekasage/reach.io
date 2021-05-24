@@ -15,6 +15,8 @@ export default function DashboardInner() {
     getAllUsers,
     connectionMetrics,
     connectMetrics,
+    connectGraph,
+    connectionGraph,
     userConnections,
     allConnections,
     userDetails,
@@ -26,11 +28,12 @@ export default function DashboardInner() {
 
   useEffect(() => {
     connectionMetrics();
+    connectionGraph();
   }, []);
 
   useEffect(() => {
-    // console.log(connectMetrics.noOfConnections);
-  }, [connectMetrics]);
+    console.log(connectGraph.mon);
+  }, [connectGraph]);
 
   useEffect(() => {
     userConnections();
@@ -38,8 +41,6 @@ export default function DashboardInner() {
 
   const [connectionsData, setConnectionsData] = useState([]);
   const [campaignIds, setCampaignIds] = useState([]);
-  const [campaignIdFilter, setCampaignIdFilter] = useState("");
-  const [viewAll] = useState(false);
 
   useEffect(() => {
     // console.log(allConnections.allConnections);
@@ -55,23 +56,6 @@ export default function DashboardInner() {
     // console.log(connectionsData);
     getCampaignsId();
   }, [connectionsData]);
-
-  useEffect(() => {
-    if (typeof connectionsData[0] !== "undefined") {
-      let tempdata = connectionsData.filter((thisdata) => {
-        if (
-          Number(campaignIdFilter) !== Number(thisdata.campaign_id) &&
-          !viewAll
-        ) {
-          if (campaignIdFilter !== "") {
-            console.log(Number(campaignIdFilter), Number(thisdata.campaign_id));
-            return false;
-          }
-        }
-      });
-      // tempdata;
-    }
-  }, [connectionsData, campaignIdFilter]);
 
   const onlyUnique = (value, index, self) => {
     return self.indexOf(value) === index;
@@ -136,7 +120,16 @@ export default function DashboardInner() {
                               <h1 className="mt-1 mb-3">
                                 {connectMetrics.noOfConnections}
                               </h1>
-                              <span className="text-success"> +0% </span>
+                              <span
+                                className={`text-success ${
+                                  connectMetrics.noOfConnections < 7
+                                    ? "text-danger"
+                                    : ""
+                                }`}
+                              >
+                                {" "}
+                                +0%{" "}
+                              </span>
                             </div>
                             <div className="mb-1">
                               <span className="text-muted">
@@ -149,10 +142,16 @@ export default function DashboardInner() {
                               showRadial1 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="0" />
+                            {/* no_of_con_percentage": 0,
+                              "no_of_tel_per": 0,
+                              "no_of_emails_per": 0,
+                              "no_of_replies_per": 0 */}
+                            <RadialChart
+                              value={connectMetrics.no_of_con_percentage}
+                            />
 
                             <span className="percentage d-flex justify-content-center">
-                              0%
+                              {connectMetrics.no_of_con_percentage}%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -197,9 +196,9 @@ export default function DashboardInner() {
                               showRadial2 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="0" />
+                            <RadialChart value={connectMetrics.no_of_tel_per} />
                             <span className="percentage d-flex justify-content-center">
-                              0%
+                              {connectMetrics.no_of_tel_per}%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -245,10 +244,12 @@ export default function DashboardInner() {
                               showRadial3 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="0" />
+                            <RadialChart
+                              value={connectMetrics.no_of_emails_per}
+                            />
 
                             <span className="percentage d-flex justify-content-center">
-                              0%
+                              {connectMetrics.no_of_emails_per}%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -293,10 +294,12 @@ export default function DashboardInner() {
                               showRadial4 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="0" />
+                            <RadialChart
+                              value={connectMetrics.no_of_replies_per}
+                            />
 
                             <span className="percentage d-flex justify-content-center">
-                              0%
+                              {connectMetrics.no_of_replies_per}%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -317,6 +320,7 @@ export default function DashboardInner() {
                 <div className="card flex-fill w-100">
                   <div className="card-header chart-card-text d-flex justify-content-start">
                     <h5 className="card-title mt-2">Connection per week</h5>
+                    {/* {JSON.stringify(connectGraph)} */}
                   </div>
                   <div className="card-body py-3">
                     <StackedBarChart />
@@ -334,7 +338,6 @@ export default function DashboardInner() {
                       <select
                         className="form-select form-select-sm col-select"
                         aria-label="Default select example"
-                        onChange={(e) => setCampaignIdFilter(e.target.value)}
                       >
                         <option selected hidden>
                           Select a campaign

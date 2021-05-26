@@ -54,7 +54,7 @@ export default function BuyCreditInner() {
   useEffect(() => {
     console.log(creditData);
     console.log(creditUsed);
-  }, [creditData]);
+  }, [creditData, creditUsed]);
 
   const [paginatedClients, setpaginatedClients] = useState([]);
   const [TransactionToDisplay, setTransactionToDisplay] = useState([]);
@@ -104,7 +104,11 @@ export default function BuyCreditInner() {
         <div className="credit-dtls">
           <div className="total-credit">
             <h6>Your total credit</h6>
-            <p>{userDetails.userCredit.amount}</p>
+            <p>
+              {typeof userDetails.userCredit.amount !== "undefined"
+                ? userDetails.userCredit.amount
+                : 0}
+            </p>
           </div>
 
           <div className="credit-btn d-flex align-items-center">
@@ -243,7 +247,7 @@ export default function BuyCreditInner() {
                                     thisTransactionData.created_at
                                   ).format("lll")}
                                 </td>
-                                <td>{thisTransactionData.cost}</td>
+                                <td>{thisTransactionData.credits}</td>
                                 <td>
                                   {"£"}
                                   {thisTransactionData.amount}
@@ -266,8 +270,9 @@ export default function BuyCreditInner() {
                         <thead>
                           <tr>
                             <th style={{ width: "10%" }}>S/N</th>
-                            <th style={{ width: "10%" }}>Date</th>
-                            <th style={{ width: "70%" }}>Campaign</th>
+                            <th style={{ width: "20%" }}>Date</th>
+                            <th style={{ width: "20%" }}>Transaction type</th>
+                            <th style={{ width: "40%" }}>Campaign</th>
                             <th style={{ width: "10%" }}>Credit</th>
                           </tr>
                         </thead>
@@ -278,9 +283,14 @@ export default function BuyCreditInner() {
                                 <td>
                                   <i className="bi bi-arrow-down-left-circle"></i>
                                 </td>
-                                <td>{thisCreditUsed}</td>
-                                <td>{thisCreditUsed}</td>
-                                <td>{thisCreditUsed}</td>
+                                <td>
+                                  {moment(thisCreditUsed.created_at).format(
+                                    "lll"
+                                  )}
+                                </td>
+                                <td>{thisCreditUsed.transaction_type}</td>
+                                <td>{thisCreditUsed.campaign}</td>
+                                <td>{thisCreditUsed.credits}</td>
                               </tr>
                             );
                           })}

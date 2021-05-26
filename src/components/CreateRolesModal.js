@@ -39,11 +39,10 @@ export default function CreateUserModal(props) {
               <input
                 type="text"
                 className="form-control form-control-lg mod-input"
-                value={
-                  typeof newRole["name"] === "undefined" ? "" : newRole["name"]
-                }
+                value={typeof newRoleName === "undefined" ? "" : newRoleName}
                 onChange={(e) => {
                   setNewRoleName(e.target.value);
+                  console.log(e.target.value);
                 }}
                 id="role_name"
                 placeholder="Name"
@@ -130,7 +129,7 @@ export default function CreateUserModal(props) {
             </div>
 
             <div className="my-3 mod-btn">
-              <Link to="roles">
+              <Link to="clients">
                 {" "}
                 <button
                   onClick={() => {
@@ -138,7 +137,7 @@ export default function CreateUserModal(props) {
                     props.setShowModal(false);
                   }}
                 >
-                  Go back to Dashboard
+                  Go back to Admin
                 </button>
               </Link>
             </div>

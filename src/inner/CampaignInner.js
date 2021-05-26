@@ -84,7 +84,10 @@ export default function CampaignInner() {
                       return (
                         <tr key={index}>
                           <td>{index + 1}</td>
-                          <td>{thisCampaignData.campaign_name}</td>
+                          <td>
+                            {thisCampaignData.campaign_name}
+                            {console.log(thisCampaignData.id)}
+                          </td>
                           <td>
                             {moment(thisCampaignData.created_at).format("lll")}
                           </td>

@@ -11,22 +11,30 @@ import {
 } from "recharts";
 import { providerFunctions } from "../provider/FunctionsProvider";
 
-export default function StackedBarChart() {
-  const { connectGraph } = useContext(providerFunctions);
+export default function StackedBarChartAdmin() {
+  const { metricsGraph } = useContext(providerFunctions);
+  // const [chartData, setChartData] = useState([]);
   const [datatouse, setDatatouse] = useState([]);
+  // useEffect(() => {
+  //   if (typeof metricsGraph.data !== "undefined") {
+  //     setChartData(metricsGraph.data);
+  //     console.log(metricsGraph.data);
+  //   }
+  // }, [metricsGraph]);
   useEffect(() => {
-    var cc = { ...connectGraph };
+    var cc = { ...metricsGraph };
     console.log(cc);
     var dt = [];
-    dt.push({ name: "Mon", value: cc.mon });
-    dt.push({ name: "Tue", value: cc.tue });
-    dt.push({ name: "Wed", value: cc.wed });
-    dt.push({ name: "Thurs", value: cc.thur });
-    dt.push({ name: "Fri", value: cc.fri });
-    dt.push({ name: "Sat", value: cc.sat });
-    dt.push({ name: "Sun", value: cc.sun });
+    dt.push({ name: "Mon", value: cc.data.mon });
+    dt.push({ name: "Tue", value: cc.data.tue });
+    dt.push({ name: "Wed", value: cc.data.wed });
+    dt.push({ name: "Thurs", value: cc.data.thur });
+    dt.push({ name: "Fri", value: cc.data.fri });
+    dt.push({ name: "Sat", value: cc.data.sat });
+    dt.push({ name: "Sun", value: cc.data.sun });
     setDatatouse(dt);
-  }, [connectGraph]);
+    console.log(dt);
+  }, [metricsGraph]);
   return (
     <ResponsiveContainer width="100%" height={270}>
       <BarChart
@@ -43,9 +51,9 @@ export default function StackedBarChart() {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" tick={{ fontSize: 12, fontFamily: "Nunito" }} />
         <YAxis
-          domain={[0, 100]}
+          domain={[100, 5000]}
           tick={[0, 0.1, 0.2, 0.3, 0.4, 0.5]}
-          tickCount={7}
+          tickCount={21}
           tickFormatter={(tick) => `${tick}`}
         />
         <Tooltip />

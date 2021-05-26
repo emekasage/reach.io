@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { providerFunctions } from "../../provider/FunctionsProvider";
 import RadialChart from "../../components/RadialChart";
-import StackedBarChart from "../../components/StackedBarChart";
+import StackedBarChartAdmin from "../../components/StackedBarChartAdmin";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { CSVLink } from "react-csv";
@@ -17,12 +17,21 @@ export default function DashboardInner() {
     showSideBar,
     allUsers,
     getAllUsers,
-    connectionMetrics,
-    connectMetrics,
+    getMetrics,
+    metrics,
+    metricsGraph,
+    getGraph,
   } = useContext(providerFunctions);
+
+  const [overviewCampaign, setOverviewCampaign] = useState({});
+  const [overviewCredit, setOverviewCredit] = useState({});
+  const [overviewConnection, setOverviewConnection] = useState({});
+  const [overviewUsers, setOverviewUsers] = useState({});
 
   useEffect(() => {
     getAllUsers();
+    getGraph();
+    getMetrics();
   }, []);
   useEffect(() => {
     if (typeof allUsers.Users !== "undefined") {
@@ -31,14 +40,40 @@ export default function DashboardInner() {
   }, [allUsers]);
 
   useEffect(() => {
-    connectionMetrics();
-  }, []);
+    if (typeof metrics.overview !== "undefined") {
+      if (typeof metrics.overview.campaign !== "undefined") {
+        setOverviewCampaign(metrics.overview.campaign);
+      }
+    }
+  }, [metrics]);
 
   useEffect(() => {
-    // console.log(connectMetrics.noOfConnections);
-  }, [connectMetrics]);
+    if (typeof metrics.overview !== "undefined") {
+      if (typeof metrics.overview.credit !== "undefined") {
+        setOverviewCredit(metrics.overview.credit);
+      }
+    }
+  }, [metrics]);
 
-  // console.log(connectMetrics);
+  useEffect(() => {
+    if (typeof metrics.overview !== "undefined") {
+      if (typeof metrics.overview.connection !== "undefined") {
+        setOverviewConnection(metrics.overview.connection);
+      }
+    }
+  }, [metrics]);
+
+  useEffect(() => {
+    if (typeof metrics.overview !== "undefined") {
+      if (typeof metrics.overview.users !== "undefined") {
+        setOverviewUsers(metrics.overview.users);
+      }
+    }
+  }, [metrics]);
+
+  useEffect(() => {
+    // console.log(metricsGraph.data.thur);
+  }, [metricsGraph]);
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -64,7 +99,7 @@ export default function DashboardInner() {
                             className="d-flex justify-content-between top-card-content"
                           >
                             <h5 className="card-title mb-4">
-                              No. of Connections
+                              Total no. of Campaign
                             </h5>
                             <i className="bi bi-circle-half moon"></i>
                           </div>
@@ -75,9 +110,19 @@ export default function DashboardInner() {
                           >
                             <div className="mb-1 mid-card-content">
                               <h1 className="mt-1 mb-3">
-                                {connectMetrics.noOfConnections}
+                                {metrics.all_campaigns}
                               </h1>
-                              <span className="text-success"> +0% </span>
+                              <span
+                                className={`text-success ${
+                                  overviewCampaign.weeklyTotal <
+                                  overviewCampaign.lastWeekTotal
+                                    ? "text-danger"
+                                    : ""
+                                }`}
+                              >
+                                {" "}
+                                +0%{" "}
+                              </span>
                             </div>
                             <div className="mb-1">
                               <span className="text-muted">
@@ -90,10 +135,10 @@ export default function DashboardInner() {
                               showRadial1 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="0" />
+                            <RadialChart value={overviewCampaign.percentage} />
 
                             <span className="percentage d-flex justify-content-center">
-                              0%
+                              {overviewCampaign.percentage}%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -112,7 +157,7 @@ export default function DashboardInner() {
                             className="d-flex justify-content-between top-card-content"
                           >
                             <h5 className="card-title mb-4">
-                              No. of Telephone numbers
+                              Total no. of Clients
                             </h5>
                             <i className="bi bi-circle-half moon"></i>
                           </div>
@@ -122,10 +167,18 @@ export default function DashboardInner() {
                             }`}
                           >
                             <div className="mb-1 mid-card-content">
-                              <h1 className="mt-1 mb-3">
-                                {connectMetrics.noOfTelephone}
-                              </h1>
-                              <span className="text-success"> +0% </span>
+                              <h1 className="mt-1 mb-3">{metrics.users}</h1>
+                              <span
+                                className={`text-success ${
+                                  overviewUsers.weeklyTotal <
+                                  overviewUsers.lastWeekTotal
+                                    ? "text-danger"
+                                    : ""
+                                }`}
+                              >
+                                {" "}
+                                +0%{" "}
+                              </span>
                             </div>
                             <div className="mb-1">
                               <span className="text-muted">
@@ -138,9 +191,9 @@ export default function DashboardInner() {
                               showRadial2 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="0" />
+                            <RadialChart value={overviewUsers.percentage} />
                             <span className="percentage d-flex justify-content-center">
-                              0%
+                              {overviewUsers.percentage}%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -160,7 +213,7 @@ export default function DashboardInner() {
                             className="d-flex justify-content-between top-card-content"
                           >
                             <h5 className="card-title mb-4">
-                              No. of Emails Collected
+                              Total Credit Purchased
                             </h5>
                             <i className="bi bi-circle-half moon"></i>
                           </div>
@@ -171,9 +224,19 @@ export default function DashboardInner() {
                           >
                             <div className="mb-1 mid-card-content">
                               <h1 className="mt-1 mb-3">
-                                {connectMetrics.noOfEmailsCollected}
+                                {overviewCredit.weeklyTotal}
                               </h1>
-                              <span className="text-success"> +0% </span>
+                              <span
+                                className={`text-success ${
+                                  overviewCredit.weeklyTotal <
+                                  overviewCredit.lastWeekTotal
+                                    ? "text-danger"
+                                    : ""
+                                }`}
+                              >
+                                {" "}
+                                +0%{" "}
+                              </span>
                             </div>
                             <div className="mb-1">
                               <span className="text-muted">
@@ -186,10 +249,10 @@ export default function DashboardInner() {
                               showRadial3 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="0" />
+                            <RadialChart value={overviewCampaign.percentage} />
 
                             <span className="percentage d-flex justify-content-center">
-                              0%
+                              {overviewCampaign.percentage}%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -208,7 +271,7 @@ export default function DashboardInner() {
                             className="d-flex justify-content-between top-card-content"
                           >
                             <h5 className="card-title mb-4">
-                              No. of First Replies
+                              Total no. of Connections
                             </h5>
                             <i className="bi bi-circle-half moon"></i>
                           </div>
@@ -219,9 +282,19 @@ export default function DashboardInner() {
                           >
                             <div className="mb-1 mid-card-content">
                               <h1 className="mt-1 mb-3">
-                                {connectMetrics.noOfFirstReplies}
+                                {overviewConnection.weeklyTotal}
                               </h1>
-                              <span className="text-success"> +0% </span>
+                              <span
+                                className={`text-success ${
+                                  overviewConnection.weeklyTotal <
+                                  overviewConnection.lastWeekTotal
+                                    ? "text-danger"
+                                    : ""
+                                }`}
+                              >
+                                {" "}
+                                +0%{" "}
+                              </span>
                             </div>
                             <div className="mb-1">
                               <span className="text-muted">
@@ -234,10 +307,12 @@ export default function DashboardInner() {
                               showRadial4 ? "show" : "hide"
                             }`}
                           >
-                            <RadialChart value="0" />
+                            <RadialChart
+                              value={overviewConnection.percentage}
+                            />
 
                             <span className="percentage d-flex justify-content-center">
-                              0%
+                              {overviewConnection.percentage}%
                             </span>
                             <span className="reach-text d-flex justify-content-center">
                               Reached
@@ -260,7 +335,7 @@ export default function DashboardInner() {
                     <h5 className="card-title mt-2">Connection per week</h5>
                   </div>
                   <div className="card-body py-3">
-                    <StackedBarChart />
+                    <StackedBarChartAdmin />
                   </div>
                 </div>
               </div>

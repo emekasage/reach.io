@@ -15,6 +15,11 @@ const FunctionsProvider = (props) => {
   const [userId, setUserId] = useState("");
   const [roleId, setRoleId] = useState("");
   const [campaignId, setCampaignId] = useState(null);
+  const [requestId, setRequestId] = useState(null);
+  const [cancelRequest, setCancelRequests] = useState({
+    campaign_requests: { data: [] },
+  });
+  const [singleCancelRequest, setSingleCancelRequest] = useState({});
   const [imageFile, setImageFile] = useState([]);
   const [token, setToken] = useState("");
   const [passwordToken, setPasswordToken] = useState("");
@@ -24,6 +29,9 @@ const FunctionsProvider = (props) => {
   const [allUserInfo, setAllUserInfo] = useState("");
   const [userDetails, setUserDetails] = useState({});
   const [metrics, setMetrics] = useState({});
+  const [metricsGraph, setMetricsGraph] = useState({
+    data: { mon: 0, tue: 0, wed: 0, thur: 0, fri: 0, sat: 0, sun: 0 },
+  });
   const [connectMetrics, setConnectMetrics] = useState({});
   const [connectGraph, setConnectGraph] = useState({
     mon: 0,
@@ -458,6 +466,27 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const getGraph = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/graph",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setMetricsGraph(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const connectionMetrics = () => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
@@ -580,7 +609,10 @@ const FunctionsProvider = (props) => {
 
     fetch(process.env.REACT_APP_API_URL + "/admin/request/camp", requestOptions)
       .then((response) => response.json())
-      .then((result) => console.log(result))
+      .then((result) => {
+        setCancelRequests(result);
+        console.log(result);
+      })
       .catch((error) => console.log("error", error));
   };
 
@@ -599,7 +631,9 @@ const FunctionsProvider = (props) => {
       requestOptions
     )
       .then((response) => response.json())
-      .then((result) => console.log(result))
+      .then((result) => {
+        setSingleCancelRequest(result);
+      })
       .catch((error) => console.log("error", error));
   };
 
@@ -890,7 +924,6 @@ const FunctionsProvider = (props) => {
       .then((response) => response.json())
       .then((result) => {
         setManagedCampaigns(result);
-        console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -1248,6 +1281,15 @@ const FunctionsProvider = (props) => {
         connectGraph,
         setConnectGraph,
         viewSingleCampaignRequest,
+        requestId,
+        setRequestId,
+        getGraph,
+        metricsGraph,
+        setMetricsGraph,
+        cancelRequest,
+        setCancelRequests,
+        singleCancelRequest,
+        setSingleCancelRequest,
       }}
     >
       {props.children}

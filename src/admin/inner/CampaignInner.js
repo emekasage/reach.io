@@ -1,11 +1,10 @@
+/* eslint-disable react/jsx-key */
 import React, { useContext, useState, useEffect } from "react";
 import { providerFunctions } from "../../provider/FunctionsProvider";
 import DateTime from "../../components/DateTime";
 import moment from "moment";
 
 export default function DashboardInner() {
-  const [page, setPage] = useState(1);
-  const [toshow, settoshow] = useState({});
   const {
     getMetrics,
     metrics,
@@ -17,45 +16,63 @@ export default function DashboardInner() {
     approveCampaign,
     declineCampaign,
     viewCancelCampaign,
+    viewSingleCampaignRequest,
+    setRequestId,
+    cancelRequest,
   } = useContext(providerFunctions);
+
   const [campaignData, setCampaignData] = useState([]);
-  const [paginatedClients, setpaginatedClients] = useState([]);
+  const [paginatedCampaign, setPaginatedCampaign] = useState([]);
   const [campaignsToDisplay, setCampaignsToDisplay] = useState([]);
   const [innerPage, setInnerPage] = useState(1);
-  const [perPage] = useState(10);
-  const [pageCount, setPageCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [toshow, settoshow] = useState({});
+  const [perPage] = useState(5);
+  const [pageCount, setPageCount] = useState({});
   const [viewAll, setViewAll] = useState(false);
-  const [rows] = useState([]);
+  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     getMetrics();
     campaignManagement();
     viewCancelCampaign();
+    viewSingleCampaignRequest();
   }, []);
 
   useEffect(() => {
-    console.log(managedCampaigns.campaign);
+    // console.log(managedCampaigns.campaign);
     if (typeof managedCampaigns.campaign !== "undefined") {
       if (typeof managedCampaigns.campaign.data !== "undefined") {
         setCampaignData(managedCampaigns.campaign.data);
-        console.log(managedCampaigns.campaign.data);
       }
     }
   }, [managedCampaigns]);
 
   useEffect(() => {
-    getpaginatedClients(page);
+    if (typeof campaignData[0] !== "undefined") {
+      let tempdata = campaignData;
+      setRows(tempdata);
+    }
+  }, [campaignData]);
+  // console.log(managedCampaigns.campaign.from);
+
+  useEffect(() => {
+    // console.log(campaignData);
+  }, [campaignData]);
+
+  useEffect(() => {
+    getPaginatedCampaign(page);
   }, [page, rows]);
 
   useEffect(() => {
     if (viewAll) {
       setCampaignsToDisplay(rows);
     } else {
-      setCampaignsToDisplay(paginatedClients);
+      setCampaignsToDisplay(paginatedCampaign);
     }
-  }, [viewAll, campaignData, paginatedClients]);
+  }, [viewAll, campaignData, paginatedCampaign]);
 
-  const getpaginatedClients = (page) => {
+  const getPaginatedCampaign = (page) => {
     var no_of_clients = rows.length;
     setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
     var cc = rows.filter((thisdata, index) => {
@@ -67,7 +84,7 @@ export default function DashboardInner() {
         return false;
       }
     });
-    setpaginatedClients(cc);
+    setPaginatedCampaign(cc);
   };
 
   const showPaginationList = () => {
@@ -82,7 +99,6 @@ export default function DashboardInner() {
         </li>
         {arr.map((item) => {
           return (
-            // eslint-disable-next-line react/jsx-key
             <li
               className={`page-item  page-link ${
                 page === item + 1 ? "active" : ""
@@ -286,42 +302,40 @@ export default function DashboardInner() {
                     <h5 className="card-title mb-0 table-title">Campaign</h5>
                   </div>
                   <table className="table table-hover my-1">
-                    {typeof managedCampaigns.campaign.data !== "undefined" && (
-                      <tbody>
-                        {campaignsToDisplay.map(
-                          (thisManagedCampaigns, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>
-                                  {!viewAll
-                                    ? (page - 1) * perPage + (index + 1)
-                                    : index + 1}
-                                </td>
-                                <td>{thisManagedCampaigns.company}</td>
-                                <td>{thisManagedCampaigns.campaign_name}</td>
-                                <td>
-                                  {moment(
-                                    thisManagedCampaigns.created_at
-                                  ).format("lll")}
-                                </td>
-                                <td>
-                                  <a
-                                    className="camp-form-lnk"
-                                    onClick={() => {
-                                      // console.log(thisManagedCampaigns);
-                                      settoshow(thisManagedCampaigns);
-                                      setInnerPage(2);
-                                    }}
-                                  >
-                                    View details
-                                  </a>
-                                </td>
-                              </tr>
-                            );
-                          }
-                        )}
-                      </tbody>
-                    )}
+                    <tbody>
+                      {campaignsToDisplay.map((thisManagedCampaigns, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>
+                              <input
+                                type="checkbox"
+                                className="custom-control-input camp-chckbx"
+                                id="customCheck1"
+                              />
+                            </td>
+                            <td>{thisManagedCampaigns.company}</td>
+                            <td>{thisManagedCampaigns.campaign_name}</td>
+                            <td>
+                              {moment(thisManagedCampaigns.created_at).format(
+                                "lll"
+                              )}
+                            </td>
+                            <td>
+                              <a
+                                className="camp-form-lnk"
+                                onClick={() => {
+                                  // console.log(thisManagedCampaigns);
+                                  settoshow(thisManagedCampaigns);
+                                  setInnerPage(2);
+                                }}
+                              >
+                                View details
+                              </a>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
                   </table>
                   <div className="d-flex justify-content-between table-feat">
                     <div
@@ -367,17 +381,28 @@ export default function DashboardInner() {
                               Campaign Status: {toshow.campaign_status}
                             </span>
                           </div>
-                          <div className="status-btn">
-                            <span
-                              className="view-canreq"
-                              onClick={() => {
-                                setShowModal(true);
-                                setModalPage("view_request");
-                              }}
-                            >
-                              View Cancel Request
-                            </span>
-                          </div>
+                          {typeof cancelRequest.campaign_requests.data !==
+                            "undefined" && (
+                            <div className="status-btn">
+                              {cancelRequest.campaign_requests.data.map(
+                                (thisCanceledRequest, index) => {
+                                  return (
+                                    <span
+                                      key={index}
+                                      className="view-canreq"
+                                      onClick={() => {
+                                        setShowModal(true);
+                                        setModalPage("view_request");
+                                        setRequestId(thisCanceledRequest.id);
+                                      }}
+                                    >
+                                      View Cancel Request
+                                    </span>
+                                  );
+                                }
+                              )}
+                            </div>
+                          )}
                         </div>
                         <div className="gcgc">
                           <h4 className="my-3">About you</h4>

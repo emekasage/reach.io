@@ -95,6 +95,8 @@ export default function ClientsInner() {
     }
   }, [viewAll, clientsData, paginatedClients]);
 
+  console.log(clientsToDisplay);
+
   const getpaginatedClients = (page) => {
     var no_of_clients = rows.length;
     setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
@@ -261,6 +263,7 @@ export default function ClientsInner() {
                         </thead>
                         <tbody>
                           {clientsToDisplay.map((thisClientData, index) => {
+                            console.log(thisClientData);
                             return (
                               <tr key={index}>
                                 <td>

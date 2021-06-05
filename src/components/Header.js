@@ -1,11 +1,31 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import { Link } from "react-router-dom";
 
 export default function Header() {
-  const { showSideBar, setShowSideBar, userDetails, logout } = useContext(
-    providerFunctions
-  );
+  const {
+    showSideBar,
+    setShowSideBar,
+    userDetails,
+    userNotifications,
+    userAlert,
+    logout,
+  } = useContext(providerFunctions);
+
+  // const [notify, setNotify] = useState([]);
+
+  useEffect(() => {
+    userNotifications();
+  }, []);
+
+  useEffect(() => {
+    // if (typeof userAlert !== "undefined") {
+    //   if (typeof userAlert.notifications !== undefined) {
+    //     setNotify(userAlert.notifications);
+    //   }
+    // }
+    console.log(userAlert.notifications);
+  }, [userAlert]);
 
   return (
     <div className="header">
@@ -72,24 +92,25 @@ export default function Header() {
                 />
               </a>
               <ul
-                className="dropdown-menu dropdown-menu-end"
+                className="dropdown-menu dropdown-menu-end notify-drop"
                 aria-labelledby="dropdownMenu2"
               >
-                <li>
-                  <button className="dropdown-item" type="button">
-                    Action
-                  </button>
-                </li>
-                <li>
-                  <button className="dropdown-item" type="button">
-                    Another action
-                  </button>
-                </li>
-                <li>
-                  <button className="dropdown-item" type="button">
-                    Something else here
-                  </button>
-                </li>
+                {console.log("test", userAlert.notifications)}
+                {typeof userAlert.notifications !== "undefined" ? (
+                  userAlert.notifications.map((thisNotifyData, index) => {
+                    return (
+                      <li key={index}>
+                        <p className="dropdown-item">{thisNotifyData}</p>
+                      </li>
+                    );
+                  })
+                ) : (
+                  <li>
+                    <p className="dropdown-item">
+                      You currently have no notifications
+                    </p>
+                  </li>
+                )}
               </ul>
             </div>
 

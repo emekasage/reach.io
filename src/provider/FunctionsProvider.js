@@ -74,6 +74,9 @@ const FunctionsProvider = (props) => {
   const [utilization, setUtilization] = useState({});
   const [cancellationMsg, setCancellationMsg] = useState([]);
   const [cancellationStatus, setCancellationStatus] = useState(false);
+  const [userAlert, setUserAlert] = useState({});
+  const [adminAlert, setAdminAlert] = useState({});
+  const [creditUtilized, setCreditUtilized] = useState({});
 
   let history = useHistory();
   // useEffect(() => {
@@ -522,6 +525,28 @@ const FunctionsProvider = (props) => {
       .then((response) => response.json())
       .then((result) => {
         setConnectGraph(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const creditGraph = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/credit/charts",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => {
+        setCreditUtilized(result);
+        // console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -1012,7 +1037,7 @@ const FunctionsProvider = (props) => {
       .then((response) => response.json())
       .then((result) => {
         setAllPermissions(result);
-        console.log(result);
+        // console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -1110,6 +1135,47 @@ const FunctionsProvider = (props) => {
       .then((response) => response.json())
       .then((result) => {
         setUtilization(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const userNotifications = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(process.env.REACT_APP_API_URL + "/notifications", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setUserAlert(result);
+        // console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const adminNotifications = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/notifications",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setAdminAlert(result);
+        // console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -1290,6 +1356,15 @@ const FunctionsProvider = (props) => {
         setCancelRequests,
         singleCancelRequest,
         setSingleCancelRequest,
+        userNotifications,
+        userAlert,
+        setUserAlert,
+        adminNotifications,
+        adminAlert,
+        setAdminAlert,
+        creditGraph,
+        creditUtilized,
+        setCreditUtilized,
       }}
     >
       {props.children}

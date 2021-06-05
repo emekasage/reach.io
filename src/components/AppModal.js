@@ -12,6 +12,7 @@ import DeleteUserModal from "./DeleteUserModal";
 import CreateRolesModal from "./CreateRolesModal";
 import DeleteRoleModal from "./DeleteRoleModal";
 import UpdateRoleModal from "./UpdateRoleModal";
+import AddLeadsModal from "./AddLeadsModal";
 import ClickOutside from "react-click-outside";
 
 export default function Modal() {
@@ -88,6 +89,12 @@ export default function Modal() {
               setShowModal={setShowModal}
               userId={userId}
             ></UpdateRoleModal>
+          )}
+          {modalPage === "add_leads" && (
+            <AddLeadsModal
+              setShowModal={setShowModal}
+              userId={userId}
+            ></AddLeadsModal>
           )}
         </ClickOutside>
       </div>

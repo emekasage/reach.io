@@ -14,11 +14,14 @@ export default function BuyCreditInner() {
     userDetails,
     creditUtilization,
     utilization,
+    creditUtilized,
+    creditGraph,
   } = useContext(providerFunctions);
 
   useEffect(() => {
     creditTransaction();
     creditUtilization();
+    creditGraph();
   }, []);
 
   const [creditData, setCreditData] = useState([]);
@@ -169,6 +172,8 @@ export default function BuyCreditInner() {
                 </div>
 
                 <div className="">
+                  {JSON.stringify(creditUtilized)}
+                  {console.log(creditUtilized.deposit)}
                   <BarChart />
                 </div>
               </div>

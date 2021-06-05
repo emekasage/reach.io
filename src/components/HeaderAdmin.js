@@ -1,11 +1,29 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import { Link } from "react-router-dom";
 
 export default function Header() {
-  const { showSideBar, setShowSideBar, userDetails, logout } = useContext(
-    providerFunctions
-  );
+  const {
+    showSideBar,
+    setShowSideBar,
+    userDetails,
+    adminNotifications,
+    adminAlert,
+    logout,
+  } = useContext(providerFunctions);
+
+  const [notify, setNotify] = useState([]);
+
+  useEffect(() => {
+    adminNotifications();
+  }, []);
+
+  useEffect(() => {
+    if (typeof adminAlert.notifications !== "undefined") {
+      setNotify(adminAlert.notifications);
+      console.log("test");
+    }
+  }, [adminAlert]);
 
   return (
     <div className="header">
@@ -72,24 +90,21 @@ export default function Header() {
                 />
               </a>
               <ul
-                className="dropdown-menu dropdown-menu-end"
+                className="dropdown-menu dropdown-menu-end notify-drop"
                 aria-labelledby="dropdownMenu2"
               >
-                <li>
-                  <button className="dropdown-item" type="button">
-                    Action
-                  </button>
-                </li>
-                <li>
-                  <button className="dropdown-item" type="button">
-                    Another action
-                  </button>
-                </li>
-                <li>
-                  <button className="dropdown-item" type="button">
-                    Something else here
-                  </button>
-                </li>
+                {console.log("test", adminAlert.notifications)}
+                {notify.map((thisAdminAlertData, index) => {
+                  return (
+                    <li key={index}>
+                      <p className="dropdown-item">
+                        {thisAdminAlertData.data.message}
+                        {/* {console.log(thisAdminAlertData.data.message)} */}
+                      </p>
+                    </li>
+                  );
+                })}
+                <button>View ALl</button>
               </ul>
             </div>
 

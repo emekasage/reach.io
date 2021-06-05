@@ -258,6 +258,11 @@ button.dropdown-item {
   font-size: 12px;
 }
 
+.notify-drop {
+  width: 400px;
+  height: auto;
+}
+
 /*** SIDEBAR STYLING ***/
 .sidebar {
   width: 237px;
@@ -414,6 +419,11 @@ ul {
 
 .heading-col h5 {
   font-size: 18px !important;
+}
+
+.heading-col.plus-bck {
+  display: block !important;
+  text-align: start;
 }
 
 h5.cred-rem {
@@ -1080,12 +1090,27 @@ button .user-plus {
   display: flex;
 }
 
+.camp-flow {
+  display: flex;
+}
+
 .tiny-cmp-cards {
   width: 254px;
   height: 170px;
   border: 1px solid #e6e8f1 !important;
   border-radius: 5px !important;
   margin: 0 10px;
+}
+
+.flow-card {
+  border: 1px solid #e6e8f1 !important;
+  border-radius: 5px !important;
+  margin: 0 10px;
+}
+
+.flow-card:hover {
+  border: 1px solid #5a0288 !important;
+  cursor: pointer;
 }
 
 .top-card-content .yo {
@@ -1096,8 +1121,20 @@ button .user-plus {
   margin-top: -20px !important;
 }
 
+.row.flow-type {
+  margin-top: -20px !important;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
 .row .yo {
   margin-top: 25px;
+}
+
+.camp-name {
+  text-align: center;
+  font-size: 16px;
+  color: #333;
 }
 
 a.camp-form-lnk {
@@ -1108,6 +1145,17 @@ a.camp-form-lnk {
 
 a.camp-form-lnk:hover {
   color: #5a0288;
+}
+
+a.camp-back-lnk {
+  color: #5a0288;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+a.camp-back-lnk:hover {
+  color: #0dc5ff;
+  cursor: pointer;
 }
 
 .cmp-adm-tent {
@@ -1250,6 +1298,133 @@ button.decline-btn {
   border-radius: 3px;
 }
 
+.company-steps {
+  margin: 0 auto;
+}
+
+.camp-steps {
+  padding: 8px 200px 8px 200px;
+  font-family: "Nunito";
+  font-weight: 600;
+  margin-bottom: 0 !important;
+}
+
+.engage-steps {
+  padding: 8px 100px 8px 100px;
+  font-family: "Nunito";
+  font-weight: 600;
+  margin-bottom: 0 !important;
+}
+
+.step-1 {
+  background: #c4c4c4;
+  color: #333;
+}
+
+.step-2 {
+  color: #555;
+}
+
+.check-step {
+  background: #5bff69;
+  color: #fff;
+}
+
+.company-search {
+  padding: 10px 150px !important;
+}
+
+.email-search {
+  margin: 0 auto;
+  width: 100%;
+  margin-left: 100px;
+  color: #212529;
+}
+
+.big-add-icon {
+  padding: 100px;
+  font-size: 100px;
+}
+
+.big-add-icon .bi-plus {
+  cursor: pointer;
+}
+
+.big-add-icon .bi-plus:hover {
+  color: #5a0288;
+}
+
+.big-add-icon p {
+  font-size: 16px;
+  font-family: "Nunito";
+}
+
+.eng-row {
+  padding: 0 !important;
+}
+
+.seq_create {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 100px;
+  font-family: "Nunito";
+}
+
+.seq-btn {
+  border: 1px solid #5a0288;
+  background: #5a0288;
+  color: #fff;
+  padding: 7px 25px;
+  font-weight: 600;
+  border-radius: 3px;
+}
+
+.seq-txt {
+  padding: 7px 15px;
+}
+
+/* Add Leads Modal */
+.list-title {
+  color: #555;
+}
+
+.list-title h6 {
+  font-size: 18px;
+  font-weight: 600 !important;
+}
+
+.list-text p {
+  font-family: "Nunito";
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.lead_options {
+  padding-bottom: 50px;
+  font-family: "Nunito";
+  font-weight: 600;
+  display: flex;
+  justify-content: space-around;
+}
+
+.lead_options span:hover {
+  cursor: pointer;
+  background: #f5f5f5;
+  color: #5a0288;
+}
+
+/* End of Add Leads Modal */
+
+.add-steps {
+  display: flex;
+  justify-content: space-around;
+}
+
+.step-prechck {
+  min-height: 0 !important;
+  padding-left: 0 !important;
+  margin-bottom: 0 !important;
+}
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
   .card-body.action-btns {
     padding: 45px 10px;
@@ -1298,7 +1473,15 @@ button.decline-btn {
     display: block !important;
   }
 
+  .camp-flow {
+    display: block !important;
+  }
+
   .tiny-cmp-cards {
+    margin: 10px 0;
+  }
+
+  .flow-card {
     margin: 10px 0;
   }
 }

@@ -8,17 +8,12 @@ export default function CampaignModal(props) {
   const [showCheckMark, setshowCheckMark] = useState(false);
   const [showCheckMarkTwo, setshowCheckMarkTwo] = useState(false);
   const [showCheckMarkThree, setshowCheckMarkThree] = useState(false);
-  const [showInnerEngageCheckMark, setshowInnerEngageCheckMark] = useState(
-    false
-  );
-  const [
-    showInnerEngageCheckMarkTwo,
-    setshowInnerEngageCheckMarkTwo,
-  ] = useState(false);
-  const [
-    showInnerEngageCheckMarkThree,
-    setshowInnerEngageCheckMarkThree,
-  ] = useState(false);
+  const [showInnerEngageCheckMark, setshowInnerEngageCheckMark] =
+    useState(false);
+  const [showInnerEngageCheckMarkTwo, setshowInnerEngageCheckMarkTwo] =
+    useState(false);
+  const [showInnerEngageCheckMarkThree, setshowInnerEngageCheckMarkThree] =
+    useState(false);
   const [showEngageCheckMark, setshowEngageCheckMark] = useState(false);
 
   const handleCheckMark = () => {

@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 export default function Login() {
-  const { registerUser, signUpData, setSignUpData } = useContext(
-    providerFunctions
-  );
+  const { registerUser, signUpData, setSignUpData } =
+    useContext(providerFunctions);
 
   const handleSignUpChange = (value, key) => {
     var sd = { ...signUpData };

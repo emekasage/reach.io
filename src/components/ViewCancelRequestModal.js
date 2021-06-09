@@ -5,11 +5,8 @@ export default function ViewCancelRequestModal() {
   // const { campaign } = useContext(providerFunctions);
   // const [campaignData, setCampaignData] = useState([]);
 
-  const {
-    viewSingleCampaignRequest,
-    requestId,
-    singleCancelRequest,
-  } = useContext(providerFunctions);
+  const { viewSingleCampaignRequest, requestId, singleCancelRequest } =
+    useContext(providerFunctions);
 
   const [campaignRequest, setCampaignRequest] = useState([]);
 

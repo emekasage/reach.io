@@ -4,13 +4,8 @@ import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function DeleteUserModal(props) {
   const [page, setPage] = useState(1);
-  const {
-    allUsers,
-    getAllUsers,
-    deleteUser,
-    userId,
-    deleteUserMessage,
-  } = useContext(providerFunctions);
+  const { allUsers, getAllUsers, deleteUser, userId, deleteUserMessage } =
+    useContext(providerFunctions);
   const [clientsData, setClientsData] = useState([]);
   console.log("===", deleteUserMessage);
 

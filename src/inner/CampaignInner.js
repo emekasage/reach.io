@@ -14,6 +14,7 @@ export default function CampaignInner() {
     userCampaign,
     setCampaignId,
     cancelCampaign,
+    createListPage,
     // createCampaign,
   } = useContext(providerFunctions);
   const { enqueueSnackbar } = useSnackbar();
@@ -140,7 +141,12 @@ export default function CampaignInner() {
                       </div>
                       <div className="card flow-card flex-fill bd-highlight">
                         <div className="card-body">
-                          <div onClick="" className="card-content">
+                          <div
+                            className="card-content"
+                            onClick={() => {
+                              setInnerPage(6);
+                            }}
+                          >
                             <img
                               src="../../assets/img/Group-465.svg"
                               alt=""
@@ -933,47 +939,184 @@ export default function CampaignInner() {
             <div className="row">
               <div className="col-10 col-lg-10 col-xxl-10 d-flex company-steps">
                 <h6
-                  className={`engage-steps ${!showCheckMark ? "step-1" : ""}`}
+                  className={`engage-steps ${
+                    createListPage == 1 ? "step-1" : "step-2"
+                  } ${
+                    createListPage > 1 ? "check-step bi bi-check-circle" : ""
+                  }`}
                 >
+                  {/* <span
+                    className="bi bi-check-circle"
+                    style={{ paddingRight: "5px" }}
+                  ></span>{" "} */}
                   1 - Add List
                 </h6>
                 <h6
-                  className={`engage-steps ${!showCheckMark ? "step-2" : ""}`}
+                  className={`engage-steps ${
+                    createListPage == 2 || createListPage == 2.5
+                      ? "step-1"
+                      : "step-2"
+                  } ${createListPage > 2.5 ? "check-step" : ""}`}
                 >
                   2 - Create Sequence
                 </h6>
                 <h6
-                  className={`engage-steps ${!showCheckMark ? "step-2" : ""}`}
+                  className={`engage-steps ${
+                    createListPage == 3 ? "step-1" : "step-2"
+                  } ${createListPage > 3 ? "check-step" : ""}`}
                 >
                   3 - Summary
                 </h6>
               </div>
-              <div className="big-add-icon">
-                <i
-                  className="bi bi-plus"
-                  onClick={() => {
-                    setShowModal(true);
-                    setModalPage("add_leads");
-                    setshowCheckMark(showCheckMark);
-                    setInnerPage(6);
-                  }}
-                ></i>
-                <p>Add new leads</p>
-              </div>
+              {createListPage == 1 && (
+                <div className="big-add-icon">
+                  <i
+                    className="bi bi-plus"
+                    onClick={() => {
+                      setShowModal(true);
+                      setModalPage("add_leads");
+                      setshowCheckMark(showCheckMark);
+                    }}
+                  ></i>
+                  <p>Add new leads</p>
+                </div>
+              )}
+
+              {createListPage == 2 && (
+                <div>
+                  <div className="eng-row">
+                    <div className="seq_create">
+                      <p className="seq-txt">Create Sequence</p>
+                      <button
+                        className="seq-btn"
+                        onClick={() => {
+                          setShowModal(true);
+                          setModalPage("create_sequence");
+                        }}
+                      >
+                        Create Sequence
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {createListPage == 2.5 && (
+                <div>
+                  <div className="eng-row">
+                    <div className="seq_create">
+                      <p className="seq-txt">Create Sequence</p>
+                      <button
+                        className="seq-btn"
+                        onClick={() => {
+                          setShowModal(true);
+                          setModalPage("engage_steps");
+                        }}
+                      >
+                        Add step
+                      </button>
+                    </div>
+                    <div className="mt-4 add-steps">
+                      <div className="form-check step-prechck">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="view_profile"
+                          id="view_profile"
+                          checked
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="view_profile"
+                        >
+                          Step 1 - View Profile
+                        </label>
+                      </div>
+                      <div className="delays">
+                        <label htmlFor="days" className="step_day">
+                          Days:
+                        </label>
+                        <input
+                          type="text"
+                          id="days"
+                          name="days"
+                          maxLength="1"
+                          size="1"
+                        />
+                        <label htmlFor="hours" className="step_hr">
+                          Hours:
+                        </label>
+                        <input
+                          type="text"
+                          id="hours"
+                          name="hours"
+                          maxLength="1"
+                          size="1"
+                        />
+                      </div>
+                      <div></div>
+                    </div>
+                    <div className="mt-5 add-steps">
+                      <div className="form-check step-prechck">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="follow_contact"
+                          id="follow_contact"
+                          checked
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="follow_contact"
+                        >
+                          Step 2 - Follow Contact
+                        </label>
+                      </div>
+                      <div className="delays">
+                        <label htmlFor="days" className="step_day">
+                          Days:
+                        </label>
+                        <input
+                          type="text"
+                          id="days"
+                          name="days"
+                          maxLength="1"
+                          size="1"
+                        />
+                        <label htmlFor="hours" className="step_hr">
+                          Hours:
+                        </label>
+                        <input
+                          type="text"
+                          id="hours"
+                          name="hours"
+                          maxLength="1"
+                          size="1"
+                        />
+                      </div>
+                      <div></div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
 
+        {/* END OF ENGAGE */}
+
+        {/* DATA EXTRACT */}
         {innerPage === 6 && (
           <div>
             <div className="d-flex justify-content-between user-val">
               <div className="heading-col plus-bck">
                 <h5>
-                  Campaign &gt;&gt; <strong>Engage</strong>
+                  Campaign &gt;&gt; <strong>Data Extract</strong>
                 </h5>
                 <a
                   className="camp-back-lnk"
                   onClick={() => {
+                    setshowCheckMark(showCheckMark);
                     setInnerPage(1);
                   }}
                 >
@@ -988,108 +1131,207 @@ export default function CampaignInner() {
                 <DateTime />
               </div>
             </div>
-            <div className="eng-row">
-              <div className="col-10 col-lg-10 col-xxl-10 d-flex company-steps">
-                <h6
-                  className={`engage-steps ${
-                    !showCheckMark ? "check-step bi bi-check-circle" : ""
-                  }`}
-                >
-                  1 - Add List
-                </h6>
-                <h6
-                  className={`engage-steps ${!showCheckMark ? "step-1" : ""}`}
-                >
-                  2 - Create Sequence
-                </h6>
-                <h6
-                  className={`engage-steps ${!showCheckMark ? "step-2" : ""}`}
-                >
-                  3 - Summary
-                </h6>
-              </div>
-              <div className="seq_create">
-                <p className="seq-txt">Create Sequence</p>
-                <button className="seq-btn">Add step</button>
-              </div>
-              <div className="mt-4 add-steps">
-                <div className="form-check step-prechck">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="view_profile"
-                    id="view_profile"
-                    checked
-                  />
-                  <label className="form-check-label" htmlFor="view_profile">
-                    Step 1 - View Profile
-                  </label>
+            <div className="row">
+              <div className="col-10 col-lg-10 col-xxl-10 d-flex">
+                <div className="email-search">
+                  <div className="note-1">
+                    <p>
+                      *you must be first level connected on LinkedIn to use this
+                      service
+                    </p>
+                  </div>
+                  <div className="my-2 mod-form">
+                    <label
+                      htmlFor="exampleFormControlInput1"
+                      className="form-label"
+                    >
+                      Job title
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg mod-input"
+                      name="skills_keywords"
+                      placeholder="e.g. Engineer, Accountant, Technician"
+                      onChange={(e) => {
+                        var cc = { ...campaignDetails };
+                        cc.job_titles = e.target.value;
+                        setCampaignDetails(cc);
+                      }}
+                      value={
+                        typeof campaignDetails["job_titles"] === "undefined"
+                          ? ""
+                          : campaignDetails["job_titles"]
+                      }
+                    />
+                  </div>
+                  <div className="my-2 mod-form">
+                    <label
+                      htmlFor="exampleFormControlInput1"
+                      className="form-label"
+                    >
+                      Job title is
+                    </label>
+                    <select
+                      className="form-select form-select-lg mod-select"
+                      aria-label="Default select example"
+                      onChange={(e) => {
+                        var cc = { ...campaignDetails };
+                        cc.job_status = e.target.value;
+                        setCampaignDetails(cc);
+                      }}
+                      value={
+                        typeof campaignDetails["job_status"] === "undefined"
+                          ? ""
+                          : campaignDetails["job_status"]
+                      }
+                    >
+                      <option selected hidden className="slct-plchldr">
+                        Choose one
+                      </option>
+                      <option value="current">Current</option>
+                      <option value="past">Past</option>
+                      <option value="current_or_past">Current or Past</option>
+                    </select>
+                  </div>
+
+                  <div className="my-2 mod-form">
+                    <label
+                      htmlFor="exampleFormControlInput1"
+                      className="form-label"
+                    >
+                      Skills and Keyword
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg mod-input"
+                      name="skills_keywords"
+                      placeholder="e.g. SAP, JavaScript, Azure"
+                      onChange={(e) => {
+                        var cc = { ...campaignDetails };
+                        cc.skills_keywords = e.target.value;
+                        setCampaignDetails(cc);
+                      }}
+                      value={
+                        typeof campaignDetails["skills_keywords"] ===
+                        "undefined"
+                          ? ""
+                          : campaignDetails["skills_keywords"]
+                      }
+                    />
+                  </div>
+                  <div className="my-2 mod-form">
+                    <label
+                      htmlFor="exampleFormControlInput1"
+                      className="form-label"
+                    >
+                      Location
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg mod-input"
+                      name="location"
+                      onChange={(e) => {
+                        var cc = { ...campaignDetails };
+                        cc.location = e.target.value;
+                        setCampaignDetails(cc);
+                      }}
+                    />
+                  </div>
+                  <div className="my-2 mod-form">
+                    <label
+                      htmlFor="exampleFormControlInput1"
+                      className="form-label"
+                    >
+                      Industry
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg mod-input"
+                      name="industry"
+                    />
+                  </div>
+                  <div className="my-2 mod-form">
+                    <label
+                      htmlFor="exampleFormControlInput1"
+                      className="form-label"
+                    >
+                      Duration in current role
+                    </label>
+                    <select
+                      className="form-select form-select-lg mod-select"
+                      aria-label="Default select example"
+                      onChange={(e) => {
+                        var cc = { ...campaignDetails };
+                        cc.duration_current_role = e.target.value;
+                        setCampaignDetails(cc);
+                      }}
+                      value={
+                        typeof campaignDetails["duration_current_role"] ===
+                        "undefined"
+                          ? ""
+                          : campaignDetails["duration_current_role"]
+                      }
+                    >
+                      <option selected hidden className="slct-plchldr">
+                        Choose
+                      </option>
+                      <option value="0-12">0 - 12 months</option>
+                      <option value="1-3">1 - 3 years</option>
+                      <option value="3-5">3 - 5 years</option>
+                      <option value="5-10">5 - 10 years</option>
+                      <option value="10+">10 years+</option>
+                    </select>
+                  </div>
+                  <div className="my-2 mod-form">
+                    <label
+                      htmlFor="exampleFormControlInput1"
+                      className="form-label"
+                    >
+                      Company Size
+                    </label>
+                    <select
+                      className="form-select form-select-lg mod-select"
+                      aria-label="Default select example"
+                      onChange={(e) => {
+                        var cc = { ...campaignDetails };
+                        cc.company_size = e.target.value;
+                        setCampaignDetails(cc);
+                      }}
+                      value={
+                        typeof campaignDetails["company_size"] === "undefined"
+                          ? ""
+                          : campaignDetails["company_size"]
+                      }
+                    >
+                      <option selected hidden className="slct-plchldr">
+                        Choose
+                      </option>
+                      <option value="1-10">1-10</option>
+                      <option value="11-50">11-50</option>
+                      <option value="51-200">51-200</option>
+                      <option value="201-500">201-500</option>
+                      <option value="501-1000">501-1000</option>
+                      <option value="1001-5000">1001-5000</option>
+                      <option value="5001-10000">5001-10000</option>
+                      <option value="10000+">10000+</option>
+                    </select>
+                  </div>
+
+                  <div className="my-3 mod-btn">
+                    <button
+                      onClick={() => {
+                        setInnerPage(1);
+                      }}
+                    >
+                      Finish
+                    </button>
+                  </div>
                 </div>
-                <div className="delays">
-                  <label htmlFor="days" className="step_day">
-                    Days:
-                  </label>
-                  <input
-                    type="text"
-                    id="days"
-                    name="days"
-                    maxLength="1"
-                    size="1"
-                  />
-                  <label htmlFor="hours" className="step_hr">
-                    Hours:
-                  </label>
-                  <input
-                    type="text"
-                    id="hours"
-                    name="hours"
-                    maxLength="1"
-                    size="1"
-                  />
-                </div>
-                <div></div>
-              </div>
-              <div className="mt-5 add-steps">
-                <div className="form-check step-prechck">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="follow_contact"
-                    id="follow_contact"
-                    checked
-                  />
-                  <label className="form-check-label" htmlFor="follow_contact">
-                    Step 2 - Follow Contact
-                  </label>
-                </div>
-                <div className="delays">
-                  <label htmlFor="days" className="step_day">
-                    Days:
-                  </label>
-                  <input
-                    type="text"
-                    id="days"
-                    name="days"
-                    maxLength="1"
-                    size="1"
-                  />
-                  <label htmlFor="hours" className="step_hr">
-                    Hours:
-                  </label>
-                  <input
-                    type="text"
-                    id="hours"
-                    name="hours"
-                    maxLength="1"
-                    size="1"
-                  />
-                </div>
-                <div></div>
               </div>
             </div>
           </div>
         )}
-        {/* END OF ENGAGE */}
+        {/* END OF DATA EXTRACT */}
       </div>
     </div>
   );

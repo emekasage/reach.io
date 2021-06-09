@@ -13,6 +13,8 @@ import CreateRolesModal from "./CreateRolesModal";
 import DeleteRoleModal from "./DeleteRoleModal";
 import UpdateRoleModal from "./UpdateRoleModal";
 import AddLeadsModal from "./AddLeadsModal";
+import CreateSequenceModal from "./CreateSequenceModal";
+import ViewEngageSteps from "./ViewEngageSteps";
 import ClickOutside from "react-click-outside";
 
 export default function Modal() {
@@ -95,6 +97,18 @@ export default function Modal() {
               setShowModal={setShowModal}
               userId={userId}
             ></AddLeadsModal>
+          )}
+          {modalPage === "create_sequence" && (
+            <CreateSequenceModal
+              setShowModal={setShowModal}
+              userId={userId}
+            ></CreateSequenceModal>
+          )}
+          {modalPage === "engage_steps" && (
+            <ViewEngageSteps
+              setShowModal={setShowModal}
+              userId={userId}
+            ></ViewEngageSteps>
           )}
         </ClickOutside>
       </div>

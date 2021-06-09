@@ -2,9 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { providerFunctions } from "../provider/FunctionsProvider";
 export default function UpdateRoleModal(props) {
-  const { updateRole, allPermissions, getPermission } = useContext(
-    providerFunctions
-  );
+  const { updateRole, allPermissions, getPermission } =
+    useContext(providerFunctions);
   const [permissionData, setPermissionData] = useState([]);
   const [page, setPage] = useState(1);
   const [changeRole, setChangeRole] = useState({

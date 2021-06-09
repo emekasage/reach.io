@@ -3,13 +3,8 @@ import { Link } from "react-router-dom";
 import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function AssignCreditsModal(props) {
-  const {
-    userDetails,
-    assignCredit,
-    campaignId,
-    creditMessage,
-    creditStatus,
-  } = useContext(providerFunctions);
+  const { userDetails, assignCredit, campaignId, creditMessage, creditStatus } =
+    useContext(providerFunctions);
   const [page, setPage] = useState(1);
   console.log("===", campaignId);
 

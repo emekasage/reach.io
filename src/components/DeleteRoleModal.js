@@ -4,13 +4,8 @@ import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function DeleteRoleModal(props) {
   const [page, setPage] = useState(1);
-  const {
-    // allUsers,
-    rolesManagement,
-    deleteRole,
-    roleId,
-    deleteUserMessage,
-  } = useContext(providerFunctions);
+  const { rolesManagement, deleteRole, roleId, deleteUserMessage } =
+    useContext(providerFunctions);
   // const [clientsData, setClientsData] = useState([]);
   console.log("===", roleId);
 

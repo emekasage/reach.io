@@ -2,13 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import Checkout from "./Checkout";
 import { providerFunctions } from "../provider/FunctionsProvider";
 export default function CreditModal() {
-  const {
-    credit,
-    setCredit,
-    paymentStatus,
-    setPaymentStatus,
-    paymentMessage,
-  } = useContext(providerFunctions);
+  const { credit, setCredit, paymentStatus, setPaymentStatus, paymentMessage } =
+    useContext(providerFunctions);
   useEffect(() => {
     if (paymentStatus) {
       setPage(3);

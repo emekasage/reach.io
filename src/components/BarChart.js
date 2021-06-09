@@ -1,4 +1,7 @@
-import React from "react";
+/* eslint-disable react/prop-types */ // TODO: upgrade to latest eslint tooling
+/* eslint-disable */
+
+import React, { useEffect, useState } from "react";
 
 import {
   BarChart,
@@ -11,53 +14,63 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  {
-    name: "SUN",
-    uv: 300,
-    pv: 450,
-    amt: 2400,
-  },
-  {
-    name: "MON",
-    uv: 300,
-    pv: 450,
-    amt: 2210,
-  },
-  {
-    name: "TUE",
-    uv: 300,
-    pv: 450,
-    amt: 2290,
-  },
-  {
-    name: "WED",
-    uv: 300,
-    pv: 450,
-    amt: 2000,
-  },
-  {
-    name: "THUR",
-    uv: 300,
-    pv: 450,
-    amt: 2181,
-  },
-  {
-    name: "FRI",
-    uv: 300,
-    pv: 450,
-    amt: 2500,
-  },
-  {
-    name: "SAT",
-    uv: 300,
-    pv: 450,
-    amt: 2100,
-  },
-];
-
-export default function App() {
+export default function App(props) {
+  const [data, setData] = useState([
+    {
+      name: "SUN",
+      uv: 0,
+      pv: 0,
+      amt: 0,
+    },
+    {
+      name: "MON",
+      uv: 0,
+      pv: 0,
+      amt: 0,
+    },
+    {
+      name: "TUE",
+      uv: 0,
+      pv: 0,
+      amt: 0,
+    },
+    {
+      name: "WED",
+      uv: 0,
+      pv: 0,
+      amt: 0,
+    },
+    {
+      name: "THUR",
+      uv: 0,
+      pv: 0,
+      amt: 0,
+    },
+    {
+      name: "FRI",
+      uv: 0,
+      pv: 0,
+      amt: 0,
+    },
+    {
+      name: "SAT",
+      uv: 0,
+      pv: 0,
+      amt: 0,
+    },
+  ]);
+  useEffect(() => {
+    if(typeof(props.showThisWeek) !== "undefined"){
+      if(props.showThisWeek){
+        setData(props.thisWeekData);
+      }else{
+        setData(props.lastWeekData)
+      }
+    }
+    
+  }, [props.showThisWeek, props.lastWeekData, props.thisWeekData]);
   return (
+    <div>
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
         // width={500}
@@ -79,5 +92,6 @@ export default function App() {
         <Bar dataKey="uv" barSize={30} fill="#0dc5ff" radius={[3, 3, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
+    </div>
   );
 }

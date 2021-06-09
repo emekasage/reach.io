@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
-// import { Link } from "react-router-dom";
+import React, { useState, useRef, useContext } from "react";
+import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function AddLeadsModal(props) {
+  const { setCreateListPage } = useContext(providerFunctions);
   const [page, setPage] = useState(1);
-  const [innerPage, setInnerPage] = useState(1);
   const [showCheckMark, setshowCheckMark] = useState(false);
 
   const FileUpload = useRef(null);
@@ -232,7 +232,7 @@ export default function AddLeadsModal(props) {
                 // eslint-disable-next-line react/prop-types
                 props.setShowModal(false);
                 setshowCheckMark(showCheckMark);
-                setInnerPage(innerPage === 6);
+                setCreateListPage(2);
               }}
             >
               Go to Step 2 - Add Sequence

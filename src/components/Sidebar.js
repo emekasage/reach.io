@@ -37,7 +37,7 @@ export default function Sidebar() {
                 activeClassName="nav--active"
               >
                 <i className="bi bi-people menu-img"></i>
-                <span className="menu-text">Connections</span>
+                <span className="menu-text">My Contacts</span>
               </NavLink>
             </li>
             <li>

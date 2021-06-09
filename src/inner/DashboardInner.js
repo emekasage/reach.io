@@ -22,6 +22,10 @@ export default function DashboardInner() {
     userDetails,
   } = useContext(providerFunctions);
 
+  const [campaignIdFilter, setCampaignIdFilter] = useState("");
+  const [viewAll] = useState(false);
+  const [rows, setRows] = useState([]);
+
   useEffect(() => {
     getAllUsers();
   });
@@ -32,7 +36,7 @@ export default function DashboardInner() {
   }, []);
 
   useEffect(() => {
-    console.log(connectGraph.mon);
+    // console.log(connectGraph.mon);
   }, [connectGraph]);
 
   useEffect(() => {
@@ -57,6 +61,25 @@ export default function DashboardInner() {
     getCampaignsId();
   }, [connectionsData]);
 
+  useEffect(() => {
+    if (typeof connectionsData[0] !== "undefined") {
+      let tempdata = connectionsData.filter((thisdata) => {
+        if (
+          Number(campaignIdFilter) !== Number(thisdata.campaign_id) &&
+          !viewAll
+        ) {
+          if (campaignIdFilter !== "") {
+            console.log(Number(campaignIdFilter), Number(thisdata.campaign_id));
+            return false;
+          }
+        }
+      });
+      setRows(tempdata);
+    }
+  }, [connectionsData, campaignIdFilter]);
+
+  useEffect(() => {}, [rows]);
+
   const onlyUnique = (value, index, self) => {
     return self.indexOf(value) === index;
   };
@@ -77,23 +100,12 @@ export default function DashboardInner() {
             <div className="d-flex justify-content-between inner-text">
               <div className="heading-col">
                 <h5 className="cred-rem">
-                  <strong>Credit Remaining:</strong> {userDetails.user.credits}
+                  <strong>Credit Remaining:</strong>{" "}
+                  {typeof userDetails.userCredit.amount !== "undefined"
+                    ? userDetails.userCredit.amount
+                    : 0}
                 </h5>
               </div>
-
-              {/* <div className="text-drop">
-                <span className="text-drop-p">Change Campaign:</span>
-
-                <select
-                  className="form-select form-select-sm"
-                  aria-label="Default select example"
-                >
-                  <option selected>Campaign 1</option>
-                  <option value="1">Campaign 2</option>
-                  <option value="2">Campaign 3</option>
-                  <option value="3">Campaign 4</option>
-                </select>
-              </div> */}
             </div>
             <div className="row">
               <div className="col-xl-6 col-xxl-5 d-flex">
@@ -142,10 +154,6 @@ export default function DashboardInner() {
                               showRadial1 ? "show" : "hide"
                             }`}
                           >
-                            {/* no_of_con_percentage": 0,
-                              "no_of_tel_per": 0,
-                              "no_of_emails_per": 0,
-                              "no_of_replies_per": 0 */}
                             <RadialChart
                               value={connectMetrics.no_of_con_percentage}
                             />
@@ -338,6 +346,7 @@ export default function DashboardInner() {
                       <select
                         className="form-select form-select-sm col-select"
                         aria-label="Default select example"
+                        onChange={(e) => setCampaignIdFilter(e.target.value)}
                       >
                         <option selected hidden>
                           Select a campaign

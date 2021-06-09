@@ -16,7 +16,7 @@ export default function StackedBarChart() {
   const [datatouse, setDatatouse] = useState([]);
   useEffect(() => {
     var cc = { ...connectGraph };
-    console.log(cc);
+    // console.log(cc);
     var dt = [];
     dt.push({ name: "Mon", value: cc.mon });
     dt.push({ name: "Tue", value: cc.tue });

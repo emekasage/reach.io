@@ -56,15 +56,13 @@ export default function Login() {
                   </label>
                 </span>
               </div>
-              <div className="mt-4">
-                <button
-                  className="submit-btn"
-                  type="button"
-                  onClick={() => login(username, password)}
-                >
-                  Login to dashboard
-                </button>
-              </div>
+              <button
+                className="mt-4 submit-btn"
+                type="button"
+                onClick={() => login(username, password)}
+              >
+                Login to dashboard
+              </button>
             </form>
           </div>
         </div>

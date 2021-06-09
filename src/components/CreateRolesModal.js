@@ -2,9 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { providerFunctions } from "../provider/FunctionsProvider";
 export default function CreateUserModal(props) {
-  const { createRoles, allPermissions, getPermission } = useContext(
-    providerFunctions
-  );
+  const { createRoles, allPermissions, getPermission } =
+    useContext(providerFunctions);
   const [permissionData, setPermissionData] = useState([]);
   const [page, setPage] = useState(1);
   const [newRole, setNewRole] = useState([]);

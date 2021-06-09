@@ -2,9 +2,8 @@ import React, { useContext } from "react";
 import StripeCheckout from "react-stripe-checkout";
 import { providerFunctions } from "../provider/FunctionsProvider";
 export default function Checkout() {
-  const { credit, purchaseCredits, setPaymentStatus } = useContext(
-    providerFunctions
-  );
+  const { credit, purchaseCredits, setPaymentStatus } =
+    useContext(providerFunctions);
   const onToken = (token, addresses) => {
     console.log(token);
     console.log(addresses);
@@ -24,14 +23,6 @@ export default function Checkout() {
     // XHR, fetch, or a GraphQL mutation is typical.
 
     //     card:
-    // address_city: null
-    // address_country: null
-    // address_line1: null
-    // address_line1_check: null
-    // address_line2: null
-    // address_state: null
-    // address_zip: null
-    // address_zip_check: null
     // brand: "MasterCard"
     // country: "US"
     // cvc_check: "unchecked"

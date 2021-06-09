@@ -8,12 +8,8 @@ export default function ChangePassword() {
   const token = new URLSearchParams(search).get("token");
   console.log(token);
 
-  const {
-    changePassword,
-    changePass,
-    setChangePass,
-    setPasswordToken,
-  } = useContext(providerFunctions);
+  const { changePassword, changePass, setChangePass, setPasswordToken } =
+    useContext(providerFunctions);
   useEffect(() => {
     console.log(token);
     setPasswordToken(token);

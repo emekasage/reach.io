@@ -14,12 +14,52 @@ export default function BuyCreditInner() {
     userDetails,
     creditUtilization,
     utilization,
+    creditUtilized,
+    creditGraph,
   } = useContext(providerFunctions);
-
+  const [lastWeekData, setLastWeekData] = useState([]);
+  const [thisWeekData, setThisWeekData] = useState([]);
+  const [showThisWeek, setShowThisWeek] = useState(true);
   useEffect(() => {
     creditTransaction();
     creditUtilization();
-  }, []);
+    console.log(creditUtilized);
+    var days = ["mon", "tue", "wed", "thur", "fri", "sat", "sun"];
+    var twd = [];
+    var lwd = [];
+    for (var i = 0; i < days.length; i++) {
+      var today = days[i];
+      if (
+        typeof creditUtilized.utilization !== "undefined" &&
+        typeof creditUtilized.deposit !== "undefined"
+      ) {
+        if (
+          typeof creditUtilized.utilization.thisWeekData !== "undefined" &&
+          typeof creditUtilized.deposit.thisWeekData !== "undefined" &&
+          typeof creditUtilized.utilization.lastWeekData !== "undefined" &&
+          typeof creditUtilized.deposit.lastWeekData !== "undefined"
+        ) {
+          twd.push({
+            name: today,
+            uv: creditUtilized.utilization.thisWeekData[today],
+            pv: creditUtilized.deposit.thisWeekData[today],
+            amt: 0,
+          });
+          lwd.push({
+            name: today,
+            uv: creditUtilized.utilization.lastWeekData[today],
+            pv: creditUtilized.deposit.lastWeekData[today],
+            amt: 0,
+          });
+        }
+      }
+    }
+    setLastWeekData(lwd);
+    setThisWeekData(twd);
+    // var thisWeekData = [];
+    // var lastWeekData = [];
+    creditGraph();
+  }, [creditUtilized]);
 
   const [creditData, setCreditData] = useState([]);
   const [creditUsed, setCreditUsed] = useState([]);
@@ -134,42 +174,29 @@ export default function BuyCreditInner() {
                     <i className="bi bi-dot sec-dot"></i>
                     <span>Utilization</span>
                   </div>
-                  <div className="dropdown">
-                    <a
-                      className="btn dropdown-toggle prop-drp"
-                      href="#"
-                      role="button"
-                      id="dropdownMenuLink"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      This Week <i className="bi bi-caret-down-fill"></i>
-                    </a>
-                    <ul
-                      className="dropdown-menu dropdown-menu-end"
-                      aria-labelledby="dropdownMenuLink"
-                    >
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Last Week
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Last 2 Weeks
-                        </a>
-                      </li>
-                      <li>
-                        <a className="dropdown-item" href="#">
-                          Last 3 Weeks
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
+                  <select
+                    className="form-select prop-drp"
+                    onChange={(e) => {
+                      if (e.target.value == "this-week") {
+                        setShowThisWeek(true);
+                      } else {
+                        setShowThisWeek(false);
+                      }
+                    }}
+                  >
+                    <option value="this-week" selected>
+                      This Week
+                    </option>
+                    <option value="last-week">Last Week</option>
+                  </select>
                 </div>
 
                 <div className="">
-                  <BarChart />
+                  <BarChart
+                    lastWeekData={lastWeekData}
+                    thisWeekData={thisWeekData}
+                    showThisWeek={showThisWeek}
+                  />
                 </div>
               </div>
             </div>

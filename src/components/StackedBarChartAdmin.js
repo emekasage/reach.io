@@ -13,17 +13,11 @@ import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function StackedBarChartAdmin() {
   const { metricsGraph } = useContext(providerFunctions);
-  // const [chartData, setChartData] = useState([]);
   const [datatouse, setDatatouse] = useState([]);
-  // useEffect(() => {
-  //   if (typeof metricsGraph.data !== "undefined") {
-  //     setChartData(metricsGraph.data);
-  //     console.log(metricsGraph.data);
-  //   }
-  // }, [metricsGraph]);
+
   useEffect(() => {
     var cc = { ...metricsGraph };
-    console.log(cc);
+    // console.log(cc);
     var dt = [];
     dt.push({ name: "Mon", value: cc.data.mon });
     dt.push({ name: "Tue", value: cc.data.tue });
@@ -33,7 +27,7 @@ export default function StackedBarChartAdmin() {
     dt.push({ name: "Sat", value: cc.data.sat });
     dt.push({ name: "Sun", value: cc.data.sun });
     setDatatouse(dt);
-    console.log(dt);
+    // console.log(dt);
   }, [metricsGraph]);
   return (
     <ResponsiveContainer width="100%" height={270}>

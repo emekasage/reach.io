@@ -5,6 +5,7 @@ import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 
 const FunctionsProvider = (props) => {
+  const REACT_APP_API_URL = "https://reachio-api-v1.herokuapp.com/api";
   const [paymentStatus, setPaymentStatus] = useState(false);
   const [paymentMessage, setPaymentMessage] = useState("");
   const [showSideBar, setShowSideBar] = useState(true);
@@ -19,6 +20,11 @@ const FunctionsProvider = (props) => {
   const [cancelRequest, setCancelRequests] = useState({
     campaign_requests: { data: [] },
   });
+  const [defaultSteps, setDefaultSteps] = useState([
+    { id: 1, name: "View Profile", days: 0, hours: 0 },
+    { id: 1, name: "Follow Contact", days: 0, hours: 0 },
+  ]);
+  const [createListPage, setCreateListPage] = useState(1);
   const [singleCancelRequest, setSingleCancelRequest] = useState({});
   const [imageFile, setImageFile] = useState([]);
   const [token, setToken] = useState("");
@@ -56,9 +62,8 @@ const FunctionsProvider = (props) => {
     Roles: { data: [] },
   });
   const [allPermissions, setAllPermissions] = useState({});
-  const [showForgotPasswordSuccess, setShowForgotPasswordSuccess] = useState(
-    ""
-  );
+  const [showForgotPasswordSuccess, setShowForgotPasswordSuccess] =
+    useState("");
 
   const [creditMessage, setCreditMessage] = useState([]);
   const [assignUserMessage, setAssignUserMessage] = useState({});
@@ -74,6 +79,9 @@ const FunctionsProvider = (props) => {
   const [utilization, setUtilization] = useState({});
   const [cancellationMsg, setCancellationMsg] = useState([]);
   const [cancellationStatus, setCancellationStatus] = useState(false);
+  const [userAlert, setUserAlert] = useState({});
+  const [adminAlert, setAdminAlert] = useState({});
+  const [creditUtilized, setCreditUtilized] = useState({});
 
   let history = useHistory();
   // useEffect(() => {
@@ -110,7 +118,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/user", requestOptions)
+    fetch(REACT_APP_API_URL + "/user", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setUserDetails(result);
@@ -133,7 +141,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/login", requestOptions)
+    fetch(REACT_APP_API_URL + "/login", requestOptions)
       .then((response) => {
         console.log(response);
         return response.json();
@@ -166,7 +174,8 @@ const FunctionsProvider = (props) => {
       body: raw,
       redirect: "follow",
     };
-    fetch(process.env.REACT_APP_API_URL + "/signin", requestOptions)
+    console.log("meerr");
+    fetch("https://reachio-api-v1.herokuapp.com/api/signin", requestOptions)
       .then((response) => {
         console.log(response);
         return response.json();
@@ -202,7 +211,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/register", requestOptions)
+    fetch(REACT_APP_API_URL + "/register", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
@@ -229,10 +238,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      process.env.REACT_APP_API_URL + "/admin/user/" + userId + "/ban",
-      requestOptions
-    )
+    fetch(REACT_APP_API_URL + "/admin/user/" + userId + "/ban", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         getAllUsers();
@@ -258,7 +264,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      process.env.REACT_APP_API_URL + "/admin/user/" + userId + "/activate",
+      REACT_APP_API_URL + "/admin/user/" + userId + "/activate",
       requestOptions
     )
       .then((response) => response.text())
@@ -288,7 +294,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      process.env.REACT_APP_API_URL + "/campaign/assign-credit/" + campaignId,
+      REACT_APP_API_URL + "/campaign/assign-credit/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -358,7 +364,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/campaign/create", requestOptions)
+    fetch(REACT_APP_API_URL + "/campaign/create", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         userCampaign();
@@ -379,7 +385,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      process.env.REACT_APP_API_URL + "/admin/approve-campaign/" + campaignId,
+      REACT_APP_API_URL + "/admin/approve-campaign/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -404,7 +410,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      process.env.REACT_APP_API_URL + "/admin/cancel-campaign/" + campaignId,
+      REACT_APP_API_URL + "/admin/cancel-campaign/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -439,7 +445,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/admin/user/create", requestOptions)
+    fetch(REACT_APP_API_URL + "/admin/user/create", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         getAllUsers();
@@ -458,7 +464,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/admin/metrics", requestOptions)
+    fetch(REACT_APP_API_URL + "/admin/metrics", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setMetrics(result);
@@ -497,10 +503,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      process.env.REACT_APP_API_URL + "/connections/metrics",
-      requestOptions
-    )
+    fetch(REACT_APP_API_URL + "/connections/metrics", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setConnectMetrics(result);
@@ -518,10 +521,32 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/connections/graph", requestOptions)
+    fetch(REACT_APP_API_URL + "/connections/graph", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setConnectGraph(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const creditGraph = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/credit/charts",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setCreditUtilized(result);
+        // console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -536,7 +561,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/campaigns", requestOptions)
+    fetch(REACT_APP_API_URL + "/campaigns", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setCampaign(result);
@@ -553,10 +578,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      process.env.REACT_APP_API_URL + "/campaign/" + campaign_id,
-      requestOptions
-    )
+    fetch(REACT_APP_API_URL + "/campaign/" + campaign_id, requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -579,7 +601,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/campaign/cancel", requestOptions)
+    fetch(REACT_APP_API_URL + "/campaign/cancel", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -607,7 +629,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/admin/request/camp", requestOptions)
+    fetch(REACT_APP_API_URL + "/admin/request/camp", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setCancelRequests(result);
@@ -627,7 +649,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      process.env.REACT_APP_API_URL + "/admin/request/camp/" + requestId,
+      REACT_APP_API_URL + "/admin/request/camp/" + requestId,
       requestOptions
     )
       .then((response) => response.json())
@@ -647,7 +669,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/admin/users", requestOptions)
+    fetch(REACT_APP_API_URL + "/admin/users", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAllUsers(result);
@@ -665,10 +687,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      process.env.REACT_APP_API_URL + "/admin/user/" + userId,
-      requestOptions
-    )
+    fetch(REACT_APP_API_URL + "/admin/user/" + userId, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setDeleteUserMessage(result);
@@ -687,10 +706,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    await fetch(
-      process.env.REACT_APP_API_URL + "/admin/user/" + userId,
-      requestOptions
-    )
+    await fetch(REACT_APP_API_URL + "/admin/user/" + userId, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         userInfo = result;
@@ -709,7 +725,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/linkedin-users", requestOptions)
+    fetch(REACT_APP_API_URL + "/linkedin-users", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setLinkedlnUsers(result);
@@ -734,9 +750,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      process.env.REACT_APP_API_URL +
-        "/campaign/assign/linkedin-user/" +
-        campaignId,
+      REACT_APP_API_URL + "/campaign/assign/linkedin-user/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -765,10 +779,7 @@ const FunctionsProvider = (props) => {
       body: raw,
     };
 
-    fetch(
-      process.env.REACT_APP_API_URL + "/reset-password-request",
-      requestOptions
-    )
+    fetch(REACT_APP_API_URL + "/reset-password-request", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (
@@ -806,7 +817,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      process.env.REACT_APP_API_URL + "/change-password?token=" + passwordToken,
+      REACT_APP_API_URL + "/change-password?token=" + passwordToken,
       requestOptions
     )
       .then((response) => response.text())
@@ -835,10 +846,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      process.env.REACT_APP_API_URL + "/user/update-profile",
-      requestOptions
-    )
+    fetch(REACT_APP_API_URL + "/user/update-profile", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -861,10 +869,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      process.env.REACT_APP_API_URL + "/user/update-password",
-      requestOptions
-    )
+    fetch(REACT_APP_API_URL + "/user/update-password", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -879,7 +884,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/connections?page=1", requestOptions)
+    fetch(REACT_APP_API_URL + "/connections?page=1", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAllConnections(result);
@@ -901,7 +906,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/user/upload-image", requestOptions)
+    fetch(REACT_APP_API_URL + "/user/upload-image", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         getUserDetails();
@@ -920,7 +925,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/admin/campaigns", requestOptions)
+    fetch(REACT_APP_API_URL + "/admin/campaigns", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setManagedCampaigns(result);
@@ -945,7 +950,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/admin/role/add/", requestOptions)
+    fetch(REACT_APP_API_URL + "/admin/role/add/", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -961,10 +966,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      process.env.REACT_APP_API_URL + "/admin/role/delete/" + roleId,
-      requestOptions
-    )
+    fetch(REACT_APP_API_URL + "/admin/role/delete/" + roleId, requestOptions)
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
@@ -989,10 +991,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(
-      process.env.REACT_APP_API_URL + "/admin/role/update/" + roleId,
-      requestOptions
-    )
+    fetch(REACT_APP_API_URL + "/admin/role/update/" + roleId, requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -1008,11 +1007,11 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/admin/permissions", requestOptions)
+    fetch(REACT_APP_API_URL + "/admin/permissions", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAllPermissions(result);
-        console.log(result);
+        // console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -1027,7 +1026,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/admin/roles", requestOptions)
+    fetch(REACT_APP_API_URL + "/admin/roles", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setManagedRoles(result);
@@ -1066,7 +1065,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/purchase-credits", requestOptions)
+    fetch(REACT_APP_API_URL + "/purchase-credits", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setPaymentMessage(result);
@@ -1085,7 +1084,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/transactions", requestOptions)
+    fetch(REACT_APP_API_URL + "/transactions", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setTransaction(result);
@@ -1103,13 +1102,51 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
+    fetch(REACT_APP_API_URL + "/campaign-transactions", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setUtilization(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const userNotifications = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(REACT_APP_API_URL + "/notifications", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        // setUserAlert(result);
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const adminNotifications = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
     fetch(
-      process.env.REACT_APP_API_URL + "/campaign-transactions",
+      "https://reachio-api-v1.herokuapp.com/api/admin/notifications",
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
-        setUtilization(result);
+        setAdminAlert(result);
+        // console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -1126,7 +1163,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/logout", requestOptions)
+    fetch(REACT_APP_API_URL + "/logout", requestOptions)
       .then((response) => response.text())
       .then(() => {
         setLoggedIn(false);
@@ -1153,7 +1190,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(process.env.REACT_APP_API_URL + "/logout", requestOptions)
+    fetch(REACT_APP_API_URL + "/logout", requestOptions)
       .then((response) => response.text())
       .then(() => {
         setLoggedIn(false);
@@ -1290,6 +1327,19 @@ const FunctionsProvider = (props) => {
         setCancelRequests,
         singleCancelRequest,
         setSingleCancelRequest,
+        userNotifications,
+        userAlert,
+        setUserAlert,
+        adminNotifications,
+        adminAlert,
+        setAdminAlert,
+        creditGraph,
+        creditUtilized,
+        setCreditUtilized,
+        createListPage,
+        setCreateListPage,
+        defaultSteps,
+        setDefaultSteps,
       }}
     >
       {props.children}

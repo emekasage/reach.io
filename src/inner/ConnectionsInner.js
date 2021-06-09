@@ -5,9 +5,8 @@ import DateTime from "../components/DateTime";
 import { CSVLink } from "react-csv";
 
 export default function ConnectionsInner() {
-  const { showSideBar, userConnections, allConnections } = useContext(
-    providerFunctions
-  );
+  const { showSideBar, userConnections, allConnections } =
+    useContext(providerFunctions);
 
   const [campaignIdFilter, setCampaignIdFilter] = useState("");
 
@@ -147,7 +146,7 @@ export default function ConnectionsInner() {
         <div className="d-flex justify-content-between user-val">
           <div className="heading-col">
             <h5>
-              <strong>Connections</strong>
+              <strong>My Contacts</strong>
             </h5>
           </div>
           <div className="date-form">

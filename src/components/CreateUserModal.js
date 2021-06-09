@@ -2,9 +2,8 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { providerFunctions } from "../provider/FunctionsProvider";
 export default function CreateUserModal(props) {
-  const { createUser, managedRoles, rolesManagement } = useContext(
-    providerFunctions
-  );
+  const { createUser, managedRoles, rolesManagement } =
+    useContext(providerFunctions);
   const [rolesData, setRolesData] = useState([]);
   const [page, setPage] = useState(1);
   const [newUser, setNewUser] = useState({

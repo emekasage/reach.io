@@ -2,9 +2,8 @@ import React, { useContext } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function ResetPassword() {
-  const { resetPassword, setResetPass, showForgotPasswordSuccess } = useContext(
-    providerFunctions
-  );
+  const { resetPassword, setResetPass, showForgotPasswordSuccess } =
+    useContext(providerFunctions);
 
   return (
     <div className="login-page">

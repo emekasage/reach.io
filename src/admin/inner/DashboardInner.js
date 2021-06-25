@@ -373,24 +373,35 @@ export default function DashboardInner() {
                     </thead>
                     <tbody>
                       {clientsData.map((thisClientData, index) => {
-                        return (
-                          <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{thisClientData.name}</td>
-                            <td className="d-none d-xl-table-cell">
-                              {thisClientData.email}
-                            </td>
-                            <td className="d-none d-xl-table-cell">
-                              {thisClientData.phone}
-                            </td>
-                            <td>
-                              <span>{thisClientData.connected_status}</span>
-                            </td>
-                            <td className="d-none d-md-table-cell">
-                              {moment(thisClientData.created_at).format("lll")}
-                            </td>
-                          </tr>
-                        );
+                        if (index < 5) {
+                          return (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td>{thisClientData.name}</td>
+                              <td className="d-none d-xl-table-cell">
+                                {thisClientData.email}
+                              </td>
+                              <td className="d-none d-xl-table-cell">
+                                {thisClientData.phone}
+                              </td>
+                              <td>
+                                <span>
+                                  {thisClientData.connected_status === 1 && (
+                                    <>Yes</>
+                                  )}
+                                  {thisClientData.connected_status === 0 && (
+                                    <>No</>
+                                  )}
+                                </span>
+                              </td>
+                              <td className="d-none d-md-table-cell">
+                                {moment(thisClientData.created_at).format(
+                                  "lll"
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        }
                       })}
                     </tbody>
                   </table>

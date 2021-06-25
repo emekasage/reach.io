@@ -61,6 +61,16 @@ export default function Sidebar() {
                 <span className="menu-text">Campaign</span>
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/admin/notifications"
+                className="nav"
+                activeClassName="nav--active"
+              >
+                <i className="bi bi-bell"></i>
+                <span className="menu-text">Notifications</span>
+              </NavLink>
+            </li>
           </ul>
           <ul className="navigate-log">
             <li>

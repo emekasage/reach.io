@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { providerFunctions } from "../../provider/FunctionsProvider";
 import DateTime from "../../components/DateTime";
 import moment from "moment";
+// import { set } from "react-hook-form";
 
 export default function DashboardInner() {
   const {
@@ -19,19 +20,33 @@ export default function DashboardInner() {
     viewSingleCampaignRequest,
     setRequestId,
     cancelRequest,
+    campaignPage,
+    setCampaignPage,
+    getUserInfo,
+    getCampaignInfo,
   } = useContext(providerFunctions);
 
+  const [thisUserInfo, setThisUserInfo] = useState({});
+  const [thisCampaignInfo, setThisCampaignInfo] = useState({});
   const [campaignData, setCampaignData] = useState([]);
-  const [paginatedCampaign, setPaginatedCampaign] = useState([]);
-  const [campaignsToDisplay, setCampaignsToDisplay] = useState([]);
   const [innerPage, setInnerPage] = useState(1);
-  const [page, setPage] = useState(1);
-  const [toshow, settoshow] = useState({});
-  const [perPage] = useState(5);
-  const [pageCount, setPageCount] = useState({});
-  const [viewAll, setViewAll] = useState(false);
-  const [rows, setRows] = useState([]);
 
+  const [toshow, settoshow] = useState({});
+  const [pageCount, setPageCount] = useState(0);
+  const [viewAll] = useState(false);
+
+  useEffect(async () => {
+    if (typeof toshow.user_id !== "undefined") {
+      var m = {};
+      m = await getUserInfo(toshow.user_id);
+      setThisUserInfo(m);
+    }
+    if (typeof toshow.campaignable_id !== "undefined") {
+      var c = {};
+      c = await getCampaignInfo(toshow.campaignable_id);
+      setThisCampaignInfo(c);
+    }
+  }, [toshow]);
   useEffect(() => {
     getMetrics();
     campaignManagement();
@@ -44,48 +59,33 @@ export default function DashboardInner() {
     if (typeof managedCampaigns.campaign !== "undefined") {
       if (typeof managedCampaigns.campaign.data !== "undefined") {
         setCampaignData(managedCampaigns.campaign.data);
+        setPageCount(managedCampaigns.campaign.last_page);
       }
     }
   }, [managedCampaigns]);
 
-  useEffect(() => {
-    if (typeof campaignData[0] !== "undefined") {
-      let tempdata = campaignData;
-      setRows(tempdata);
-    }
-  }, [campaignData]);
-  // console.log(managedCampaigns.campaign.from);
+  const [showCancelButton, setShowCancelButton] = useState(false);
+
+  const [campaingnCancelRequest, setCampaingnCancelRequest] = useState({});
 
   useEffect(() => {
     // console.log(campaignData);
-  }, [campaignData]);
 
-  useEffect(() => {
-    getPaginatedCampaign(page);
-  }, [page, rows]);
-
-  useEffect(() => {
-    if (viewAll) {
-      setCampaignsToDisplay(rows);
-    } else {
-      setCampaignsToDisplay(paginatedCampaign);
-    }
-  }, [viewAll, campaignData, paginatedCampaign]);
-
-  const getPaginatedCampaign = (page) => {
-    var no_of_clients = rows.length;
-    setPageCount(Math.ceil(Number(no_of_clients) / Number(perPage)));
-    var cc = rows.filter((thisdata, index) => {
-      var pageFirst = (page - 1) * perPage;
-      var lastItem = page * perPage - 1;
-      if (index >= pageFirst && index <= lastItem) {
-        return true;
-      } else {
-        return false;
+    if (typeof toshow.id !== "undefined") {
+      setShowCancelButton(false);
+      setCampaingnCancelRequest({});
+      if (typeof cancelRequest.campaign_requests !== "undefined") {
+        if (typeof cancelRequest.campaign_requests.data !== "undefined") {
+          cancelRequest.campaign_requests.data.filter((thisData) => {
+            if (thisData.campaign_id === toshow.id) {
+              setShowCancelButton(true);
+              setCampaingnCancelRequest(thisData);
+            }
+          });
+        }
       }
-    });
-    setPaginatedCampaign(cc);
-  };
+    }
+  }, [cancelRequest.campaign_requests, toshow.id]);
 
   const showPaginationList = () => {
     let arr = Array.apply(null, { length: pageCount }).map(Number.call, Number);
@@ -93,7 +93,9 @@ export default function DashboardInner() {
       <ul className="pgntr">
         <li
           className="page-item page-link"
-          onClick={() => (page !== 1 ? setPage(page - 1) : "")}
+          onClick={() =>
+            campaignPage !== 1 ? setCampaignPage(campaignPage - 1) : ""
+          }
         >
           Prev
         </li>
@@ -101,9 +103,9 @@ export default function DashboardInner() {
           return (
             <li
               className={`page-item  page-link ${
-                page === item + 1 ? "active" : ""
+                campaignPage === item + 1 ? "active" : ""
               }`}
-              onClick={() => setPage(item + 1)}
+              onClick={() => setCampaignPage(item + 1)}
             >
               {item + 1}
             </li>
@@ -111,7 +113,9 @@ export default function DashboardInner() {
         })}
         <li
           className="page-item page-link"
-          onClick={() => (page !== pageCount ? setPage(page + 1) : "")}
+          onClick={() =>
+            campaignPage !== pageCount ? setCampaignPage(campaignPage + 1) : ""
+          }
         >
           Next
         </li>
@@ -303,7 +307,7 @@ export default function DashboardInner() {
                   </div>
                   <table className="table table-hover my-1">
                     <tbody>
-                      {campaignsToDisplay.map((thisManagedCampaigns, index) => {
+                      {campaignData.map((thisManagedCampaigns, index) => {
                         return (
                           <tr key={index}>
                             <td>
@@ -313,12 +317,30 @@ export default function DashboardInner() {
                                 id="customCheck1"
                               />
                             </td>
-                            <td>{thisManagedCampaigns.company}</td>
+                            <td>
+                              {thisManagedCampaigns.campaignable_type ===
+                                "App\\Models\\CompanySearch" && (
+                                <span>Campaign Search</span>
+                              )}
+                              {thisManagedCampaigns.campaignable_type ===
+                                "App\\Models\\DataExtract" && (
+                                <span>Data Extract</span>
+                              )}
+                              {thisManagedCampaigns.campaignable_type ===
+                                "App\\Models\\EmailSearch" && (
+                                <span>Email Search</span>
+                              )}
+                              {thisManagedCampaigns.campaignable_type ===
+                                "App\\Models\\Engage" && <span>Engage</span>}
+                            </td>
                             <td>{thisManagedCampaigns.campaign_name}</td>
                             <td>
                               {moment(thisManagedCampaigns.created_at).format(
                                 "lll"
                               )}
+                            </td>
+                            <td>
+                              {thisManagedCampaigns.no_of_credits_allocated}
                             </td>
                             <td>
                               <a
@@ -337,14 +359,7 @@ export default function DashboardInner() {
                       })}
                     </tbody>
                   </table>
-                  <div className="d-flex justify-content-between table-feat">
-                    <div
-                      className="view-more-link"
-                      onClick={() => setViewAll(!viewAll)}
-                    >
-                      {" "}
-                      {!viewAll ? "View all" : "Show Less"}{" "}
-                    </div>
+                  <div className="d-flex justify-content-end table-feat">
                     <nav aria-label="Page navigation example">
                       {viewAll ? "" : showPaginationList()}
                     </nav>
@@ -373,174 +388,596 @@ export default function DashboardInner() {
                       <div className="col-sm-9">
                         <div className="card-header d-flex justify-content-between can-details">
                           <div className="status-txt">
-                            <h4>{toshow.name}</h4>
-                            <p>From {toshow.company}</p>
+                            <h4>
+                              No. of Credits Allocated:{" "}
+                              {toshow.no_of_credits_allocated}
+                            </h4>
+                            {/* <h4>{toshow.name}</h4>
+                            <p>From {toshow.company}</p> */}
                           </div>
                           <div className="status-btn">
                             <span>
                               Campaign Status: {toshow.campaign_status}
                             </span>
                           </div>
-                          {typeof cancelRequest.campaign_requests.data !==
-                            "undefined" && (
+                          {/* {JSON.stringify(campaingnCancelRequest)} */}
+
+                          {showCancelButton && (
                             <div className="status-btn">
-                              {cancelRequest.campaign_requests.data.map(
-                                (thisCanceledRequest, index) => {
-                                  return (
-                                    <span
-                                      key={index}
-                                      className="view-canreq"
-                                      onClick={() => {
-                                        setShowModal(true);
-                                        setModalPage("view_request");
-                                        setRequestId(thisCanceledRequest.id);
-                                      }}
-                                    >
-                                      View Cancel Request
-                                    </span>
-                                  );
-                                }
-                              )}
+                              <span
+                                className="view-canreq"
+                                onClick={() => {
+                                  setShowModal(true);
+                                  setModalPage("view_request");
+                                  setRequestId(campaingnCancelRequest.id);
+                                }}
+                              >
+                                View Cancel Request
+                              </span>
                             </div>
                           )}
                         </div>
-                        <div className="gcgc">
-                          <h4 className="my-3">About you</h4>
-                          <div className="my-4">
-                            <p className="faded-p">Email address</p>
-                            <p className="norm-p">{toshow.email}</p>
-                          </div>
+                        {typeof toshow.campaignable_type !== "undefined" &&
+                          typeof thisUserInfo.user !== "undefined" &&
+                          typeof thisCampaignInfo.campaign_type !==
+                            "undefined" && (
+                            <>
+                              {JSON.stringify(toshow)}
+                              {/* {JSON.stringify(thisUserInfo)} */}
+                              {JSON.stringify(thisCampaignInfo.campaign_type)}
+                              {toshow.campaignable_type.includes(
+                                "EmailSearch"
+                              ) === true && (
+                                <div className="gcgc">
+                                  <h4 className="my-3">About you</h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Email address</p>
+                                    <p className="norm-p">
+                                      {thisUserInfo.user.email}
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">First Name and Last Name</p>
-                            <p className="norm-p">{toshow.name}</p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Full Name</p>
+                                    <p className="norm-p">
+                                      {thisUserInfo.user.name}
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">LinkedIn username</p>
-                            <p className="norm-p">{toshow.linkdn_username}</p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Company</p>
+                                    <p className="norm-p">
+                                      {thisUserInfo.user.company}
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">LinkedIn password</p>
-                            <p className="norm-p">{toshow.linkdn_password}</p>
-                          </div>
+                                  <h4 className="my-3 bb-h4">
+                                    About your campaign
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Job Title</p>
+                                    <p className="norm-p">
+                                      {thisCampaignInfo.campaign_type.job_title}
+                                    </p>
+                                  </div>
 
-                          <h4 className="my-3 bb-h4">About your campaign</h4>
-                          <div className="my-4">
-                            <p className="faded-p">Candidate Options</p>
-                            <p className="norm-p">{toshow.campaign_options}</p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Job Status</p>
+                                    <p className="norm-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .job_status
+                                      }
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Campaign Durations</p>
-                            <p className="norm-p">{toshow.campaign_duration}</p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Skill and Keywords
+                                    </p>
+                                    <p className="norm-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .skills_and_keyword
+                                      }
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">CRM</p>
-                            <p className="norm-p">{toshow.crm}</p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Industry</p>
+                                    <p className="norm-p">
+                                      {thisCampaignInfo.campaign_type.industry}
+                                    </p>
+                                  </div>
 
-                          <h4 className="my-3 bb-h4">Candidate Acquisition</h4>
-                          <div className="my-4">
-                            <p className="faded-p">Job Title</p>
-                            <p className="norm-p">{toshow.job_titles}</p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Location</p>
+                                    <p className="norm-p">
+                                      {thisCampaignInfo.campaign_type.location}
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Skills and Keywords</p>
-                            <p className="norm-p">{toshow.skills}</p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Duration in Company Role
+                                    </p>
+                                    <p className="norm-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .duration_in_current_role
+                                      }
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Image attached</p>
-                            <img src="../../assets/img/Rec-586.png" />
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Company Size</p>
+                                    <p className="norm-p lng-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .company_size
+                                      }
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              {toshow.campaignable_type.includes(
+                                "CompanySearch"
+                              ) === true && (
+                                <div className="gcgc">
+                                  <h4 className="my-3">About you</h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Email address</p>
+                                    <p className="norm-p">{toshow.email}</p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Industry</p>
-                            <p className="norm-p">{toshow.industry}</p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      First Name and Last Name
+                                    </p>
+                                    <p className="norm-p">{toshow.name}</p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Location</p>
-                            <p className="norm-p">{toshow.location}</p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">LinkedIn username</p>
+                                    <p className="norm-p">
+                                      {toshow.linkdn_username}
+                                    </p>
+                                  </div>
 
-                          <h4 className="my-3 bb-h4">
-                            Candidate Linkedln Message
-                          </h4>
-                          <div className="my-4">
-                            <p className="faded-p">
-                              Your Connection Request Message
-                            </p>
-                            <p className="norm-p lng-p">
-                              {toshow.connection_request_message}
-                            </p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">LinkedIn password</p>
+                                    <p className="norm-p">
+                                      {toshow.linkdn_password}
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Follow up message</p>
-                            <p className="norm-p lng-p">
-                              {toshow.follow_up_message}
-                            </p>
-                          </div>
-                          <h4 className="my-3 bb-h4">Client Acquisition</h4>
-                          <div className="my-4">
-                            <p className="faded-p">Job Title</p>
-                            <p className="norm-p">
-                              {toshow.hiring_manager_job_titles}
-                            </p>
-                          </div>
+                                  <h4 className="my-3 bb-h4">
+                                    About your campaign
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Description</p>
+                                    <p className="norm-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .description
+                                      }
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Skills and Keywords</p>
-                            <p className="norm-p">
-                              {toshow.hiring_manager_skills}
-                            </p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Location</p>
+                                    <p className="norm-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .hq_location
+                                      }
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Industry</p>
-                            <p className="norm-p">
-                              {toshow.hiring_manager_industry}
-                            </p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Industry</p>
+                                    <p className="norm-p">
+                                      {thisCampaignInfo.campaign_type.industry}
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Company SIze</p>
-                            <p className="norm-p">
-                              {toshow.hiring_manager_company_size}
-                            </p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Number of Employees
+                                    </p>
+                                    <p className="norm-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .no_of_employees
+                                      }
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Location</p>
-                            <p className="norm-p">
-                              {toshow.hiring_manager_location}
-                            </p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Estimated Revenue Range
+                                    </p>
+                                    <p className="norm-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .estimated_revenue_range
+                                      }
+                                    </p>
+                                  </div>
 
-                          <h4 className="my-3 bb-h4">
-                            Company Linkedln Message
-                          </h4>
-                          <div className="my-4">
-                            <p className="faded-p">
-                              Your Connection Request Message
-                            </p>
-                            <p className="norm-p lng-p">
-                              {toshow.hiring_manager_connection_request_message}
-                            </p>
-                          </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Founded</p>
+                                    <p className="norm-p">
+                                      {thisCampaignInfo.campaign_type.founded}
+                                    </p>
+                                  </div>
 
-                          <div className="my-4">
-                            <p className="faded-p">Follow up message</p>
-                            <p className="norm-p lng-p">
-                              {toshow.hiring_manager_follow_up_message}
-                            </p>
-                          </div>
-                        </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Actively Hiring</p>
+                                    <p className="norm-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .actively_hiring
+                                      }
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Leadership Hire</p>
+                                    <p className="norm-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .leadership_hire
+                                      }
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Company Type</p>
+                                    <p className="norm-p lng-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .company_type
+                                      }
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              {toshow.campaignable_type.includes(
+                                "DataExtract"
+                              ) === true && (
+                                <div className="gcgc">
+                                  <h4 className="my-3">About you</h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Email address</p>
+                                    <p className="norm-p">{toshow.email}</p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      First Name and Last Name
+                                    </p>
+                                    <p className="norm-p">{toshow.name}</p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">LinkedIn username</p>
+                                    <p className="norm-p">
+                                      {toshow.linkdn_username}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">LinkedIn password</p>
+                                    <p className="norm-p">
+                                      {toshow.linkdn_password}
+                                    </p>
+                                  </div>
+
+                                  <h4 className="my-3 bb-h4">
+                                    About your campaign
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Candidate Options</p>
+                                    <p className="norm-p">
+                                      {toshow.campaign_options}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Campaign Durations
+                                    </p>
+                                    <p className="norm-p">
+                                      {toshow.campaign_duration}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">CRM</p>
+                                    <p className="norm-p">{toshow.crm}</p>
+                                  </div>
+
+                                  <h4 className="my-3 bb-h4">
+                                    Candidate Acquisition
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Job Title</p>
+                                    <p className="norm-p">
+                                      {toshow.job_titles}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Skills and Keywords
+                                    </p>
+                                    <p className="norm-p">{toshow.skills}</p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Image attached</p>
+                                    <img src="../../assets/img/Rec-586.png" />
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Industry</p>
+                                    <p className="norm-p">{toshow.industry}</p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Location</p>
+                                    <p className="norm-p">{toshow.location}</p>
+                                  </div>
+
+                                  <h4 className="my-3 bb-h4">
+                                    Candidate Linkedln Message
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Your Connection Request Message
+                                    </p>
+                                    <p className="norm-p lng-p">
+                                      {toshow.connection_request_message}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Follow up message</p>
+                                    <p className="norm-p lng-p">
+                                      {toshow.follow_up_message}
+                                    </p>
+                                  </div>
+                                  <h4 className="my-3 bb-h4">
+                                    Client Acquisition
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Job Title</p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_job_titles}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Skills and Keywords
+                                    </p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_skills}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Industry</p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_industry}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Company SIze</p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_company_size}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Location</p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_location}
+                                    </p>
+                                  </div>
+
+                                  <h4 className="my-3 bb-h4">
+                                    Company Linkedln Message
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Your Connection Request Message
+                                    </p>
+                                    <p className="norm-p lng-p">
+                                      {
+                                        toshow.hiring_manager_connection_request_message
+                                      }
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Follow up message</p>
+                                    <p className="norm-p lng-p">
+                                      {toshow.hiring_manager_follow_up_message}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                              {toshow.campaignable_type.includes("Engage") ===
+                                true && (
+                                <div className="gcgc">
+                                  <h4 className="my-3">About you</h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Email address</p>
+                                    <p className="norm-p">{toshow.email}</p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      First Name and Last Name
+                                    </p>
+                                    <p className="norm-p">{toshow.name}</p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">LinkedIn username</p>
+                                    <p className="norm-p">
+                                      {toshow.linkdn_username}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">LinkedIn password</p>
+                                    <p className="norm-p">
+                                      {toshow.linkdn_password}
+                                    </p>
+                                  </div>
+
+                                  <h4 className="my-3 bb-h4">
+                                    About your campaign
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Candidate Options</p>
+                                    <p className="norm-p">
+                                      {toshow.campaign_options}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Campaign Durations
+                                    </p>
+                                    <p className="norm-p">
+                                      {toshow.campaign_duration}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">CRM</p>
+                                    <p className="norm-p">{toshow.crm}</p>
+                                  </div>
+
+                                  <h4 className="my-3 bb-h4">
+                                    Candidate Acquisition
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Job Title</p>
+                                    <p className="norm-p">
+                                      {toshow.job_titles}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Skills and Keywords
+                                    </p>
+                                    <p className="norm-p">{toshow.skills}</p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Image attached</p>
+                                    <img src="../../assets/img/Rec-586.png" />
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Industry</p>
+                                    <p className="norm-p">{toshow.industry}</p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Location</p>
+                                    <p className="norm-p">{toshow.location}</p>
+                                  </div>
+
+                                  <h4 className="my-3 bb-h4">
+                                    Candidate Linkedln Message
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Your Connection Request Message
+                                    </p>
+                                    <p className="norm-p lng-p">
+                                      {toshow.connection_request_message}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Follow up message</p>
+                                    <p className="norm-p lng-p">
+                                      {toshow.follow_up_message}
+                                    </p>
+                                  </div>
+                                  <h4 className="my-3 bb-h4">
+                                    Client Acquisition
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">Job Title</p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_job_titles}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Skills and Keywords
+                                    </p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_skills}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Industry</p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_industry}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Company SIze</p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_company_size}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Location</p>
+                                    <p className="norm-p">
+                                      {toshow.hiring_manager_location}
+                                    </p>
+                                  </div>
+
+                                  <h4 className="my-3 bb-h4">
+                                    Company Linkedln Message
+                                  </h4>
+                                  <div className="my-4">
+                                    <p className="faded-p">
+                                      Your Connection Request Message
+                                    </p>
+                                    <p className="norm-p lng-p">
+                                      {
+                                        toshow.hiring_manager_connection_request_message
+                                      }
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Follow up message</p>
+                                    <p className="norm-p lng-p">
+                                      {toshow.hiring_manager_follow_up_message}
+                                    </p>
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          )}
                       </div>
                       <div className="col-sm-3">
                         <div className="card action-card">

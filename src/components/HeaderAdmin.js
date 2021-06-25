@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 export default function Header() {
   const {
@@ -9,7 +10,7 @@ export default function Header() {
     userDetails,
     adminNotifications,
     adminAlert,
-    logout,
+    adminLogout,
   } = useContext(providerFunctions);
 
   const [notify, setNotify] = useState([]);
@@ -21,7 +22,7 @@ export default function Header() {
   useEffect(() => {
     if (typeof adminAlert.notifications !== "undefined") {
       setNotify(adminAlert.notifications);
-      console.log("test");
+      // console.log("test");
     }
   }, [adminAlert]);
 
@@ -57,7 +58,7 @@ export default function Header() {
           </div>
 
           <div className="navbar-collapse collapse">
-            <form className="d-none d-sm-inline-block">
+            {/* <form className="d-none d-sm-inline-block">
               <div className="input-group input-group-navbar">
                 <img
                   src="../../assets/img/search-1.svg"
@@ -73,7 +74,7 @@ export default function Header() {
                   aria-label="Search"
                 />
               </div>
-            </form>
+            </form> */}
 
             <div className="dropdown">
               <a
@@ -81,30 +82,41 @@ export default function Header() {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <img
-                  src="../../assets/img/Group-61.svg"
-                  alt=""
-                  width="20"
-                  height="40"
-                  className="notifik"
-                />
+                <span className="bi bi-bell notifik"></span>
+                <span className="badge">{notify.length}</span>
               </a>
               <ul
                 className="dropdown-menu dropdown-menu-end notify-drop"
                 aria-labelledby="dropdownMenu2"
               >
-                {console.log("test", adminAlert.notifications)}
-                {notify.map((thisAdminAlertData, index) => {
-                  return (
-                    <li key={index}>
-                      <p className="dropdown-item">
-                        {thisAdminAlertData.data.message}
-                        {/* {console.log(thisAdminAlertData.data.message)} */}
-                      </p>
-                    </li>
-                  );
-                })}
-                <button>View ALl</button>
+                <h6 className="notify-head">{notify.length} Notifications</h6>
+                {/* {console.log("test", adminAlert.notifications)} */}
+                {notify.length !== 0 ? (
+                  notify.map((thisAdminAlertData, index) => {
+                    if (index < 5) {
+                      return (
+                        <>
+                          <li key={index} className="notify-data">
+                            <p className="dropdown-item notify-msg">
+                              {thisAdminAlertData.data.message}
+                              {/* {console.log(thisAdminAlertData.data.message)} */}
+                            </p>
+                            <span className="notify-time">
+                              {moment(thisAdminAlertData.created_at).fromNow()}
+                            </span>
+                          </li>
+                        </>
+                      );
+                    }
+                  })
+                ) : (
+                  <li>
+                    <p className="dropdown-item">
+                      You currently have no notifications
+                    </p>
+                  </li>
+                )}
+                <button className="notify-btn">View All</button>
               </ul>
             </div>
 
@@ -163,7 +175,7 @@ export default function Header() {
                     <button
                       className="dropdown-item"
                       type="button"
-                      onClick={() => logout()}
+                      onClick={() => adminLogout()}
                     >
                       Log Out
                     </button>

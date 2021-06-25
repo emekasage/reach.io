@@ -10,12 +10,14 @@ import Campaign from "./pages/Campaign";
 import BuyCredit from "./pages/BuyCredit";
 import Signup from "./pages/Signup";
 import ChangePassword from "./pages/ChangePassword";
+import LinkedlnUser from "./pages/LinkedlnUser";
 // Admin Routes
 import AdminLogin from "./pages/LoginAdmin";
 import AdminDashboard from "./admin/Dashboard";
 import AdminUsers from "./admin/Clients";
 import AdminSettings from "./admin/Settings";
 import AdminCampaign from "./admin/Campaign";
+import AdminNotifications from "./admin/Notifications";
 import { providerFunctions } from "./provider/FunctionsProvider";
 import AppModal from "./components/AppModal";
 
@@ -38,6 +40,10 @@ export default function Routes() {
         <Route path="/settings" component={loggedIn ? Settings : Login} />
         <Route path="/campaign" component={loggedIn ? Campaign : Login} />
         <Route path="/buycredit" component={loggedIn ? BuyCredit : Login} />
+        <Route
+          path="/linkedln_user"
+          component={loggedIn ? LinkedlnUser : Login}
+        />
 
         {/********** ADMIN ROUTES **********/}
 
@@ -62,6 +68,10 @@ export default function Routes() {
         <Route
           path="/admin/campaign"
           component={loggedIn ? AdminCampaign : AdminLogin}
+        />
+        <Route
+          path="/admin/notifications"
+          component={loggedIn ? AdminNotifications : AdminLogin}
         />
         <Redirect to="/login" />
       </Switch>

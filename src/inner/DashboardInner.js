@@ -22,10 +22,6 @@ export default function DashboardInner() {
     userDetails,
   } = useContext(providerFunctions);
 
-  const [campaignIdFilter, setCampaignIdFilter] = useState("");
-  const [viewAll] = useState(false);
-  const [rows, setRows] = useState([]);
-
   useEffect(() => {
     getAllUsers();
   });
@@ -44,7 +40,6 @@ export default function DashboardInner() {
   }, []);
 
   const [connectionsData, setConnectionsData] = useState([]);
-  const [campaignIds, setCampaignIds] = useState([]);
 
   useEffect(() => {
     // console.log(allConnections.allConnections);
@@ -58,39 +53,7 @@ export default function DashboardInner() {
 
   useEffect(() => {
     // console.log(connectionsData);
-    getCampaignsId();
   }, [connectionsData]);
-
-  useEffect(() => {
-    if (typeof connectionsData[0] !== "undefined") {
-      let tempdata = connectionsData.filter((thisdata) => {
-        if (
-          Number(campaignIdFilter) !== Number(thisdata.campaign_id) &&
-          !viewAll
-        ) {
-          if (campaignIdFilter !== "") {
-            console.log(Number(campaignIdFilter), Number(thisdata.campaign_id));
-            return false;
-          }
-        }
-      });
-      setRows(tempdata);
-    }
-  }, [connectionsData, campaignIdFilter]);
-
-  useEffect(() => {}, [rows]);
-
-  const onlyUnique = (value, index, self) => {
-    return self.indexOf(value) === index;
-  };
-  const getCampaignsId = () => {
-    var allC = [];
-    for (var i = 0; i < connectionsData.length; i++) {
-      allC.push(connectionsData[i].campaign_id);
-    }
-    var unique = allC.filter(onlyUnique);
-    setCampaignIds(unique);
-  };
 
   return (
     <div className={`pagebody ${showSideBar ? "" : "expand"}`}>
@@ -343,20 +306,6 @@ export default function DashboardInner() {
                   <div className="card-header table-card-head d-flex justify-content-between">
                     <h5 className="card-title mb-0 table-title">Connections</h5>
                     <div className="table-attr">
-                      <select
-                        className="form-select form-select-sm col-select"
-                        aria-label="Default select example"
-                        onChange={(e) => setCampaignIdFilter(e.target.value)}
-                      >
-                        <option selected hidden>
-                          Select a campaign
-                        </option>
-                        {campaignIds.map((thisCampaignId, index) => {
-                          <option value={thisCampaignId} key={index}>
-                            {thisCampaignId}
-                          </option>;
-                        })}
-                      </select>
                       <CSVLink
                         data={connectionsData}
                         download="Reachio-Clients-list.csv"

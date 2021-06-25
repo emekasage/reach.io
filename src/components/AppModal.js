@@ -15,6 +15,8 @@ import UpdateRoleModal from "./UpdateRoleModal";
 import AddLeadsModal from "./AddLeadsModal";
 import CreateSequenceModal from "./CreateSequenceModal";
 import ViewEngageSteps from "./ViewEngageSteps";
+import RerunCampaignModal from "./RerunCampaignModal";
+import AddLinkedlnUserModal from "./AddLinkedlnUserModal";
 import ClickOutside from "react-click-outside";
 
 export default function Modal() {
@@ -109,6 +111,18 @@ export default function Modal() {
               setShowModal={setShowModal}
               userId={userId}
             ></ViewEngageSteps>
+          )}
+          {modalPage === "rerun_campaign" && (
+            <RerunCampaignModal
+              setShowModal={setShowModal}
+              userId={userId}
+            ></RerunCampaignModal>
+          )}
+          {modalPage === "add_linkedln_user" && (
+            <AddLinkedlnUserModal
+              setShowModal={setShowModal}
+              userId={userId}
+            ></AddLinkedlnUserModal>
           )}
         </ClickOutside>
       </div>

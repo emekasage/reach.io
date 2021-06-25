@@ -1,6 +1,8 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useMemo, useRef } from "react";
 // import { Link } from "react-router-dom";
 import { providerFunctions } from "../provider/FunctionsProvider";
+import Select from "react-select";
+import countryList from "react-select-country-list";
 
 export default function AssignUserModal() {
   const {
@@ -8,15 +10,49 @@ export default function AssignUserModal() {
     linkedlnUsers,
     assignUserToCampaign,
     assignUserMessage,
+    sendRobotData,
+    getRobotMessage,
+    robotMessages,
   } = useContext(providerFunctions);
   const [showOptions, setShowOptions] = useState(false);
   const [showSecOption, setShowSecOption] = useState(false);
   const [linkUser, setLinkUser] = useState([]);
+  const [value, setValue] = useState("");
+  const options = useMemo(() => countryList().getData(), []);
   // const [pickedUserId] = useState(null);
   useEffect(() => {
     getLinkedlnUser();
     assignUserToCampaign();
+    getRobotMessage();
   }, []);
+
+  const handleUsernameChange = () => {
+    console.log(usernameRef.current.value);
+  };
+
+  const handlePasswordChange = () => {
+    console.log(passwordRef.current.value);
+  };
+
+  const handleCountryChange = () => {
+    console.log(countryRef.current.value);
+  };
+
+  const usernameRef = useRef(null);
+  const passwordRef = useRef(null);
+  const countryRef = useRef(null);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      var lu = usernameRef.current.value;
+      var lp = passwordRef.current.value;
+      var lc = passwordRef.current.value;
+      await sendRobotData(lu, lp, lc);
+      // console.log(res.message);
+    } catch (error) {
+      console.log("yabababababababa", error.message);
+    }
+  };
 
   useEffect(() => {
     if (typeof linkedlnUsers.linkedinUsers !== "undefined") {
@@ -52,6 +88,10 @@ export default function AssignUserModal() {
       {typeof assignUserMessage.error !== "undefined" && (
         <div className="error">{assignUserMessage.error}</div>
       )}
+
+      {typeof robotMessages !== "undefined" && (
+        <div className="error">{robotMessages.status}</div>
+      )}
       <div
         className="my-3 mod-check no1"
         onClick={() => {
@@ -86,6 +126,15 @@ export default function AssignUserModal() {
               );
             })}
           </select>
+
+          <button
+            className="mt-2 assign-btn"
+            onClick={() => {
+              assignUserToCampaign(linkedlnId);
+            }}
+          >
+            Assign User
+          </button>
         </div>
       )}
 
@@ -111,6 +160,8 @@ export default function AssignUserModal() {
               className="form-control inner-input"
               id="exampleFormControlInput1"
               placeholder="Linkedln Username"
+              ref={usernameRef}
+              onChange={handleUsernameChange}
             />
           </div>
           <div className="my-2 mod-form">
@@ -119,19 +170,37 @@ export default function AssignUserModal() {
               className="form-control inner-input"
               id="exampleFormControlInput1"
               placeholder="Linkedln Password"
+              ref={passwordRef}
+              onChange={handlePasswordChange}
             />
           </div>
+          <div className="my-2">
+            <Select
+              options={options}
+              className="form-control inner-input"
+              value={value}
+              ref={countryRef}
+              onChange={(countryRef) => {
+                handleCountryChange(countryRef, "country");
+                setValue(countryRef);
+              }}
+              name="country"
+              id="country-name-inner"
+              placeholder="Select Country"
+            />
+          </div>
+          <button className="mt-2 assign-btn" onClick={handleSubmit}>
+            Add User
+          </button>
+          <button
+            className="mt-2 assign-btn"
+            style={{ marginLeft: "5px" }}
+            onClick={handleSubmit}
+          >
+            Add 2FA Code
+          </button>
         </div>
       )}
-
-      <button
-        className="assign-btn"
-        onClick={() => {
-          assignUserToCampaign(linkedlnId);
-        }}
-      >
-        Assign User
-      </button>
     </div>
   );
 }

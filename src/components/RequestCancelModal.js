@@ -25,7 +25,6 @@ export default function RequestCancelModal(props) {
       await cancelCampaign(campaignId, cr);
       setPage(3);
       // console.log(res.message);
-      // setResMsg(res.message);
     } catch (error) {
       console.log("yabababababababa", error.message);
     }

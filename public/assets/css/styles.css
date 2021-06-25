@@ -263,6 +263,16 @@ button.dropdown-item {
   height: auto;
 }
 
+button.notify-btn {
+  display: block;
+  margin: 0 auto;
+  border: 1px solid #5a0288;
+  padding: 5px 15px;
+  background: #5a0288;
+  color: #fff;
+  font-family: "Nunito";
+}
+
 p.dropdown-item {
   font-family: "Nunito";
 }
@@ -273,6 +283,10 @@ p.dropdown-item {
   float: left;
   margin-top: 70px;
   transition-timing-function: ease;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: transform;
+  transition-property: transform;
 }
 .sidebar ul {
   padding-left: 0;
@@ -868,7 +882,14 @@ button.admin-ban {
   font-family: "Nunito";
 }
 
-.campaign-dets h5 {
+button#pills-data-extract-tab {
+  width: max-content;
+}
+
+.contact-tabs {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: nowrap !important;
 }
 
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
@@ -1306,6 +1327,34 @@ button.decline-btn {
   border-radius: 3px;
 }
 
+.bi-three-dots-vertical {
+  color: #c4c4c4;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.dots_details {
+  font-size: 14px;
+  cursor: pointer;
+  margin: 0 !important;
+  padding: 10px;
+}
+
+.dots_details:hover {
+  background: #5a0288;
+  color: #fff;
+}
+
+p#rerun_camp {
+  border-bottom: 1px solid #e6e8f1;
+}
+
+p#cancel_stuff {
+  margin-bottom: 0 !important;
+  margin-top: -10px;
+  border-bottom: 1px solid #e6e8f1;
+}
+
 .company-steps {
   margin: 0 auto;
 }
@@ -1505,6 +1554,51 @@ button.decline-btn {
   min-height: 0 !important;
   padding-left: 0 !important;
   margin-bottom: 0 !important;
+  display: flex !important;
+  justify-content: flex-start;
+}
+
+.delays .step_day {
+  padding-right: 10px;
+}
+
+.delays .step_day label {
+  padding-right: 5px;
+}
+
+.delays .step_hr label {
+  padding-right: 5px;
+}
+
+.eng-btns {
+  display: flex;
+  justify-content: flex-end;
+  padding: 100px;
+  font-family: "Nunito";
+}
+
+button.temp-btn {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background: #fff;
+  border: 1px solid #333;
+}
+
+button.continue-btn {
+  margin-right: 10px;
+  padding: 10px 20px;
+  background: #5a0288;
+  border: 1px solid #5a0288;
+  color: #fff;
+}
+
+button.bck-btn {
+  border: 1px solid #5a0288;
+  padding: 10px 25px;
+  background: #5a0288;
+  color: #fff;
+  font-family: "Nunito";
+  font-weight: 600;
 }
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 1) {
   .card-body.action-btns {
@@ -1845,6 +1939,19 @@ button.assign-btn {
   font-size: 20px;
   color: #09d105;
 }
+
+.saved-items {
+  border: 1px solid #e6e8f1;
+  margin: 0 100px;
+  padding: 30px;
+  display: flex;
+  background: #fff;
+  justify-content: space-around;
+}
+
+.saved-items span {
+  font-family: "Nunito";
+}
 /* end of new create campaign */
 
 .form-check-label {
@@ -2126,6 +2233,27 @@ button.no-btn:hover {
 .inner-input {
   width: 90% !important;
   margin-left: 20px;
+  border: none !important;
+}
+
+input#exampleFormControlInput1 {
+  border: 1px solid #ced4da !important;
+}
+
+div#country-name-inner {
+  padding: 0 45px;
+  margin-left: 25px;
+}
+.request-head {
+  font-size: 18px !important;
+  font-weight: 600;
+  color: #5a0288;
+}
+
+.request-body {
+  display: block;
+  margin: 50px auto;
+  font-family: "Nunito";
 }
 
 /* end of modal */
@@ -2280,4 +2408,55 @@ ul#pills-tab:hover {
 
 .red {
   color: #f33 !important;
+}
+
+/*** NOTIFICATIONS ***/
+h6.notify-head {
+  font-family: "Nunito";
+  font-weight: 600;
+  border-bottom: 1px solid #c4c4c4;
+  padding: 10px 15px;
+}
+
+span.notify-time {
+  font-family: "Poppins", sans-serif;
+  font-size: 13px;
+}
+
+li.notify-data {
+  padding: 10px;
+}
+
+.notify-msg {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+span.bi.bi-bell.notifik {
+  font-size: 22px;
+  color: #333;
+  cursor: pointer;
+}
+
+span.badge {
+  position: absolute;
+  background: #ff0000;
+  padding: 5px !important;
+  border-radius: 50% !important;
+  right: -9px;
+  bottom: 15px;
+  font-size: 0.65em !important;
+  font-family: "Nunito";
+}
+
+.notify-area {
+  padding: 10px 0;
+  border-bottom: #e6e8f1;
+}
+
+.notify-btn.not {
+  margin: 0 !important;
+}
+
+.notify-prt {
 }

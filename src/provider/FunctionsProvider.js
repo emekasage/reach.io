@@ -6,6 +6,36 @@ import { useHistory } from "react-router-dom";
 
 const FunctionsProvider = (props) => {
   const REACT_APP_API_URL = "https://reachio-api-v1.herokuapp.com/api";
+  const steps = [
+    { icon: "", text: "View Profile" },
+    { icon: "", text: "Send Connection Request" },
+    { icon: "", text: "Like a Post" },
+    { icon: "", text: "Send Follow Up Message" },
+  ];
+  const [engageDetails, setEngageDetails] = useState({
+    job_title: "",
+    location: "",
+    industry: "",
+    // view_profile_seq_duration[0]: "",
+    // view_profile_seq_duration[1]: "",
+    company_size: "",
+    // follow_contact_seq_duration[0]: "",
+    // follow_contact_seq_duration[1]: "",
+    list_name: "",
+    connection_status: "",
+    job_status: "",
+    like_a_post_seq: "",
+    send_follow_up_seq_message: "",
+    skills_keywords: "",
+    duration_current_role: "",
+  });
+  const [selectedSteps, setSelectedSteps] = useState([]);
+  const resetStep = () => {
+    setSelectedSteps([
+      { icon: "", text: "View Profile", days: 0, hours: 0 },
+      { icon: "", text: "Follow Contact", days: 0, hours: 0 },
+    ]);
+  };
   const [paymentStatus, setPaymentStatus] = useState(false);
   const [paymentMessage, setPaymentMessage] = useState("");
   const [showSideBar, setShowSideBar] = useState(true);
@@ -17,6 +47,8 @@ const FunctionsProvider = (props) => {
   const [roleId, setRoleId] = useState("");
   const [campaignId, setCampaignId] = useState(null);
   const [requestId, setRequestId] = useState(null);
+  const [campaignPage, setCampaignPage] = useState(1);
+  const [userCampaignPage, setUserCampaignPage] = useState(1);
   const [cancelRequest, setCancelRequests] = useState({
     campaign_requests: { data: [] },
   });
@@ -25,7 +57,7 @@ const FunctionsProvider = (props) => {
     { id: 1, name: "Follow Contact", days: 0, hours: 0 },
   ]);
   const [createListPage, setCreateListPage] = useState(1);
-  const [singleCancelRequest, setSingleCancelRequest] = useState({});
+  const [singleCancelRequest, setSingleCancelRequest] = useState([]);
   const [imageFile, setImageFile] = useState([]);
   const [token, setToken] = useState("");
   const [passwordToken, setPasswordToken] = useState("");
@@ -82,6 +114,12 @@ const FunctionsProvider = (props) => {
   const [userAlert, setUserAlert] = useState({});
   const [adminAlert, setAdminAlert] = useState({});
   const [creditUtilized, setCreditUtilized] = useState({});
+  const [companySearchResult, setCompanySearchResult] = useState({});
+  const [emailSearchResult, setEmailSearchResult] = useState({});
+  const [rerunMessage, setRerunMessage] = useState({});
+  const [extractResult, setExtractResult] = useState({});
+  const [robotMessages, setRobotMessages] = useState({});
+  const [saveEngageList, setSaveEngageList] = useState({});
 
   let history = useHistory();
   // useEffect(() => {
@@ -91,6 +129,14 @@ const FunctionsProvider = (props) => {
   //     }, 60000);
   //   }
   // }, [creditMessage]);
+  useEffect(() => {
+    campaignManagement(campaignPage);
+  }, [campaignPage]);
+
+  useEffect(() => {
+    userCampaign(userCampaignPage);
+  }, [userCampaignPage]);
+
   useEffect(() => {
     if (
       typeof localStorage.getItem("token") !== "undefined" &&
@@ -239,7 +285,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(REACT_APP_API_URL + "/admin/user/" + userId + "/ban", requestOptions)
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((result) => {
         getAllUsers();
         enqueueSnackbar("User banned", {
@@ -315,47 +361,25 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
   /*************** CREATE CAMPAIGN *****************/
-  const createCampaign = (campaignDetails) => {
+
+  /*** COMPANY SEARCH CAMPAIGN ***/
+  const companySearch = (companyDetails) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
 
     var formdata = new FormData();
-    formdata.append("campaign_name", campaignDetails.name);
-    formdata.append("email", campaignDetails.email);
-    formdata.append("company", campaignDetails.company);
-    formdata.append("campaign_duration", campaignDetails.duration);
-    formdata.append("campaign_options", campaignDetails.options);
-    formdata.append("crm", campaignDetails.crm);
-    formdata.append("others", campaignDetails.others);
-    formdata.append("job_titles", campaignDetails.job_titles);
-    formdata.append("skills_and_keywords", campaignDetails.skills_keywords);
-    formdata.append("industry", campaignDetails.industry);
-    formdata.append("location", campaignDetails.location);
+    formdata.append("description", companyDetails.description);
+    formdata.append("hq_location", companyDetails.hq_location);
+    formdata.append("industry", companyDetails.industry);
+    formdata.append("no_of_employees", companyDetails.no_of_employees);
     formdata.append(
-      "send_connection_request_message",
-      campaignDetails.send_connection_request
+      "estimated_revenue_range",
+      companyDetails.estimated_revenue_range
     );
-    formdata.append("send_follow_up_message", campaignDetails.send_follow_up);
-    formdata.append(
-      "hiring_manager_connection_request_message",
-      campaignDetails.hiring_manager_connection_request
-    );
-    formdata.append(
-      "hiring_manager_follow_up_message",
-      campaignDetails.hiring_manager_follow_up
-    );
-    formdata.append("open_to_opportunities", campaignDetails.opportunities);
-    formdata.append(
-      "duration_in_current_role",
-      campaignDetails.duration_current_role
-    );
-    formdata.append("company_size", campaignDetails.company_size);
-    formdata.append("sequence_step[0]", campaignDetails.sequence_step_0);
-    formdata.append(
-      "extract_data_after_person_connected",
-      campaignDetails.extract_data_after_person_connected
-    );
-    formdata.append("sequence_step[1]", campaignDetails.sequence_step_1);
+    formdata.append("founded", companyDetails.founded);
+    formdata.append("actively_hiring", companyDetails.actively_hiring);
+    formdata.append("leadership_hire", companyDetails.leadership_hire);
+    formdata.append("company_type", companyDetails.company_type);
 
     var requestOptions = {
       method: "POST",
@@ -364,7 +388,273 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/campaign/create", requestOptions)
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/campaign/create/company-search",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        userCampaign();
+        setCompanySearchResult(result);
+        // console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  /*** EMAIL SEARCH CAMPAIGN ***/
+  const emailSearch = (emailDetails) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var formdata = new FormData();
+    formdata.append("job_title", emailDetails.job_title);
+    formdata.append("job_status", emailDetails.job_status);
+    formdata.append("skills_and_keyword", emailDetails.skills_keywords);
+    formdata.append("location", emailDetails.location);
+    formdata.append("industry", emailDetails.industry);
+    formdata.append(
+      "duration_in_current_role",
+      emailDetails.duration_current_role
+    );
+    formdata.append("company_size", emailDetails.company_size);
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/campaign/create/email-search",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        userCampaign();
+        setEmailSearchResult(result);
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  /*** DATA EXTRACT CAMPAIGN ***/
+  const dataExtract = (extractDetails) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var formdata = new FormData();
+    formdata.append("job_title", extractDetails.job_title);
+    formdata.append("job_status", extractDetails.job_status);
+    formdata.append("skills_and_keyword", extractDetails.skills_keywords);
+    formdata.append("location", extractDetails.location);
+    formdata.append("industry", extractDetails.industry);
+    formdata.append(
+      "duration_in_current_role",
+      extractDetails.duration_current_role
+    );
+    formdata.append("company_size", extractDetails.company_size);
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/campaign/create/data-extract",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        userCampaign();
+        setExtractResult(result);
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  /*** ENGAGE CAMPAIGN ***/
+  const engageCampaign = () => {
+    let viewProfile = { icon: "", text: "View Profile", days: 0, hours: 0 };
+    let connectionRequest = {
+      icon: "",
+      text: "Send Connection Request",
+      days: 0,
+      hours: 0,
+    };
+    let likeAPost = { icon: "", text: "Like a Post", days: 0, hours: 0 };
+    let followMessage = {
+      icon: "",
+      text: "Send Follow Up Message",
+      days: 0,
+      hours: 0,
+    };
+
+    selectedSteps.filter((thisSelectedStep) => {
+      if (thisSelectedStep.text === "View Profile") {
+        viewProfile = thisSelectedStep;
+      } else if (thisSelectedStep.text === "Send Connection Request") {
+        connectionRequest = thisSelectedStep;
+      } else if (thisSelectedStep.text === "Like a Post") {
+        likeAPost = thisSelectedStep;
+      } else {
+        followMessage = thisSelectedStep;
+      }
+    });
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    console.log(
+      selectedSteps,
+      viewProfile,
+      connectionRequest,
+      likeAPost,
+      followMessage
+    );
+    var formdata = new FormData();
+    formdata.append("job_title", "Software Engineer");
+    formdata.append("industry", "Information Technology");
+    formdata.append("location", "Lagos, Nigeria");
+    formdata.append("duration_in_current_role", "1-3 years");
+    formdata.append("company_size", "10");
+    formdata.append("skills_and_keyword", "java, php, python");
+    formdata.append("list_name", "My company list");
+    formdata.append("connection_status", "1st level connections");
+    formdata.append("job_status", "Current");
+
+    // formdata.append("view_profile_seq_duration[0]", "days: 2");
+    // formdata.append("view_profile_seq_duration[1]", "hours: 10");
+    // formdata.append("follow_contact_seq_duration[0]", "days: 2");
+    // formdata.append("follow_contact_seq_duration[1]", "hours: 10");
+    // formdata.append("send_follow_up_seq_message[0]", "hours:10");
+    // formdata.append("send_follow_up_seq_message[1]", "days: 2");
+
+    // formdata.append("like_a_post_seq[0]", "hours: 10");
+    // formdata.append("like_a_post_seq[1]", "days:2");
+    // formdata.append("like_a_post_seq[2]", "message: Loremipsum");
+
+    formdata.append(
+      "view_profile_seq_duration[0]",
+      "days: " + viewProfile.days
+    );
+    formdata.append(
+      "view_profile_seq_duration[1]",
+      "hours: " + viewProfile.hours
+    );
+    formdata.append(
+      "follow_contact_seq_duration[0]",
+      "days: " + connectionRequest.days
+    );
+    formdata.append(
+      "follow_contact_seq_duration[1]",
+      "hours: " + connectionRequest.hours
+    );
+    formdata.append(
+      "send_follow_up_seq_message[0]",
+      "hours:" + followMessage.hours
+    );
+    formdata.append(
+      "send_follow_up_seq_message[1]",
+      "days:" + followMessage.days
+    );
+
+    formdata.append("like_a_post_seq[0]", "hours: " + likeAPost.hours);
+    formdata.append("like_a_post_seq[1]", "days:" + likeAPost.days);
+    formdata.append("like_a_post_seq[2]", "message: Loremipsum");
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/campaign/create/engage",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  const createEngageTemplate = (templateDetails) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var formdata = new FormData();
+    formdata.append("job_title", templateDetails.job_title);
+    formdata.append("industry", templateDetails.industry);
+    formdata.append("location", templateDetails.location);
+    formdata.append(
+      "duration_in_current_role",
+      templateDetails.duration_current_role
+    );
+    formdata.append("company_size", templateDetails.company_size);
+    formdata.append(
+      "view_profile_seq_duration[0]",
+      templateDetails.view_profile_seq_duration[0]
+    );
+    formdata.append(
+      "view_profile_seq_duration[1]",
+      templateDetails.view_profile_seq_duration[1]
+    );
+    formdata.append(
+      "follow_contact_seq_duration[0]",
+      templateDetails.follow_contact_seq_duration[0]
+    );
+    formdata.append(
+      "follow_contact_seq_duration[1]",
+      templateDetails.follow_contact_seq_duration[1]
+    );
+    formdata.append("list_name", templateDetails.list_name);
+    formdata.append("connection_status", templateDetails.connection_status);
+    formdata.append("job_status", templateDetails.job_status);
+    formdata.append("like_a_post_seq", templateDetails.like_a_post_seq);
+    formdata.append(
+      "send_follow_up_seq_message",
+      templateDetails.send_follow_up_seq_message
+    );
+    formdata.append("skills_and_keyword", templateDetails.skills_keywords);
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/campaigns/engage/template/create",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
+  /* END OF CREATE CAMPAIGN */
+
+  const confirmCampaignSubmission = (campaignId) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var raw = "";
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/campaign/confirm-submission/" +
+        campaignId,
+      requestOptions
+    )
       .then((response) => response.json())
       .then((result) => {
         userCampaign();
@@ -372,7 +662,33 @@ const FunctionsProvider = (props) => {
       })
       .catch((error) => console.log("error", error));
   };
-  /* End of Create Campain */
+
+  const rerunCampaign = (campaignId) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = "";
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/campaign/rerun/" + campaignId,
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        userCampaign();
+        setRerunMessage(result);
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
 
   const approveCampaign = (campaignId) => {
     var myHeaders = new Headers();
@@ -551,7 +867,7 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
-  const userCampaign = () => {
+  const userCampaign = (userCampaignPage) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
 
@@ -561,7 +877,10 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/campaigns", requestOptions)
+    fetch(
+      REACT_APP_API_URL + "/campaigns?page=" + userCampaignPage,
+      requestOptions
+    )
       .then((response) => response.json())
       .then((result) => {
         setCampaign(result);
@@ -659,6 +978,59 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const getRobotMessage = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/get-robot-messages",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        setRobotMessages();
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const sendRobotData = (username, password, country) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      username: username,
+      password: password,
+      country: country,
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/send-data-to-robot",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result);
+        getRobotMessage();
+      })
+      .catch((error) => console.log("error", error));
+  };
+
   const getAllUsers = () => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
@@ -707,6 +1079,28 @@ const FunctionsProvider = (props) => {
     };
 
     await fetch(REACT_APP_API_URL + "/admin/user/" + userId, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        userInfo = result;
+      })
+      .catch((error) => console.log("error", error));
+    return userInfo;
+  };
+
+  const getCampaignInfo = async (campaignnable_id) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    var userInfo = [];
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    await fetch(
+      REACT_APP_API_URL + "/admin/campaign/" + campaignnable_id,
+      requestOptions
+    )
       .then((response) => response.json())
       .then((result) => {
         userInfo = result;
@@ -915,7 +1309,7 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
-  const campaignManagement = () => {
+  const campaignManagement = (campaignPage) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
 
@@ -925,7 +1319,10 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/campaigns", requestOptions)
+    fetch(
+      REACT_APP_API_URL + "/admin/campaigns?page=" + campaignPage,
+      requestOptions
+    )
       .then((response) => response.json())
       .then((result) => {
         setManagedCampaigns(result);
@@ -1151,6 +1548,25 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
+  const markRead = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch(
+      "https://reachio-api-v1.herokuapp.com/api/admin/notification/mark-as-read",
+      requestOptions
+    )
+      .then((response) => response.textz())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  };
+
   const logout = () => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -1191,7 +1607,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(REACT_APP_API_URL + "/logout", requestOptions)
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then(() => {
         setLoggedIn(false);
         setUserDetails({});
@@ -1277,7 +1693,6 @@ const FunctionsProvider = (props) => {
         setAllUserInfo,
         cancelCampaign,
         viewCancelCampaign,
-        createCampaign,
         assignCredit,
         creditStatus,
         assignUserToCampaign,
@@ -1304,6 +1719,7 @@ const FunctionsProvider = (props) => {
         roleId,
         setRoleId,
         updateRole,
+        markRead,
         purchaseCredits,
         creditUtilization,
         buyCreditMessage,
@@ -1340,6 +1756,38 @@ const FunctionsProvider = (props) => {
         setCreateListPage,
         defaultSteps,
         setDefaultSteps,
+        companySearch,
+        companySearchResult,
+        setCompanySearchResult,
+        emailSearch,
+        emailSearchResult,
+        setEmailSearchResult,
+        rerunCampaign,
+        rerunMessage,
+        setRerunMessage,
+        confirmCampaignSubmission,
+        campaignPage,
+        setCampaignPage,
+        userCampaignPage,
+        setUserCampaignPage,
+        selectedSteps,
+        setSelectedSteps,
+        steps,
+        resetStep,
+        dataExtract,
+        extractResult,
+        setExtractResult,
+        engageCampaign,
+        getCampaignInfo,
+        sendRobotData,
+        getRobotMessage,
+        robotMessages,
+        setRobotMessages,
+        saveEngageList,
+        setSaveEngageList,
+        engageDetails,
+        setEngageDetails,
+        createEngageTemplate,
       }}
     >
       {props.children}

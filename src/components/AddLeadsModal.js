@@ -2,7 +2,8 @@ import React, { useState, useRef, useContext } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 
 export default function AddLeadsModal(props) {
-  const { setCreateListPage } = useContext(providerFunctions);
+  const { setCreateListPage, engageDetails, setEngageDetails } =
+    useContext(providerFunctions);
   const [page, setPage] = useState(1);
   const [showCheckMark, setshowCheckMark] = useState(false);
 
@@ -30,8 +31,16 @@ export default function AddLeadsModal(props) {
               className="form-control form-control-lg mod-input"
               name="list_name"
               placeholder="E.g CEOs in New York"
-              onChange={() => {}}
-              value=""
+              onChange={(e) => {
+                var ec = { ...engageDetails };
+                ec.list_name = e.target.value;
+                setEngageDetails(ec);
+              }}
+              value={
+                typeof engageDetails["list_name"] === "undefined"
+                  ? ""
+                  : engageDetails["list_name"]
+              }
             />
           </div>
           <div className="my-4 list-text">
@@ -45,7 +54,15 @@ export default function AddLeadsModal(props) {
             >
               Create New List
             </span>
-            <span>Use Saved List</span>
+            <span
+              onClick={() => {
+                // eslint-disable-next-line react/prop-types
+                props.setShowModal(false);
+                setCreateListPage(1.5);
+              }}
+            >
+              Use Saved List
+            </span>
 
             <span onClick={onFileClick}>Upload CSV file</span>
             <input type="file" ref={FileUpload} style={{ display: "none" }} />
@@ -77,14 +94,22 @@ export default function AddLeadsModal(props) {
             <select
               className="form-select form-select-lg mod-select"
               aria-label="Default select example"
-              onChange={() => {}}
-              value=""
+              onChange={(e) => {
+                var ec = { ...engageDetails };
+                ec.connection_status = e.target.value;
+                setEngageDetails(ec);
+              }}
+              value={
+                typeof engageDetails["connection_status"] === "undefined"
+                  ? ""
+                  : engageDetails["connection_status"]
+              }
             >
               <option selected hidden className="slct-plchldr">
                 Choose
               </option>
               <option value="first_level">1st Level Connections only</option>
-              <option value="second-third_level">
+              <option value="second_and_third_level">
                 2nd and 3rd+ Level Connection
               </option>
             </select>
@@ -96,21 +121,38 @@ export default function AddLeadsModal(props) {
             <input
               type="text"
               className="form-control form-control-lg mod-input"
-              name="skills_keywords"
+              name="job_title"
               placeholder="e.g. Engineer, Accountant, Technician"
-              onChange={() => {}}
-              value=""
+              onChange={(e) => {
+                var ec = { ...engageDetails };
+                ec.job_title = e.target.value;
+                setEngageDetails(ec);
+              }}
+              value={
+                typeof engageDetails["job_title"] === "undefined"
+                  ? ""
+                  : engageDetails["job_title"]
+              }
             />
           </div>
           <div className="my-2 mod-form">
             <label htmlFor="exampleFormControlInput1" className="form-label">
-              Job title is
+              Job status
             </label>
             <select
               className="form-select form-select-lg mod-select"
               aria-label="Default select example"
-              onChange={() => {}}
-              value=""
+              name="job_status"
+              onChange={(e) => {
+                var ec = { ...engageDetails };
+                ec.job_status = e.target.value;
+                setEngageDetails(ec);
+              }}
+              value={
+                typeof engageDetails["job_status"] === "undefined"
+                  ? ""
+                  : engageDetails["job_status"]
+              }
             >
               <option selected hidden className="slct-plchldr">
                 Choose one
@@ -130,8 +172,16 @@ export default function AddLeadsModal(props) {
               className="form-control form-control-lg mod-input"
               name="skills_keywords"
               placeholder="e.g. SAP, JavaScript, Azure"
-              onChange={() => {}}
-              value=""
+              onChange={(e) => {
+                var ec = { ...engageDetails };
+                ec.skills_keywords = e.target.value;
+                setEngageDetails(ec);
+              }}
+              value={
+                typeof engageDetails["skills_keywords"] === "undefined"
+                  ? ""
+                  : engageDetails["skills_keywords"]
+              }
             />
           </div>
           <div className="my-2 mod-form">
@@ -142,7 +192,16 @@ export default function AddLeadsModal(props) {
               type="text"
               className="form-control form-control-lg mod-input"
               name="location"
-              onChange={() => {}}
+              onChange={(e) => {
+                var ec = { ...engageDetails };
+                ec.location = e.target.value;
+                setEngageDetails(ec);
+              }}
+              value={
+                typeof engageDetails["location"] === "undefined"
+                  ? ""
+                  : engageDetails["location"]
+              }
             />
           </div>
           <div className="my-2 mod-form">
@@ -153,6 +212,16 @@ export default function AddLeadsModal(props) {
               type="text"
               className="form-control form-control-lg mod-input"
               name="industry"
+              onChange={(e) => {
+                var ec = { ...engageDetails };
+                ec.industry = e.target.value;
+                setEngageDetails(ec);
+              }}
+              value={
+                typeof engageDetails["industry"] === "undefined"
+                  ? ""
+                  : engageDetails["industry"]
+              }
             />
           </div>
           <div className="my-2 mod-form">
@@ -162,8 +231,16 @@ export default function AddLeadsModal(props) {
             <select
               className="form-select form-select-lg mod-select"
               aria-label="Default select example"
-              onChange={() => {}}
-              value=""
+              onChange={(e) => {
+                var ec = { ...engageDetails };
+                ec.duration_current_role = e.target.value;
+                setEngageDetails(ec);
+              }}
+              value={
+                typeof engageDetails["duration_current_role"] === "undefined"
+                  ? ""
+                  : engageDetails["duration_current_role"]
+              }
             >
               <option selected hidden className="slct-plchldr">
                 Choose
@@ -182,8 +259,16 @@ export default function AddLeadsModal(props) {
             <select
               className="form-select form-select-lg mod-select"
               aria-label="Default select example"
-              onChange={() => {}}
-              value=""
+              onChange={(e) => {
+                var ec = { ...engageDetails };
+                ec.company_size = e.target.value;
+                setEngageDetails(ec);
+              }}
+              value={
+                typeof engageDetails["company_size"] === "undefined"
+                  ? ""
+                  : engageDetails["company_size"]
+              }
             >
               <option selected hidden className="slct-plchldr">
                 Choose

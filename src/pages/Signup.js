@@ -1,5 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
+import Select from "react-select";
+import countryList from "react-select-country-list";
 export default function Login() {
   const { registerUser, signUpData, setSignUpData } =
     useContext(providerFunctions);
@@ -9,6 +11,9 @@ export default function Login() {
     sd[key] = value;
     setSignUpData(sd);
   };
+  const [value, setValue] = useState("");
+
+  const options = useMemo(() => countryList().getData(), []);
 
   return (
     <div className="login-page">
@@ -56,6 +61,20 @@ export default function Login() {
                   name="company"
                   id="company-name"
                   placeholder="Company"
+                />
+              </div>
+              <div className="mb-3">
+                <Select
+                  options={options}
+                  className="form-control input-bx"
+                  value={value}
+                  onChange={(value) => {
+                    handleSignUpChange(value, "country");
+                    setValue(value);
+                  }}
+                  name="country"
+                  id="country-name"
+                  placeholder="Select Country"
                 />
               </div>
               <div className="mb-3">

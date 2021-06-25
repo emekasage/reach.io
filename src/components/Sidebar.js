@@ -70,6 +70,16 @@ export default function Sidebar() {
                 <span className="menu-text">Credit</span>
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/linkedln_user"
+                className="nav"
+                activeClassName="nav--active"
+              >
+                <i className="bi bi-person-plus"></i>
+                <span className="menu-text">Linkedln User</span>
+              </NavLink>
+            </li>
           </ul>
           <ul className="navigate-log">
             <li>

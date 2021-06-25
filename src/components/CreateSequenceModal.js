@@ -21,7 +21,14 @@ export default function CreateSequenceModal(props) {
           <span className="bi bi-file-earmark-plus"></span>
           <p>From Scratch</p>
         </div>
-        <div className="seq-2">
+        <div
+          className="seq-2"
+          onClick={() => {
+            setCreateListPage(2.3);
+            // eslint-disable-next-line react/prop-types
+            props.setShowModal(false);
+          }}
+        >
           <span className="bi bi-file-earmark-text"></span>
           <p>From Template</p>
         </div>

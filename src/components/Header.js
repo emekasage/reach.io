@@ -1,6 +1,7 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import { Link } from "react-router-dom";
+import moment from "moment";
 
 export default function Header() {
   const {
@@ -12,19 +13,17 @@ export default function Header() {
     logout,
   } = useContext(providerFunctions);
 
-  // const [notify, setNotify] = useState([]);
+  const [notify, setNotify] = useState([]);
 
   useEffect(() => {
     userNotifications();
   }, []);
 
   useEffect(() => {
-    // if (typeof userAlert !== "undefined") {
-    //   if (typeof userAlert.notifications !== undefined) {
-    //     setNotify(userAlert.notifications);
-    //   }
-    // }
-    console.log(userAlert.notifications);
+    if (typeof userAlert.notifications !== "undefined") {
+      setNotify(userAlert.notifications);
+      // console.log(userAlert.notifications);
+    }
   }, [userAlert]);
 
   return (
@@ -59,24 +58,6 @@ export default function Header() {
           </div>
 
           <div className="navbar-collapse collapse">
-            <form className="d-none d-sm-inline-block">
-              <div className="input-group input-group-navbar">
-                <img
-                  src="../../assets/img/search-1.svg"
-                  alt=""
-                  width="30"
-                  height="30"
-                  className="form-icon"
-                />
-                <input
-                  type="text"
-                  className="form-control header-form"
-                  placeholder="Search anything"
-                  aria-label="Search"
-                />
-              </div>
-            </form>
-
             <div className="dropdown">
               <a
                 className="nav-icon dropdown-toggle"
@@ -95,14 +76,22 @@ export default function Header() {
                 className="dropdown-menu dropdown-menu-end notify-drop"
                 aria-labelledby="dropdownMenu2"
               >
-                {console.log("test", userAlert.notifications)}
-                {typeof userAlert.notifications !== "undefined" ? (
-                  userAlert.notifications.map((thisNotifyData, index) => {
-                    return (
-                      <li key={index}>
-                        <p className="dropdown-item">{thisNotifyData}</p>
-                      </li>
-                    );
+                <h6 className="notify-head">{notify.length} Notifications</h6>
+                {console.log("test", notify)}
+                {notify.length !== 0 ? (
+                  notify.map((thisNotifyData, index) => {
+                    if (index < 5) {
+                      return (
+                        <li key={index} className="notify-data">
+                          <p className="dropdown-item notify-msg">
+                            {thisNotifyData.data.message}
+                          </p>
+                          <span className="notify-time">
+                            {moment(thisNotifyData.created_at).fromNow()}
+                          </span>
+                        </li>
+                      );
+                    }
                   })
                 ) : (
                   <li>

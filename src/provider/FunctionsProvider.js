@@ -990,7 +990,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/get-robot-messages",
+      REACT_APP_API_URL + "/get-robot-messages",
       requestOptions
     )
       .then((response) => response.json())
@@ -1020,13 +1020,19 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/send-data-to-robot",
+      REACT_APP_API_URL + "/send-data-to-robot",
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
-        getRobotMessage();
+        if (result.success === true) {
+          console.log(result);
+          getRobotMessage();
+        } else {
+          enqueueSnackbar("Request could not be sent at the moment, please try again after some time", {
+            variant: "warning",
+          });
+        }
       })
       .catch((error) => console.log("error", error));
   };

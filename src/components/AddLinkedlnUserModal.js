@@ -8,6 +8,7 @@ export default function AssignUserModal() {
   const { getLinkedlnUser, sendRobotData, getRobotMessage, robotMessages } =
     useContext(providerFunctions);
 
+  const [loading, setLoading] = useState(false);
   const [value, setValue] = useState("");
   const options = useMemo(() => countryList().getData(), []);
   // const [pickedUserId] = useState(null);
@@ -15,6 +16,15 @@ export default function AssignUserModal() {
     getLinkedlnUser();
     getRobotMessage();
   }, []);
+
+  // const [robotMsg, setRobotMesg] = useState([]);
+
+  // useEffect(() => {
+  //   if (typeof robotMessages.robotMessages !== "undefined") {
+  //     console.log(robotMessages.robotMessages);
+  //     setRobotMesg(robotMessages.robotMessages);
+  //   }
+  // }, [robotMessages]);
 
   const handleUsernameChange = () => {
     console.log(usernameRef.current.value);
@@ -33,6 +43,10 @@ export default function AssignUserModal() {
   const countryRef = useRef(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+     setTimeout(() => {
+      setLoading(false);
+    }, 3000);
     try {
       var lu = usernameRef.current.value;
       var lp = passwordRef.current.value;
@@ -49,7 +63,6 @@ export default function AssignUserModal() {
       {typeof robotMessages !== "undefined" && (
         <div className="error">{robotMessages.status}</div>
       )}
-
       <div className="card-header d-flex justify-content-between">
         <div className="list-title mt-1">
           <h6>Add a Linkedln User</h6>
@@ -91,9 +104,19 @@ export default function AssignUserModal() {
           placeholder="Select Country"
         />
       </div>
+      {!loading && 
+      
       <button className="mt-2 mb-4 assign-btn" onClick={handleSubmit}>
         Add User
       </button>
+      }
+      {loading && 
+      
+      <button className="mt-2 mb-4 assign-btn" onClick={handleSubmit}>
+        Sending data to robot
+      </button>
+      }
+     
     </div>
   );
 }

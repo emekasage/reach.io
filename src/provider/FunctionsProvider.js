@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 
 const FunctionsProvider = (props) => {
-  const REACT_APP_API_URL = "https://reachio-api-v1.herokuapp.com/api";
+  const REACT_APP_API_URL = "http://127.0.0.1:8000/api";
   const steps = [
     { icon: "", text: "View Profile" },
     { icon: "", text: "Send Connection Request" },
@@ -1231,6 +1231,7 @@ const FunctionsProvider = (props) => {
     var raw = JSON.stringify({
       name: changeUserDets.name,
       phone: changeUserDets.phone,
+      company: changeUserDets.company,
     });
 
     var requestOptions = {

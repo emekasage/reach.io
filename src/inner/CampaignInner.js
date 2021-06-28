@@ -92,6 +92,7 @@ export default function CampaignInner() {
   };
 
   const [companyDetails, setCompanyDetails] = useState({
+    campaign_name: "",
     description: "",
     hq_location: "",
     industry: "",
@@ -104,6 +105,7 @@ export default function CampaignInner() {
   });
 
   const [emailDetails, setEmailDetails] = useState({
+    campaign_name: "",
     job_title: "",
     job_status: "",
     industry: "",
@@ -114,6 +116,7 @@ export default function CampaignInner() {
   });
 
   const [extractDetails, setExtractDetails] = useState({
+    campaign_name: "",
     job_title: "",
     job_status: "",
     industry: "",

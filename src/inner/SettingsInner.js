@@ -85,6 +85,7 @@ export default function SettingsInner() {
                             ? userDetails.user.avatar
                             : "https://www.seekpng.com/png/detail/514-5147412_default-avatar-icon.png"
                         }
+                        alt=""
                         style={{
                           background: "url(" + userDetails.user.avatar + ")",
                           width: "6em",
@@ -141,7 +142,19 @@ export default function SettingsInner() {
                         className="form-control input-bx"
                         id="phone-number"
                         name="phone"
-                        placeholder={userDetails.user.phone}
+                        placeholder={userDetails.user.phone ? userDetails.user.phone : 'Enter Phone Number'}
+                        onChange={(e) =>
+                          handleUserDetailsChange(e.target.value, e.target.name)
+                        }
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <input
+                        type="tel"
+                        className="form-control input-bx"
+                        id="phone-number"
+                        name="company"
+                        placeholder={userDetails.user.company ? userDetails.user.company : 'Enter Company Name'}
                         onChange={(e) =>
                           handleUserDetailsChange(e.target.value, e.target.name)
                         }
@@ -229,6 +242,8 @@ export default function SettingsInner() {
             </div>
           </div>
         </div>
+
+        
       </div>
     </div>
   );

@@ -66,6 +66,7 @@ export default function LinkedlnUserInner() {
                         <tr>
                           <th scope="col">S/N</th>
                           <th>Name</th>
+                          <th>Username</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -73,10 +74,8 @@ export default function LinkedlnUserInner() {
                           return (
                             <tr key={index}>
                               <td>{index + 1}</td>
-                              <td>{thislinkedlnUser.Name}</td>
-                              {/* <td className="d-none d-xl-table-cell">
-                                {thisConnectionData.ContactEmail}
-                              </td> */}
+                              <td>{thislinkedlnUser.name}</td>
+                              <td>{thislinkedlnUser.username}</td>
                             </tr>
                           );
                         })}

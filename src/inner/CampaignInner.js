@@ -30,7 +30,9 @@ export default function CampaignInner() {
     dataExtract,
     extractResult,
     engageDetails,
+    setEngageDetails,
     engageCampaign,
+    engageResult,
   } = useContext(providerFunctions);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -480,6 +482,32 @@ export default function CampaignInner() {
                       htmlFor="exampleFormControlInput1"
                       className="form-label"
                     >
+                      Campaign Name
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg mod-input"
+                      name="campaign_name"
+                      onChange={(e) => {
+                        var cs = { ...companyDetails };
+                        cs.campaign_name = e.target.value;
+                        setCompanyDetails(cs);
+                      }}
+                      value={
+                        typeof companyDetails["campaign_name"] === "undefined"
+                          ? ""
+                          : companyDetails["campaign_name"]
+                      }
+                      id="validateCustom02"
+                      placeholder="Enter a Campaign name"
+                    />
+                  </div>
+
+                  <div className="my-2 mod-form">
+                    <label
+                      htmlFor="exampleFormControlInput1"
+                      className="form-label"
+                    >
                       Description Keywords
                     </label>
                     <input
@@ -497,11 +525,7 @@ export default function CampaignInner() {
                           : companyDetails["description"]
                       }
                       id="validationCustom03"
-                      required
                     />
-                    <div className="invalid-feedback">
-                      Please fill this field.
-                    </div>
                   </div>
                   <div className="my-2 mod-form">
                     <label
@@ -584,40 +608,6 @@ export default function CampaignInner() {
                       <option value="10000+">10000+</option>
                     </select>
                   </div>
-                  <div className="my-2 mod-form">
-                    <label
-                      htmlFor="exampleFormControlInput1"
-                      className="form-label"
-                    >
-                      Estimated Revenue Range
-                    </label>
-                    <select
-                      className="form-select form-select-lg mod-select"
-                      aria-label="Default select example"
-                      onChange={(e) => {
-                        var cs = { ...companyDetails };
-                        cs.estimated_revenue_range = e.target.value;
-                        setCompanyDetails(cs);
-                      }}
-                      value={
-                        typeof companyDetails["estimated_revenue_range"] ===
-                        "undefined"
-                          ? ""
-                          : companyDetails["estimated_revenue_range"]
-                      }
-                    >
-                      <option selected hidden className="slct-plchldr">
-                        Choose
-                      </option>
-                      <option value="1">Less than $1M</option>
-                      <option value="2">$1M - $10M</option>
-                      <option value="3">$10M - $50M</option>
-                      <option value="3">$50M - $100M</option>
-                      <option value="3">$100M - $500M</option>
-                      <option value="3">$500M - $1B</option>
-                      <option value="3">$1B - $10B</option>
-                    </select>
-                  </div>
 
                   <div className="my-3 mod-btn">
                     <button
@@ -674,6 +664,41 @@ export default function CampaignInner() {
                   </h6>
                 </div>
                 <div className="company-search">
+                  <div className="my-2 mod-form">
+                    <label
+                      htmlFor="exampleFormControlInput1"
+                      className="form-label"
+                    >
+                      Estimated Revenue Range
+                    </label>
+                    <select
+                      className="form-select form-select-lg mod-select"
+                      aria-label="Default select example"
+                      onChange={(e) => {
+                        var cs = { ...companyDetails };
+                        cs.estimated_revenue_range = e.target.value;
+                        setCompanyDetails(cs);
+                      }}
+                      value={
+                        typeof companyDetails["estimated_revenue_range"] ===
+                        "undefined"
+                          ? ""
+                          : companyDetails["estimated_revenue_range"]
+                      }
+                    >
+                      <option selected hidden className="slct-plchldr">
+                        Choose
+                      </option>
+                      <option value="1">Less than $1M</option>
+                      <option value="2">$1M - $10M</option>
+                      <option value="3">$10M - $50M</option>
+                      <option value="3">$50M - $100M</option>
+                      <option value="3">$100M - $500M</option>
+                      <option value="3">$500M - $1B</option>
+                      <option value="3">$1B - $10B</option>
+                    </select>
+                  </div>
+
                   <div className="my-2 mod-form">
                     <label
                       htmlFor="exampleFormControlInput1"
@@ -889,6 +914,30 @@ export default function CampaignInner() {
                         htmlFor="exampleFormControlInput1"
                         className="form-label"
                       >
+                        Campaign Name
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control form-control-lg mod-input"
+                        name="campaign_name"
+                        onChange={(e) => {
+                          var es = { ...emailDetails };
+                          es.campaign_name = e.target.value;
+                          setEmailDetails(es);
+                        }}
+                        value={
+                          typeof emailDetails["campaign_name"] === "undefined"
+                            ? ""
+                            : emailDetails["campaign_name"]
+                        }
+                        placeholder="Enter a Campaign name"
+                      />
+                    </div>
+                    <div className="my-2 mod-form">
+                      <label
+                        htmlFor="exampleFormControlInput1"
+                        className="form-label"
+                      >
                         Job title
                       </label>
                       <input
@@ -1084,7 +1133,7 @@ export default function CampaignInner() {
                           setInnerPage(8);
                         }}
                       >
-                        Finish
+                        Submit
                       </button>
                     </div>
                   </div>
@@ -1234,6 +1283,14 @@ export default function CampaignInner() {
 
               {createListPage == 2 && (
                 <div>
+                  <button
+                    className="prev-btn"
+                    onClick={() => {
+                      setCreateListPage(1);
+                    }}
+                  >
+                    Previous
+                  </button>
                   <div className="eng-row">
                     <div className="seq_create">
                       <p className="seq-txt">Create Sequence</p>
@@ -1278,6 +1335,14 @@ export default function CampaignInner() {
 
               {createListPage == 2.5 && (
                 <div>
+                  <button
+                    className="prev-btn"
+                    onClick={() => {
+                      setCreateListPage(2);
+                    }}
+                  >
+                    Previous
+                  </button>
                   <div className="eng-row">
                     <div className="seq_create">
                       <p className="seq-txt">Create Sequence</p>
@@ -1304,17 +1369,6 @@ export default function CampaignInner() {
                                   className="img-chckbx"
                                 />
                               </div>
-                              {index > 1 && (
-                                <div
-                                  onClick={() => {
-                                    var m = [...selectedSteps];
-                                    m.splice(index, 1);
-                                    setSelectedSteps(m);
-                                  }}
-                                >
-                                  Delete
-                                </div>
-                              )}
                               <label
                                 className="form-check-label"
                                 htmlFor="follow_contact"
@@ -1356,7 +1410,7 @@ export default function CampaignInner() {
                                 />
                               </span>
                               {typeof selectedStep.message !== "undefined" && (
-                                <div>
+                                <div className="my-2">
                                   <textarea
                                     rows="2"
                                     cols="40"
@@ -1374,6 +1428,17 @@ export default function CampaignInner() {
                                 </div>
                               )}
                             </div>
+                            {index > 1 && (
+                                <div
+                                  onClick={() => {
+                                    var m = [...selectedSteps];
+                                    m.splice(index, 1);
+                                    setSelectedSteps(m);
+                                  }}
+                                >
+                                  <i class="bi bi-x"></i>
+                                </div>
+                              )}
                             <div></div>
                           </div>
                         </div>
@@ -1396,48 +1461,133 @@ export default function CampaignInner() {
 
               {createListPage == 3 && (
                 <div>
+                  <button
+                      className="prev-btn"
+                      onClick={() => {
+                        setCreateListPage(2.5);
+                      }}
+                    >
+                     Previous
+                    </button>
                   <div className="eng-row">
-                    <div className="seq_create">
-                      <p className="seq-txt">Summary of your campaign</p>
+                    <div className="seq_summary">
+                      
+                        <div className="my-2 eng_name">
+                        <label
+                          htmlFor="exampleFormControlInput1"
+                          className="form-label"
+                        >
+                          Campaign Name
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control form-control-lg mod-input"
+                          name="campaign_name"
+                          onChange={(e) => {
+                            var ec = { ...engageDetails };
+                            ec.campaign_name = e.target.value;
+                            setEngageDetails(ec);
+                          }}
+                          value={
+                            typeof engageDetails["campaign_name"] === "undefined"
+                              ? ""
+                              : engageDetails["campaign_name"]
+                          }
+                          placeholder="Enter Campaign name"
+                        />
+                        </div>
+
+                        <p className="seq-txt2">Summary of your campaign</p>
+                      
                     </div>
                     {/* {JSON.stringify(selectedSteps)}
                     {JSON.stringify(engageDetails)} */}
-                    <div>{engageDetails.list_name}</div>
-                    <div>{engageDetails.connection_status}</div>
-                    <div>{engageDetails.job_title}</div>
-                    <div>{engageDetails.job_status}</div>
-                    <div>{engageDetails.skills_keywords}</div>
-                    <div>{engageDetails.location}</div>
-                    <div>{engageDetails.industry}</div>
-                    <div>{engageDetails.duration_current_role}</div>
-                    {/* <div>{engageDetails.list_name}</div>
-                    <div>{engageDetails.list_name}</div>
-                    <div>{engageDetails.list_name}</div>
-                    <div>{engageDetails.list_name}</div>
-                    <div>{engageDetails.list_name}</div>
-                    <div>{engageDetails.list_name}</div>
-                    <div>{engageDetails.list_name}</div> */}
+                    <div className="add_leads">
+                      <h5>Step 1 - Add Leads</h5>
+                      <hr/>
 
-                    <p>Steps</p>
-                    {selectedSteps.map((thisStep, index) => {
-                      return (
-                        <div key={index}>
-                          <h3>
-                            Step {index + 1} - {thisStep.text}
-                          </h3>
-                          <p>Days - {thisStep.days}</p>
-                          <p>Hours - {thisStep.hours}</p>
-                          {typeof thisStep.message !== "undefined" && (
-                            <p>Message - {thisStep.message}</p>
-                          )}
-                        </div>
-                      );
-                    })}
+                      <div className="my-4">
+                        <p className="faded-p">List Name</p>
+                        <p className="norm-p">
+                          {engageDetails.list_name}
+                        </p>
+                      </div>
+
+                      <div className="my-4">
+                        <p className="faded-p">Connection Status</p>
+                        <p className="norm-p">
+                          {engageDetails.connection_status}
+                        </p>
+                      </div>
+
+                      <div className="my-4">
+                        <p className="faded-p">Job Title</p>
+                        <p className="norm-p">
+                          {engageDetails.job_title}
+                        </p>
+                      </div>
+
+                      <div className="my-4">
+                        <p className="faded-p">Job Status</p>
+                        <p className="norm-p">
+                          {engageDetails.job_status}
+                        </p>
+                      </div>
+
+                      <div className="my-4">
+                        <p className="faded-p">Skills and Keywords</p>
+                        <p className="norm-p">
+                          {engageDetails.skills_keywords}
+                        </p>
+                      </div>
+
+                      <div className="my-4">
+                        <p className="faded-p">Location</p>
+                        <p className="norm-p">
+                          {engageDetails.location}
+                        </p>
+                      </div>
+
+                      <div className="my-4">
+                        <p className="faded-p">Industry</p>
+                        <p className="norm-p">
+                          {engageDetails.industry}
+                        </p>
+                      </div>
+
+                      <div className="my-4">
+                        <p className="faded-p">Duration in current role</p>
+                        <p className="norm-p">
+                          {engageDetails.duration_current_role}
+                        </p>
+                      </div>
+                    </div>
+                    <div></div>
+
+                    <div className="add_leads">
+                      <h5>Step 2 - Create Sequence</h5>
+                      <hr/>
+                      {selectedSteps.map((thisStep, index) => {
+                        return (
+                          <div key={index}>
+                            <h4>
+                              Step {index + 1} - {thisStep.text}
+                            </h4>
+                            <p>Days - {thisStep.days}</p>
+                            <p>Hours - {thisStep.hours}</p>
+                            {typeof thisStep.message !== "undefined" && (
+                              <p>Message - {thisStep.message}</p>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                     <div className="my-5 eng-btns">
                       <button
                         className="continue-btn"
                         onClick={() => {
                           engageCampaign();
+                          setInnerPage(10);
                         }}
                       >
                         Submit a Campaign
@@ -1449,6 +1599,46 @@ export default function CampaignInner() {
             </div>
           </div>
         )}
+
+{innerPage === 10 && (
+            <div>
+              <div className="d-flex justify-content-between user-val">
+                <div className="heading-col plus-bck">
+                  <h5>
+                    Campaign &gt;&gt; <strong>Engage</strong>
+                  </h5>
+                  <a
+                    className="camp-back-lnk"
+                    onClick={() => {
+                      setInnerPage(1);
+                    }}
+                  >
+                    <i
+                      className="bi bi-arrow-left"
+                      style={{ marginRight: "5px", fontSize: "16px" }}
+                    ></i>
+                    Go back
+                  </a>
+                </div>
+                <div className="date-form">
+                  <DateTime />
+                </div>
+              </div>
+              <div className="success-page">
+                <i className="bi bi-check-circle"></i>
+                <p>{engageResult.message}</p>
+              </div>
+
+              <button
+                className="my-3 bck-btn"
+                onClick={() => {
+                  setInnerPage(1);
+                }}
+              >
+                Go back to Campaigns
+              </button>
+            </div>
+          )}
 
         {/* END OF ENGAGE */}
 
@@ -1487,6 +1677,30 @@ export default function CampaignInner() {
                         *you must be first level connected on LinkedIn to use
                         this service
                       </p>
+                    </div>
+                    <div className="my-2 mod-form">
+                      <label
+                        htmlFor="exampleFormControlInput1"
+                        className="form-label"
+                      >
+                        Campaign Name
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control form-control-lg mod-input"
+                        name="campaign_name"
+                        onChange={(e) => {
+                          var de = { ...extractDetails };
+                          de.campaign_name = e.target.value;
+                          setExtractDetails(de);
+                        }}
+                        value={
+                          typeof extractDetails["campaign_name"] === "undefined"
+                            ? ""
+                            : extractDetails["campaign_name"]
+                        }
+                        placeholder="Enter Campaign name"
+                      />
                     </div>
                     <div className="my-2 mod-form">
                       <label
@@ -1688,7 +1902,7 @@ export default function CampaignInner() {
                           setInnerPage(9);
                         }}
                       >
-                        Finish
+                        Submit
                       </button>
                     </div>
                   </div>

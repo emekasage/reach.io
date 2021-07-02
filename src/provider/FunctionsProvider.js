@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
 
 const FunctionsProvider = (props) => {
-  const REACT_APP_API_URL = "http://127.0.0.1:8000/api";
+  const REACT_APP_API_URL = "https://reachio-api-v1.herokuapp.com/api";
   const steps = [
     { icon: "", text: "View Profile" },
     { icon: "", text: "Send Connection Request" },
@@ -118,8 +118,9 @@ const FunctionsProvider = (props) => {
   const [emailSearchResult, setEmailSearchResult] = useState({});
   const [rerunMessage, setRerunMessage] = useState({});
   const [extractResult, setExtractResult] = useState({});
+  const [engageResult, setEngageResult] = useState({});
   const [robotMessages, setRobotMessages] = useState({});
-  const [saveEngageList, setSaveEngageList] = useState({});
+  const [verifyMessage, setVerifyMessage] = useState({});
 
   let history = useHistory();
   // useEffect(() => {
@@ -470,7 +471,7 @@ const FunctionsProvider = (props) => {
       .then((result) => {
         userCampaign();
         setExtractResult(result);
-        console.log(result);
+        // console.log(result);
       })
       .catch((error) => console.log("error", error));
   };
@@ -514,15 +515,16 @@ const FunctionsProvider = (props) => {
       followMessage
     );
     var formdata = new FormData();
-    formdata.append("job_title", "Software Engineer");
-    formdata.append("industry", "Information Technology");
-    formdata.append("location", "Lagos, Nigeria");
-    formdata.append("duration_in_current_role", "1-3 years");
-    formdata.append("company_size", "10");
-    formdata.append("skills_and_keyword", "java, php, python");
-    formdata.append("list_name", "My company list");
-    formdata.append("connection_status", "1st level connections");
-    formdata.append("job_status", "Current");
+    formdata.append("job_title", engageDetails.job_title);
+    formdata.append("industry", engageDetails.industry);
+    formdata.append("location", engageDetails.location);
+    formdata.append("duration_in_current_role", engageDetails.duration_current_role);
+    formdata.append("company_size", engageDetails.company_size);
+    formdata.append("skills_and_keyword", engageDetails.skills_keywords);
+    formdata.append("list_name", engageDetails.list_name);
+    formdata.append("connection_status", engageDetails.connection_status);
+    formdata.append("job_status", engageDetails.job_status);
+    formdata.append("campaign_name", engageDetails.campaign_name);
 
     // formdata.append("view_profile_seq_duration[0]", "days: 2");
     // formdata.append("view_profile_seq_duration[1]", "hours: 10");
@@ -575,8 +577,11 @@ const FunctionsProvider = (props) => {
       "https://reachio-api-v1.herokuapp.com/api/campaign/create/engage",
       requestOptions
     )
-      .then((response) => response.text())
-      .then((result) => console.log(result))
+      .then((response) => response.json())
+      .then((result) => {
+        setEngageResult(result);
+        console.log(result);
+      })
       .catch((error) => console.log("error", error));
   };
 
@@ -978,11 +983,13 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
   };
 
-  const getRobotMessage = () => {
+  const getRobotMessage = (username, password, country) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
     myHeaders.append("Content-Type", "application/json");
 
+    console.log("asassas");
+    
     var requestOptions = {
       method: "GET",
       headers: myHeaders,
@@ -995,7 +1002,7 @@ const FunctionsProvider = (props) => {
     )
       .then((response) => response.json())
       .then((result) => {
-        setRobotMessages();
+        setRobotMessages(result);
         console.log(result);
       })
       .catch((error) => console.log("error", error));
@@ -1025,9 +1032,10 @@ const FunctionsProvider = (props) => {
     )
       .then((response) => response.json())
       .then((result) => {
+        getRobotMessage(username, password, country);
         if (result.success === true) {
           console.log(result);
-          getRobotMessage();
+          // getRobotMessage();
         } else {
           enqueueSnackbar("Request could not be sent at the moment, please try again after some time", {
             variant: "warning",
@@ -1036,6 +1044,31 @@ const FunctionsProvider = (props) => {
       })
       .catch((error) => console.log("error", error));
   };
+
+  const sendTwoFaCode = () => {
+    var myHeaders = new Headers();
+  myHeaders.append("Authorization", "Bearer " + token);
+  myHeaders.append("Content-Type", "application/json");
+
+  var raw = JSON.stringify({
+    "verification_code": 12345
+  });
+
+  var requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: raw,
+    redirect: 'follow'
+  };
+
+  fetch("https://reachio-api-v1.herokuapp.com/api/linkedin-save-2fa-code-to-db", requestOptions)
+    .then(response => response.json())
+    .then(result => {
+      setVerifyMessage(result);
+      console.log(result);
+    })
+    .catch(error => console.log('error', error));
+  }
 
   const getAllUsers = () => {
     var myHeaders = new Headers();
@@ -1790,11 +1823,14 @@ const FunctionsProvider = (props) => {
         getRobotMessage,
         robotMessages,
         setRobotMessages,
-        saveEngageList,
-        setSaveEngageList,
+        verifyMessage,
+        setVerifyMessage,
         engageDetails,
         setEngageDetails,
         createEngageTemplate,
+        sendTwoFaCode,
+        engageResult,
+        setEngageResult,
       }}
     >
       {props.children}

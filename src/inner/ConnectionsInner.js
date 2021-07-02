@@ -191,7 +191,7 @@ export default function ConnectionsInner() {
                       Company
                     </button>
                   </li>
-                  <li className="nav-item two-role">
+                  {/* <li className="nav-item two-role">
                     <button
                       className="nav-link mx-1 usr-btn"
                       id="pills-email-tab"
@@ -204,7 +204,7 @@ export default function ConnectionsInner() {
                     >
                       Email
                     </button>
-                  </li>
+                  </li> */}
                   <li className="nav-item two-role">
                     <button
                       className="nav-link mx-1 usr-btn"
@@ -281,15 +281,20 @@ export default function ConnectionsInner() {
                     <thead>
                       <tr>
                         <th scope="col">S/N</th>
-                        <th>Name</th>
+                        <th>Full Name</th>
+                        <th className="d-none d-md-table-cell">Position</th>
                         <th className="d-none d-xl-table-cell">
-                          Email Address
+                          Company
                         </th>
                         <th className="d-none d-xl-table-cell">
-                          Phone Numbers
+                          Linkedln URL
                         </th>
-                        <th>Connected Status</th>
+                        <th>Connection Status</th>
                         <th className="d-none d-md-table-cell">Connected on</th>
+                        <th className="d-none d-md-table-cell">Follow Up Status</th>
+                        <th className="d-none d-md-table-cell">Contact Mobile</th>
+                        <th className="d-none d-md-table-cell">Contact Email</th>
+                        <th className="d-none d-md-table-cell">Location</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -376,15 +381,12 @@ export default function ConnectionsInner() {
                       <thead>
                         <tr>
                           <th scope="col">S/N</th>
-                          <th>Organization</th>
+                          <th>Company Name</th>
                           <th className="d-none d-xl-table-cell">Industry</th>
                           <th className="d-none d-xl-table-cell">
                             Headquarters Location
                           </th>
                           <th>Description</th>
-                          <th className="d-none d-md-table-cell">
-                            Headquarters Region
-                          </th>
                           <th>Phone Number</th>
                           <th className="d-none d-md-table-cell">
                             Founded Date
@@ -394,7 +396,25 @@ export default function ConnectionsInner() {
                           </th>
                           <th className="d-none d-md-table-cell">Website</th>
                           <th className="d-none d-md-table-cell">
-                            Linkedln URL
+                            No. of Employees
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Company Linkedln URL
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Name
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Linkedln URL
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Position
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Email
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Accuracy
                           </th>
                         </tr>
                       </thead>
@@ -415,7 +435,7 @@ export default function ConnectionsInner() {
                   </div> */}
                 </div>
                 {/* EMAIL TAB */}
-                <div
+                {/* <div
                   className="tab-pane fade"
                   id="pills-email"
                   role="tabpanel"
@@ -503,7 +523,7 @@ export default function ConnectionsInner() {
                       {viewAll ? "" : showPaginationList()}
                     </nav>
                   </div> */}
-                </div>
+                {/* </div> */}
                 {/* DATA EXTRACT TAB */}
                 <div
                   className="tab-pane fade"
@@ -549,35 +569,19 @@ export default function ConnectionsInner() {
                     <table className="table table-hover my-1">
                       <thead>
                         <tr>
-                          <th scope="col">S/N</th>
-                          <th>Full Name</th>
-                          <th className="d-none d-xl-table-cell">URL</th>
-                          <th className="d-none d-xl-table-cell">Position</th>
-                          <th>Company</th>
-                          <th className="d-none d-md-table-cell">Location</th>
-                          <th>Linkedln URL</th>
+                          <th scope="col">S/N</th>         
                           <th className="d-none d-md-table-cell">First Name</th>
                           <th className="d-none d-md-table-cell">Surname</th>
-                          <th className="d-none d-md-table-cell">Domain</th>
-                          <th className="d-none d-md-table-cell">Website</th>
+                          <th className="d-none d-xl-table-cell">Position</th>
+                          <th className="d-none d-md-table-cell">Company</th>
                           <th className="d-none d-md-table-cell">
-                            Company Location
+                            Linkedln URL
                           </th>
-                          <th className="d-none d-md-table-cell">Industry</th>
-                          <th className="d-none d-md-table-cell">
-                            Year Founded
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Company Size
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Company Linkedln URL
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Suggested Emails
-                          </th>
-                          <th className="d-none d-md-table-cell">Email</th>
-                          <th className="d-none d-md-table-cell">Accuracy</th>
+                          <th>Connected Status</th>
+                          <th>Connected On</th>
+                          <th className="d-none d-md-table-cell">Contact Mobile</th>
+                          <th className="d-none d-md-table-cell">Contact Email</th>
+                          <th className="d-none d-md-table-cell">Location</th>
                         </tr>
                       </thead>
                       <tbody></tbody>

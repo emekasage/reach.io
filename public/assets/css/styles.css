@@ -1433,6 +1433,21 @@ p#cancel_stuff {
   justify-content: space-between;
   padding: 50px 100px;
   font-family: "Nunito";
+  margin-top: 80px;
+}
+
+.seq_summary {
+  font-family: "Nunito";
+  padding: 0 100px;
+  margin-top: 100px;
+}
+
+.seq-txt2 {
+  padding: 25px 0;
+  text-align: start;
+  display: flex;
+  font-weight: 600;
+  font-size: 18px;
 }
 
 .seq-btn {
@@ -1448,6 +1463,29 @@ p#cancel_stuff {
   padding: 7px 15px;
   font-weight: 600;
   font-size: 18px;
+}
+
+.add_leads {
+  font-family: "Nunito";
+  padding: 25px 100px;
+  text-align: start;
+}
+
+.add_leads h5 {
+  font-weight: 600;
+  font-size: 17px;
+}
+
+button.prev-btn {
+  border: 1px solid #5a0288;
+  margin: 20px 105px;
+  float: left;
+  font-family: "Nunito";
+  background: #fff;
+  font-weight: 600;
+  color: #5a0288;
+  padding: 7px 25px;
+  cursor: pointer;
 }
 
 /* Add Leads Modal */
@@ -1760,6 +1798,15 @@ button.assign-btn {
   font-family: "Nunito";
   background: #5a0288;
   color: #fff;
+  font-weight: 600;
+}
+
+.lite-btn {
+  border: 1px solid #5a0288;
+  background: #fff;
+  font-family: "Nunito";
+  padding: 10px 20px;
+  color: #5a0288;
   font-weight: 600;
 }
 
@@ -2458,5 +2505,14 @@ span.badge {
   margin: 0 !important;
 }
 
-.notify-prt {
+select#country-name-inner {
+  border: 1px solid #ced4da !important;
+  width: 75% !important;
+  margin-left: 70px;
+}
+
+.bi-x {
+  font-size: 28px;
+  color: #f92222;
+  cursor: pointer;
 }

@@ -6,7 +6,7 @@ export default function ViewEngageSteps() {
   return (
     <div>
       <div className="steps">
-        <div className="view-profile">
+        {/* <div className="view-profile">
           <img
             src="../../assets/img/Group-489.svg"
             className="shrink-on-hover"
@@ -28,7 +28,7 @@ export default function ViewEngageSteps() {
             }}
           />
           <p>View Profile</p>
-        </div>
+        </div> */}
         <div className="conn-request">
           <img
             src="../../assets/img/Group-488.svg"

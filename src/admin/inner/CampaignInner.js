@@ -319,16 +319,12 @@ export default function DashboardInner() {
                             </td>
                             <td>
                               {thisManagedCampaigns.campaignable_type ===
-                                "App\\Models\\CompanySearch" && (
-                                <span>Campaign Search</span>
+                                "App\\Models\\ContactSearch" && (
+                                <span>Contact Search</span>
                               )}
                               {thisManagedCampaigns.campaignable_type ===
                                 "App\\Models\\DataExtract" && (
                                 <span>Data Extract</span>
-                              )}
-                              {thisManagedCampaigns.campaignable_type ===
-                                "App\\Models\\EmailSearch" && (
-                                <span>Email Search</span>
                               )}
                               {thisManagedCampaigns.campaignable_type ===
                                 "App\\Models\\Engage" && <span>Engage</span>}
@@ -417,37 +413,44 @@ export default function DashboardInner() {
                             </div>
                           )}
                         </div>
-                        {typeof toshow.campaignable_type !== "undefined" &&
-                          typeof thisUserInfo.user !== "undefined" &&
+                        {typeof toshow.campaignable_type !== "undefined" && (
+                          typeof thisUserInfo.user !== "undefined" && 
                           typeof thisCampaignInfo.campaign_type !==
-                            "undefined" && (
+                            "undefined" && 
                             <>
-                              {JSON.stringify(toshow)}
-                              {/* {JSON.stringify(thisUserInfo)} */}
-                              {JSON.stringify(thisCampaignInfo.campaign_type)}
+                              {/* {JSON.stringify(toshow)}
+                              {JSON.stringify(thisUserInfo)}
+                              {JSON.stringify(thisCampaignInfo.campaign_type)} */}
                               {toshow.campaignable_type.includes(
-                                "EmailSearch"
+                                "DataExtract"
                               ) === true && (
                                 <div className="gcgc">
                                   <h4 className="my-3">About you</h4>
                                   <div className="my-4">
                                     <p className="faded-p">Email address</p>
                                     <p className="norm-p">
-                                      {thisUserInfo.user.email}
+                                      {}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
                                     <p className="faded-p">Full Name</p>
                                     <p className="norm-p">
-                                      {thisUserInfo.user.name}
+                                      {}
+                                    </p>
+                                  </div>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Country</p>
+                                    <p className="norm-p">
+                                      {}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
                                     <p className="faded-p">Company</p>
                                     <p className="norm-p">
-                                      {thisUserInfo.user.company}
+                                      {}
                                     </p>
                                   </div>
 
@@ -521,33 +524,33 @@ export default function DashboardInner() {
                                 </div>
                               )}
                               {toshow.campaignable_type.includes(
-                                "CompanySearch"
+                                "ContactSearch"
                               ) === true && (
                                 <div className="gcgc">
                                   <h4 className="my-3">About you</h4>
                                   <div className="my-4">
                                     <p className="faded-p">Email address</p>
-                                    <p className="norm-p">{toshow.email}</p>
+                                    <p className="norm-p">{thisUserInfo.email}</p>
                                   </div>
 
                                   <div className="my-4">
                                     <p className="faded-p">
-                                      First Name and Last Name
+                                      Name
                                     </p>
-                                    <p className="norm-p">{toshow.name}</p>
+                                    <p className="norm-p">{}</p>
                                   </div>
 
                                   <div className="my-4">
-                                    <p className="faded-p">LinkedIn username</p>
+                                    <p className="faded-p">Country</p>
                                     <p className="norm-p">
-                                      {toshow.linkdn_username}
+                                      {}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
-                                    <p className="faded-p">LinkedIn password</p>
+                                    <p className="faded-p">Company</p>
                                     <p className="norm-p">
-                                      {toshow.linkdn_password}
+                                      {}
                                     </p>
                                   </div>
 
@@ -634,17 +637,67 @@ export default function DashboardInner() {
 
                                   <div className="my-4">
                                     <p className="faded-p">Company Type</p>
-                                    <p className="norm-p lng-p">
+                                    <p className="norm-p">
                                       {
                                         thisCampaignInfo.campaign_type
                                           .company_type
                                       }
                                     </p>
                                   </div>
+
+                                  <h4 className="my-3 bb-h4">
+                                    Email Search campaign
+                                  </h4>
+
+                                  <div className="my-4">
+                                    <p className="faded-p">Job Title</p>
+                                    <p className="norm-p lng-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .job_title
+                                      }
+                                    </p>
+                                  </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Job Status</p>
+                                    <p className="norm-p lng-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .job_status
+                                      }
+                                    </p>
+                                  </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Skills and Keyword</p>
+                                    <p className="norm-p lng-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .skills_and_keyword
+                                      }
+                                    </p>
+                                  </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Duration in Current Role</p>
+                                    <p className="norm-p lng-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .duration_in_current_role
+                                      }
+                                    </p>
+                                  </div>
+                                  <div className="my-4">
+                                    <p className="faded-p">Company Size</p>
+                                    <p className="norm-p lng-p">
+                                      {
+                                        thisCampaignInfo.campaign_type
+                                          .company_size
+                                      }
+                                    </p>
+                                  </div>
                                 </div>
                               )}
                               {toshow.campaignable_type.includes(
-                                "DataExtract"
+                                "Engage"
                               ) === true && (
                                 <div className="gcgc">
                                   <h4 className="my-3">About you</h4>
@@ -655,20 +708,20 @@ export default function DashboardInner() {
 
                                   <div className="my-4">
                                     <p className="faded-p">
-                                      First Name and Last Name
+                                      Full Name
                                     </p>
                                     <p className="norm-p">{toshow.name}</p>
                                   </div>
 
                                   <div className="my-4">
-                                    <p className="faded-p">LinkedIn username</p>
+                                    <p className="faded-p">Country</p>
                                     <p className="norm-p">
                                       {toshow.linkdn_username}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
-                                    <p className="faded-p">LinkedIn password</p>
+                                    <p className="faded-p">Company</p>
                                     <p className="norm-p">
                                       {toshow.linkdn_password}
                                     </p>
@@ -678,33 +731,33 @@ export default function DashboardInner() {
                                     About your campaign
                                   </h4>
                                   <div className="my-4">
-                                    <p className="faded-p">Candidate Options</p>
+                                    <p className="faded-p">List Name</p>
                                     <p className="norm-p">
-                                      {toshow.campaign_options}
+                                      {thisCampaignInfo.campaign_type.list_name}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
                                     <p className="faded-p">
-                                      Campaign Durations
+                                      Connection Status
                                     </p>
                                     <p className="norm-p">
-                                      {toshow.campaign_duration}
+                                    {thisCampaignInfo.campaign_type.connection_status}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
-                                    <p className="faded-p">CRM</p>
-                                    <p className="norm-p">{toshow.crm}</p>
+                                    <p className="faded-p">Job Title</p>
+                                    <p className="norm-p">{thisCampaignInfo.campaign_type.job_title}</p>
                                   </div>
 
                                   <h4 className="my-3 bb-h4">
                                     Candidate Acquisition
                                   </h4>
                                   <div className="my-4">
-                                    <p className="faded-p">Job Title</p>
+                                    <p className="faded-p">Job Status</p>
                                     <p className="norm-p">
-                                      {toshow.job_titles}
+                                    {thisCampaignInfo.campaign_type.job_status}
                                     </p>
                                   </div>
 
@@ -712,76 +765,68 @@ export default function DashboardInner() {
                                     <p className="faded-p">
                                       Skills and Keywords
                                     </p>
-                                    <p className="norm-p">{toshow.skills}</p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">Image attached</p>
-                                    <img src="../../assets/img/Rec-586.png" />
+                                    <p className="norm-p">{thisCampaignInfo.campaign_type.skills_and_keyword}</p>
                                   </div>
 
                                   <div className="my-4">
                                     <p className="faded-p">Industry</p>
-                                    <p className="norm-p">{toshow.industry}</p>
+                                    <p className="norm-p">{thisCampaignInfo.campaign_type.industry}</p>
                                   </div>
 
                                   <div className="my-4">
                                     <p className="faded-p">Location</p>
-                                    <p className="norm-p">{toshow.location}</p>
+                                    <p className="norm-p">{thisCampaignInfo.campaign_type.location}</p>
                                   </div>
 
-                                  <h4 className="my-3 bb-h4">
-                                    Candidate Linkedln Message
-                                  </h4>
                                   <div className="my-4">
                                     <p className="faded-p">
-                                      Your Connection Request Message
+                                      Duration in Current Role
                                     </p>
                                     <p className="norm-p lng-p">
-                                      {toshow.connection_request_message}
+                                      {thisCampaignInfo.campaign_type.duration_in_current_role}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
-                                    <p className="faded-p">Follow up message</p>
+                                    <p className="faded-p">Company Size</p>
                                     <p className="norm-p lng-p">
-                                      {toshow.follow_up_message}
+                                      {thisCampaignInfo.campaign_type.company_size}
                                     </p>
                                   </div>
                                   <h4 className="my-3 bb-h4">
-                                    Client Acquisition
+                                    Sequence
                                   </h4>
                                   <div className="my-4">
-                                    <p className="faded-p">Job Title</p>
+                                    <p className="faded-p">View Profile</p>
                                     <p className="norm-p">
-                                      {toshow.hiring_manager_job_titles}
+                                      {thisCampaignInfo.campaign_type.view_profile_seq_duration}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
                                     <p className="faded-p">
-                                      Skills and Keywords
+                                      Follow Contact
                                     </p>
                                     <p className="norm-p">
-                                      {toshow.hiring_manager_skills}
+                                    {thisCampaignInfo.campaign_type.follow_contact_seq_duration}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
-                                    <p className="faded-p">Industry</p>
+                                    <p className="faded-p">Like a Post</p>
                                     <p className="norm-p">
-                                      {toshow.hiring_manager_industry}
+                                      {thisCampaignInfo.campaign_type.like_a_post_seq}
                                     </p>
                                   </div>
 
                                   <div className="my-4">
-                                    <p className="faded-p">Company SIze</p>
+                                    <p className="faded-p">Follow Up Message</p>
                                     <p className="norm-p">
-                                      {toshow.hiring_manager_company_size}
+                                      {thisCampaignInfo.campaign_type.send_follow_up_seq_message}
                                     </p>
                                   </div>
 
-                                  <div className="my-4">
+                                  {/* <div className="my-4">
                                     <p className="faded-p">Location</p>
                                     <p className="norm-p">
                                       {toshow.hiring_manager_location}
@@ -807,173 +852,7 @@ export default function DashboardInner() {
                                     <p className="norm-p lng-p">
                                       {toshow.hiring_manager_follow_up_message}
                                     </p>
-                                  </div>
-                                </div>
-                              )}
-                              {toshow.campaignable_type.includes("Engage") ===
-                                true && (
-                                <div className="gcgc">
-                                  <h4 className="my-3">About you</h4>
-                                  <div className="my-4">
-                                    <p className="faded-p">Email address</p>
-                                    <p className="norm-p">{toshow.email}</p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">
-                                      First Name and Last Name
-                                    </p>
-                                    <p className="norm-p">{toshow.name}</p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">LinkedIn username</p>
-                                    <p className="norm-p">
-                                      {toshow.linkdn_username}
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">LinkedIn password</p>
-                                    <p className="norm-p">
-                                      {toshow.linkdn_password}
-                                    </p>
-                                  </div>
-
-                                  <h4 className="my-3 bb-h4">
-                                    About your campaign
-                                  </h4>
-                                  <div className="my-4">
-                                    <p className="faded-p">Candidate Options</p>
-                                    <p className="norm-p">
-                                      {toshow.campaign_options}
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">
-                                      Campaign Durations
-                                    </p>
-                                    <p className="norm-p">
-                                      {toshow.campaign_duration}
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">CRM</p>
-                                    <p className="norm-p">{toshow.crm}</p>
-                                  </div>
-
-                                  <h4 className="my-3 bb-h4">
-                                    Candidate Acquisition
-                                  </h4>
-                                  <div className="my-4">
-                                    <p className="faded-p">Job Title</p>
-                                    <p className="norm-p">
-                                      {toshow.job_titles}
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">
-                                      Skills and Keywords
-                                    </p>
-                                    <p className="norm-p">{toshow.skills}</p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">Image attached</p>
-                                    <img src="../../assets/img/Rec-586.png" />
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">Industry</p>
-                                    <p className="norm-p">{toshow.industry}</p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">Location</p>
-                                    <p className="norm-p">{toshow.location}</p>
-                                  </div>
-
-                                  <h4 className="my-3 bb-h4">
-                                    Candidate Linkedln Message
-                                  </h4>
-                                  <div className="my-4">
-                                    <p className="faded-p">
-                                      Your Connection Request Message
-                                    </p>
-                                    <p className="norm-p lng-p">
-                                      {toshow.connection_request_message}
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">Follow up message</p>
-                                    <p className="norm-p lng-p">
-                                      {toshow.follow_up_message}
-                                    </p>
-                                  </div>
-                                  <h4 className="my-3 bb-h4">
-                                    Client Acquisition
-                                  </h4>
-                                  <div className="my-4">
-                                    <p className="faded-p">Job Title</p>
-                                    <p className="norm-p">
-                                      {toshow.hiring_manager_job_titles}
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">
-                                      Skills and Keywords
-                                    </p>
-                                    <p className="norm-p">
-                                      {toshow.hiring_manager_skills}
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">Industry</p>
-                                    <p className="norm-p">
-                                      {toshow.hiring_manager_industry}
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">Company SIze</p>
-                                    <p className="norm-p">
-                                      {toshow.hiring_manager_company_size}
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">Location</p>
-                                    <p className="norm-p">
-                                      {toshow.hiring_manager_location}
-                                    </p>
-                                  </div>
-
-                                  <h4 className="my-3 bb-h4">
-                                    Company Linkedln Message
-                                  </h4>
-                                  <div className="my-4">
-                                    <p className="faded-p">
-                                      Your Connection Request Message
-                                    </p>
-                                    <p className="norm-p lng-p">
-                                      {
-                                        toshow.hiring_manager_connection_request_message
-                                      }
-                                    </p>
-                                  </div>
-
-                                  <div className="my-4">
-                                    <p className="faded-p">Follow up message</p>
-                                    <p className="norm-p lng-p">
-                                      {toshow.hiring_manager_follow_up_message}
-                                    </p>
-                                  </div>
+                                  </div> */}
                                 </div>
                               )}
                             </>

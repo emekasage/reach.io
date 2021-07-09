@@ -166,45 +166,31 @@ export default function ConnectionsInner() {
                   <li className="nav-item one-user">
                     <button
                       className="nav-link active mx-1 usr-btn"
-                      id="pills-connection-tab"
+                      id="pills-contact-tab"
                       data-bs-toggle="pill"
-                      data-bs-target="#pills-connections"
+                      data-bs-target="#pills-contact-data"
                       type="button"
                       role="tab"
                       aria-controls="pills-home"
                       aria-selected="true"
                     >
-                      Connections
+                      Contact Data
                     </button>
                   </li>
                   <li className="nav-item two-role">
                     <button
                       className="nav-link mx-1 usr-btn"
-                      id="pills-company-tab"
+                      id="pills-engage-tab"
                       data-bs-toggle="pill"
-                      data-bs-target="#pills-company"
+                      data-bs-target="#pills-engage-data"
                       type="button"
                       role="tab"
                       aria-controls="pills-home"
                       aria-selected="false"
                     >
-                      Company
+                      Engage Data
                     </button>
                   </li>
-                  {/* <li className="nav-item two-role">
-                    <button
-                      className="nav-link mx-1 usr-btn"
-                      id="pills-email-tab"
-                      data-bs-toggle="pill"
-                      data-bs-target="#pills-email"
-                      type="button"
-                      role="tab"
-                      aria-controls="pills-home"
-                      aria-selected="false"
-                    >
-                      Email
-                    </button>
-                  </li> */}
                   <li className="nav-item two-role">
                     <button
                       className="nav-link mx-1 usr-btn"
@@ -222,15 +208,15 @@ export default function ConnectionsInner() {
                 </ul>
               </div>
               <div className="tab-content" id="pills-tabContent">
-                {/* CONNECTIONS TAB */}
+                {/* CONTACT DATA TAB */}
                 <div
                   className="tab-pane fade show active"
-                  id="pills-connections"
+                  id="pills-contact-data"
                   role="tabpanel"
-                  aria-labelledby="pills-connection-tab"
+                  aria-labelledby="pills-contact-tab"
                 >
                   <div className="card-header table-card-head d-flex justify-content-between">
-                    <h5 className="card-title mb-0 table-title">Connections</h5>
+                    <h5 className="card-title mb-0 table-title">Contact</h5>
                     <div className="dashboard-attr">
                       <select
                         className="form-select form-select-sm camp-select"
@@ -281,20 +267,41 @@ export default function ConnectionsInner() {
                     <thead>
                       <tr>
                         <th scope="col">S/N</th>
-                        <th>Full Name</th>
-                        <th className="d-none d-md-table-cell">Position</th>
-                        <th className="d-none d-xl-table-cell">
-                          Company
-                        </th>
-                        <th className="d-none d-xl-table-cell">
-                          Linkedln URL
-                        </th>
-                        <th>Connection Status</th>
-                        <th className="d-none d-md-table-cell">Connected on</th>
-                        <th className="d-none d-md-table-cell">Follow Up Status</th>
-                        <th className="d-none d-md-table-cell">Contact Mobile</th>
-                        <th className="d-none d-md-table-cell">Contact Email</th>
-                        <th className="d-none d-md-table-cell">Location</th>
+                        <th>Company Name</th>
+                          <th className="d-none d-xl-table-cell">Industry</th>
+                          <th className="d-none d-xl-table-cell">
+                            Headquarters Location
+                          </th>
+                          <th>Description</th>
+                          <th>Phone Number</th>
+                          <th className="d-none d-md-table-cell">
+                            Founded Date
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Company Type
+                          </th>
+                          <th className="d-none d-md-table-cell">Website</th>
+                          <th className="d-none d-md-table-cell">
+                            No. of Employees
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Company Linkedln URL
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Name
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Linkedln URL
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Position
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Email
+                          </th>
+                          <th className="d-none d-md-table-cell">
+                            Contact Accuracy
+                          </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -337,112 +344,15 @@ export default function ConnectionsInner() {
                     </nav>
                   </div>
                 </div>
-                {/* COMPANY TAB */}
+                {/* ENGAGE TAB */}
                 <div
                   className="tab-pane fade"
-                  id="pills-company"
+                  id="pills-engage-data"
                   role="tabpanel"
-                  aria-labelledby="pills-company-tab"
+                  aria-labelledby="pills-engage-tab"
                 >
                   <div className="card-header table-card-head d-flex justify-content-between">
-                    <h5 className="card-title mb-0 table-title">Company</h5>
-                    <div className="dashboard-attr">
-                      <div className="input-group input-group-navbar">
-                        <img
-                          src="assets/img/search-1.svg"
-                          alt=""
-                          width="30"
-                          height="50"
-                          className="form-icon"
-                        />
-                        <input
-                          type="text"
-                          className="form-control header-form"
-                          placeholder="Search..."
-                          value={searchData}
-                          onChange={(e) => {
-                            setSearchData(e.target.value);
-                          }}
-                        />
-                      </div>
-                      <CSVLink
-                        data={connectionsData}
-                        download="Reachio-Clients-list.csv"
-                        className="csv-link"
-                      >
-                        <button type="button" className="btn-dashboard">
-                          Dashboard list
-                        </button>
-                      </CSVLink>
-                    </div>
-                  </div>
-                  <div className="table-responsive">
-                    <table className="table table-hover my-1">
-                      <thead>
-                        <tr>
-                          <th scope="col">S/N</th>
-                          <th>Company Name</th>
-                          <th className="d-none d-xl-table-cell">Industry</th>
-                          <th className="d-none d-xl-table-cell">
-                            Headquarters Location
-                          </th>
-                          <th>Description</th>
-                          <th>Phone Number</th>
-                          <th className="d-none d-md-table-cell">
-                            Founded Date
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Company Type
-                          </th>
-                          <th className="d-none d-md-table-cell">Website</th>
-                          <th className="d-none d-md-table-cell">
-                            No. of Employees
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Company Linkedln URL
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Contact Name
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Contact Linkedln URL
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Contact Position
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Contact Email
-                          </th>
-                          <th className="d-none d-md-table-cell">
-                            Contact Accuracy
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody></tbody>
-                    </table>
-                  </div>
-                  {/* <div className="d-flex justify-content-between table-feat">
-                    <div
-                      className="view-more-link"
-                      onClick={() => setViewAll(!viewAll)}
-                    >
-                      {" "}
-                      {!viewAll ? "View all" : "Show Less"}{" "}
-                    </div>
-                    <nav aria-label="Page navigation example">
-                      {viewAll ? "" : showPaginationList()}
-                    </nav>
-                  </div> */}
-                </div>
-                {/* EMAIL TAB */}
-                {/* <div
-                  className="tab-pane fade"
-                  id="pills-email"
-                  role="tabpanel"
-                  aria-labelledby="pills-email-tab"
-                >
-                  <div className="card-header table-card-head d-flex justify-content-between">
-                    <h5 className="card-title mb-0 table-title">Email</h5>
+                    <h5 className="card-title mb-0 table-title">Engage</h5>
                     <div className="dashboard-attr">
                       <div className="input-group input-group-navbar">
                         <img
@@ -479,39 +389,29 @@ export default function ConnectionsInner() {
                         <tr>
                           <th scope="col">S/N</th>
                           <th>Full Name</th>
-                          <th className="d-none d-xl-table-cell">URL</th>
                           <th className="d-none d-xl-table-cell">Position</th>
-                          <th>Company</th>
-                          <th className="d-none d-md-table-cell">Location</th>
+                          <th className="d-none d-xl-table-cell">
+                            Company
+                          </th>
                           <th>Linkedln URL</th>
-                          <th className="d-none d-md-table-cell">First Name</th>
-                          <th className="d-none d-md-table-cell">Surname</th>
-                          <th className="d-none d-md-table-cell">Domain</th>
-                          <th className="d-none d-md-table-cell">Website</th>
+                          <th>Connection Status</th>
                           <th className="d-none d-md-table-cell">
-                            Company Location
-                          </th>
-                          <th className="d-none d-md-table-cell">Industry</th>
-                          <th className="d-none d-md-table-cell">
-                            Year Founded
+                            Connected On
                           </th>
                           <th className="d-none d-md-table-cell">
-                            Company Size
+                            Follow Up Status
                           </th>
+                          <th className="d-none d-md-table-cell">Contact Mobile</th>
                           <th className="d-none d-md-table-cell">
-                            Company Linkedln URL
+                            Contact Email
                           </th>
-                          <th className="d-none d-md-table-cell">
-                            Suggested Emails
-                          </th>
-                          <th className="d-none d-md-table-cell">Email</th>
-                          <th className="d-none d-md-table-cell">Accuracy</th>
+                          <th className="d-none d-md-table-cell">Location</th>
                         </tr>
                       </thead>
                       <tbody></tbody>
                     </table>
                   </div>
-                  {/* <div className="d-flex justify-content-between table-feat">
+                  <div className="d-flex justify-content-between table-feat">
                     <div
                       className="view-more-link"
                       onClick={() => setViewAll(!viewAll)}
@@ -522,8 +422,8 @@ export default function ConnectionsInner() {
                     <nav aria-label="Page navigation example">
                       {viewAll ? "" : showPaginationList()}
                     </nav>
-                  </div> */}
-                {/* </div> */}
+                  </div>
+                </div>
                 {/* DATA EXTRACT TAB */}
                 <div
                   className="tab-pane fade"

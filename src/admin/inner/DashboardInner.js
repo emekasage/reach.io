@@ -271,7 +271,7 @@ export default function DashboardInner() {
                             className="d-flex justify-content-between top-card-content"
                           >
                             <h5 className="card-title mb-4">
-                              Total no. of Connections
+                              Total no. of Contacts
                             </h5>
                             <i className="bi bi-circle-half moon"></i>
                           </div>

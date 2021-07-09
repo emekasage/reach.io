@@ -20,6 +20,7 @@ import AdminCampaign from "./admin/Campaign";
 import AdminNotifications from "./admin/Notifications";
 import { providerFunctions } from "./provider/FunctionsProvider";
 import AppModal from "./components/AppModal";
+import VerifyEmail from "./pages/VerifyEmail";
 
 export default function Routes() {
   const { showModal, loggedIn } = useContext(providerFunctions);
@@ -29,6 +30,7 @@ export default function Routes() {
       {showModal && <AppModal></AppModal>}
       <Switch>
         <Route path="/signup" component={Signup} />
+        <Route path="/verify-email" component={VerifyEmail} />
         <Route path="/changepassword" component={ChangePassword} />
         <Route path="/login" component={loggedIn ? Dashboard : Login} />
         <Route

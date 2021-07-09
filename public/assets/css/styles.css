@@ -54,6 +54,23 @@
   font-style: normal;
 }
 
+div#country-name {
+  font-family: "Nunito";
+  text-indent: 15px;
+}
+
+.css-yk16xz-control {
+  min-height: 60px !important;
+  border-radius: 2px !important;
+  border: 1px solid #e5e5e5 !important;
+}
+
+span.verify_txt {
+  display: block;
+  font-family: "Nunito";
+  font-size: 18px;
+}
+
 .reset-pass {
   color: #5a0288;
   text-decoration: none;
@@ -420,7 +437,7 @@ ul {
 }
 
 .container-fluid.p-0 {
-  height: 90vh;
+  height: 100%;
 }
 
 /******************
@@ -882,7 +899,9 @@ button.admin-ban {
   font-family: "Nunito";
 }
 
-button#pills-data-extract-tab {
+#pills-data-extract-tab,
+#pills-engage-tab,
+#pills-contact-tab {
   width: max-content;
 }
 
@@ -1123,12 +1142,77 @@ button .user-plus {
   display: flex;
 }
 
+.campaign_first {
+  background: #eff0f6;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  margin: 0 10px;
+  justify-content: space-around;
+  padding-top: 20px;
+}
+
+.first-flow-txt {
+  text-align: start;
+  font-family: "Nunito";
+  margin: 20px 100px 20px 0;
+}
+
+.first-flow-txt .small-txt {
+  font-size: 14px;
+  font-weight: 400;
+  color: #555;
+}
+
+.first-flow-txt .big-txt {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-top: -10px;
+}
+
+.first-flow-btn {
+  display: flex;
+  align-items: center;
+  margin-top: -20px;
+}
+
+.first-flow-btn button {
+  padding: 7px 18px;
+}
+
+.first-flow-btn button {
+  padding: 10px 18px;
+  border: #5a0288;
+  background: #5a0288;
+  color: #fff;
+  text-transform: capitalize;
+  font-weight: 600;
+  border-radius: 3px;
+}
+
+.first-flow-btn button:hover {
+  background: #fff;
+  color: #5a0288;
+  border: 1px solid #5a0288;
+}
+
 .tiny-cmp-cards {
   width: 254px;
   height: 170px;
   border: 1px solid #e6e8f1 !important;
   border-radius: 5px !important;
   margin: 0 10px;
+}
+
+.prev_flow {
+  display: block;
+  position: absolute;
+  top: 118px;
+  z-index: 10;
+  font-size: 20px;
+  padding-left: 15px;
+  cursor: pointer;
 }
 
 .flow-card {
@@ -1357,6 +1441,25 @@ p#cancel_stuff {
 
 .company-steps {
   margin: 0 auto;
+}
+
+.email_campaign {
+  text-align: start;
+  padding: 10px 50px;
+  cursor: pointer;
+}
+
+.email_campaign .bi-plus-circle {
+  color: #5a0288;
+  font-size: 18px;
+}
+
+.email_campaign span {
+  padding-left: 5px;
+  font-family: "Nunito";
+  color: #5a0288;
+  font-weight: 600;
+  font-size: 17px;
 }
 
 .camp-steps {
@@ -1772,11 +1875,25 @@ button.bck-btn {
   float: left;
   font-family: "Nunito";
   font-size: 14px !important;
+  font-weight: 600;
+}
+
+.form-label2 {
+  display: block;
+  text-align: start !important;
+  font-family: "Nunito";
+  font-size: 14px !important;
+  padding-bottom: 10px;
+  font-weight: 600;
 }
 
 .mod-form,
 .mod-btn {
   padding: 10px 50px;
+}
+
+.mod-form-hidden {
+  padding: 0 50px;
 }
 
 .mod-form-inner {
@@ -1994,6 +2111,11 @@ button.assign-btn {
   display: flex;
   background: #fff;
   justify-content: space-around;
+}
+
+.saved-items:hover {
+  border: 1px solid #5a0288;
+  cursor: pointer;
 }
 
 .saved-items span {

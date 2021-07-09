@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
 import CreditModal from "./CreditModal";
 import CampaignModal from "./CampaignModal";
-import UserRegisterModal from "./UserRegisterModal";
+import SaveTemplateModal from "./SaveTemplateModal";
 import AssignCreditsModal from "./AssignCreditsModal";
 import AssignUserModal from "./AssignUserModal";
 import RequestCancelModal from "./RequestCancelModal";
@@ -33,11 +33,11 @@ export default function Modal() {
           {modalPage === "credit-modal" && (
             <CreditModal userId={userId}></CreditModal>
           )}
-          {modalPage === "user_registered" && (
-            <UserRegisterModal
+          {modalPage === "save_template" && (
+            <SaveTemplateModal
               setShowModal={setShowModal}
               userId={userId}
-            ></UserRegisterModal>
+            ></SaveTemplateModal>
           )}
           {modalPage === "assign_credit" && (
             <AssignCreditsModal

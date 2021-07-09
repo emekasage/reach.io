@@ -1,17 +1,75 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { providerFunctions } from "../provider/FunctionsProvider";
+import MultiSelect from "react-multi-select-component";
+import countries from "../countries"
 
 export default function AddLeadsModal(props) {
-  const { setCreateListPage, engageDetails, setEngageDetails } =
+  const { setCreateListPage, engageDetails, setEngageDetails, setTemplateDetails, getLinkedlnIndustries,
+    linkedlnIndustries, } =
     useContext(providerFunctions);
   const [page, setPage] = useState(1);
   const [showCheckMark, setshowCheckMark] = useState(false);
+  const [selectedEngageIndustry, setSelectedEngageIndustry] = useState([]);
+  const [industries, setIndustries] = useState([]);
 
-  const FileUpload = useRef(null);
+  const [countryEngage, setCountryEngage] = useState(-1);
+  const [stateEngage, setStateEngage] = useState(-1);
+  const [cityExtract, setCityEngage] = useState(-1);
+  const [cityOptions, setCityOptions] = useState([]);
+  const [stateOptions, setStateOptions] = useState([]);
 
-  const onFileClick = () => {
-    FileUpload.current.click();
-  };
+  useEffect(()=>{
+    var c = ""
+    if(cityExtract !== -1){
+      c = countries[countryEngage].name+","+countries[countryEngage].states[stateEngage].name+","
+      +countries[countryEngage].states[stateEngage].cities[cityExtract].name;
+      var cd = { ...engageDetails}
+      cd["location"] = c;
+      setEngageDetails(cd);
+      setTemplateDetails(cd);
+    }
+    
+  },[cityExtract])
+
+  useEffect(()=>{
+    if(stateEngage !== -1 && countryEngage !== -1)
+      setCityOptions(countries[countryEngage].states[stateEngage].cities)
+  },[stateEngage]);
+
+  useEffect(()=>{
+      if(countryEngage !== -1)
+        setStateOptions(countries[countryEngage].states)
+  },[countryEngage]);
+
+  // const FileUpload = useRef(null);
+
+  // const onFileClick = () => {
+  //   FileUpload.current.click();
+  // };
+
+  useEffect(() => {
+    console.log("asjkjaskj")
+    getLinkedlnIndustries();
+    console.log(linkedlnIndustries);
+  }, []);
+
+  useEffect(() => {
+    if (typeof linkedlnIndustries.data !== "undefined") {
+      setIndustries(linkedlnIndustries.data);
+      console.log(industries);
+    }
+  }, [linkedlnIndustries]);
+
+  useEffect(()=>{
+    var cc = "";
+    for (var i = 0; i < selectedEngageIndustry.length; i++){
+      cc = selectedEngageIndustry[i] + ","+ cc;
+    }
+    var s = {...engageDetails}
+    s.industry = cc;
+    setEngageDetails(s);
+    setTemplateDetails(s);
+  },[selectedEngageIndustry])
 
   return (
     <div>
@@ -35,6 +93,7 @@ export default function AddLeadsModal(props) {
                 var ec = { ...engageDetails };
                 ec.list_name = e.target.value;
                 setEngageDetails(ec);
+                setTemplateDetails(ec);
               }}
               value={
                 typeof engageDetails["list_name"] === "undefined"
@@ -64,8 +123,8 @@ export default function AddLeadsModal(props) {
               Use Saved List
             </span>
 
-            <span onClick={onFileClick}>Upload CSV file</span>
-            <input type="file" ref={FileUpload} style={{ display: "none" }} />
+            {/* <span onClick={onFileClick}>Upload CSV file</span>
+            <input type="file" ref={FileUpload} style={{ display: "none" }} /> */}
           </div>
         </div>
       )}
@@ -98,6 +157,7 @@ export default function AddLeadsModal(props) {
                 var ec = { ...engageDetails };
                 ec.connection_status = e.target.value;
                 setEngageDetails(ec);
+                setTemplateDetails(ec);
               }}
               value={
                 typeof engageDetails["connection_status"] === "undefined"
@@ -127,6 +187,7 @@ export default function AddLeadsModal(props) {
                 var ec = { ...engageDetails };
                 ec.job_title = e.target.value;
                 setEngageDetails(ec);
+                setTemplateDetails(ec);
               }}
               value={
                 typeof engageDetails["job_title"] === "undefined"
@@ -147,6 +208,7 @@ export default function AddLeadsModal(props) {
                 var ec = { ...engageDetails };
                 ec.job_status = e.target.value;
                 setEngageDetails(ec);
+                setTemplateDetails(ec);
               }}
               value={
                 typeof engageDetails["job_status"] === "undefined"
@@ -176,6 +238,7 @@ export default function AddLeadsModal(props) {
                 var ec = { ...engageDetails };
                 ec.skills_keywords = e.target.value;
                 setEngageDetails(ec);
+                setTemplateDetails(ec);
               }}
               value={
                 typeof engageDetails["skills_keywords"] === "undefined"
@@ -186,42 +249,87 @@ export default function AddLeadsModal(props) {
           </div>
           <div className="my-2 mod-form">
             <label htmlFor="exampleFormControlInput1" className="form-label">
-              Location
+              Country
             </label>
-            <input
-              type="text"
-              className="form-control form-control-lg mod-input"
-              name="location"
-              onChange={(e) => {
-                var ec = { ...engageDetails };
-                ec.location = e.target.value;
-                setEngageDetails(ec);
+            <select
+              className="form-select form-select-lg mod-select"
+              aria-label="Default select example"
+              onChange={(e)=>{
+                var c = e.target.value;
+                setCountryEngage(c);
               }}
-              value={
-                typeof engageDetails["location"] === "undefined"
-                  ? ""
-                  : engageDetails["location"]
-              }
-            />
+            >
+              {countries.map((thiscountry, index)=>{
+                return(
+                  <option value={index}>{thiscountry.name}</option>
+                )
+              })}
+            </select>
+          </div>
+          <div className="my-3 mod-form-hidden">
+            {JSON.stringify(stateOptions) !== "[]" &&
+              <>
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
+                  State
+                </label>
+                <select
+                  className="form-select form-select-lg mod-select"
+                  aria-label="Default select example"
+                  onChange={(e)=>{
+                    setStateEngage(e.target.value);
+                  }}
+                >
+                  {JSON.parse(JSON.stringify(stateOptions)).map((thisState, index)=>{
+                    return(
+                    <option selected value={index} className="slct-plchldr"  key={`${countryEngage} - ${index}`}>
+                      {thisState.name}
+                    </option>
+                    )
+                  })}
+                </select>
+              </>
+            }
+          </div>
+          <div className="my-3 mod-form-hidden">
+            {JSON.stringify(cityOptions) !== "[]" &&
+              <>
+                <label
+                  htmlFor="exampleFormControlInput1"
+                  className="form-label"
+                >
+                  Region
+                </label>   
+                <select
+                  className="form-select form-select-lg mod-select"
+                  aria-label="Default select example"
+                  onChange={(e)=>{
+                    setCityEngage(e.target.value);
+                  }}
+                >
+                  {cityOptions.map((thiscity, index)=>{
+                    return(
+                      <option selected value={index} className="slct-plchldr" key={`${countryEngage} - ${stateEngage} -  ${index}`}>
+                          {thiscity.name}
+                      </option>
+                    )
+                  })}
+                </select>
+              </>
+            }
           </div>
           <div className="my-2 mod-form">
-            <label htmlFor="exampleFormControlInput1" className="form-label">
+            <label htmlFor="exampleFormControlInput1" className="form-label2">
               Industry
             </label>
-            <input
-              type="text"
-              className="form-control form-control-lg mod-input"
-              name="industry"
-              onChange={(e) => {
-                var ec = { ...engageDetails };
-                ec.industry = e.target.value;
-                setEngageDetails(ec);
-              }}
-              value={
-                typeof engageDetails["industry"] === "undefined"
-                  ? ""
-                  : engageDetails["industry"]
-              }
+            <MultiSelect
+              className="mod-input"
+              options={linkedlnIndustries}
+              value={selectedEngageIndustry}
+              onChange={setSelectedEngageIndustry}
+              // labelledBy="Select Industry"
             />
           </div>
           <div className="my-2 mod-form">
@@ -235,6 +343,7 @@ export default function AddLeadsModal(props) {
                 var ec = { ...engageDetails };
                 ec.duration_current_role = e.target.value;
                 setEngageDetails(ec);
+                setTemplateDetails(ec);
               }}
               value={
                 typeof engageDetails["duration_current_role"] === "undefined"
@@ -263,6 +372,7 @@ export default function AddLeadsModal(props) {
                 var ec = { ...engageDetails };
                 ec.company_size = e.target.value;
                 setEngageDetails(ec);
+                setTemplateDetails(ec);
               }}
               value={
                 typeof engageDetails["company_size"] === "undefined"
@@ -299,7 +409,7 @@ export default function AddLeadsModal(props) {
         <div className="last-body">
           <div className="card-header d-flex justify-content-between mod-head">
             <div className="mod-title">
-              <h5>Campaign Submited</h5>
+              <h5>Campaign Submitted</h5>
             </div>
           </div>
 

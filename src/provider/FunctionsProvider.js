@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
 import { useHistory } from "react-router-dom";
+import config from "../config";
 
 const FunctionsProvider = (props) => {
-  const REACT_APP_API_URL = "https://reachio-api-v1.herokuapp.com/api";
+  const baseURL = config().apiHost;
   const steps = [
     { icon: "", text: "View Profile" },
     { icon: "", text: "Send Connection Request" },
@@ -16,11 +17,22 @@ const FunctionsProvider = (props) => {
     job_title: "",
     location: "",
     industry: "",
-    // view_profile_seq_duration[0]: "",
-    // view_profile_seq_duration[1]: "",
     company_size: "",
-    // follow_contact_seq_duration[0]: "",
-    // follow_contact_seq_duration[1]: "",
+    list_name: "",
+    connection_status: "",
+    job_status: "",
+    like_a_post_seq: "",
+    send_follow_up_seq_message: "",
+    skills_keywords: "",
+    duration_current_role: "",
+    campaign_name: "",
+  });
+  const [templateDetails, setTemplateDetails] = useState({
+    template_name: "",
+    job_title: "",
+    location: "",
+    industry: "",
+    company_size: "",
     list_name: "",
     connection_status: "",
     job_status: "",
@@ -61,6 +73,7 @@ const FunctionsProvider = (props) => {
   const [imageFile, setImageFile] = useState([]);
   const [token, setToken] = useState("");
   const [passwordToken, setPasswordToken] = useState("");
+  // const [verificationToken, setVerificationToken] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [allUsers, setAllUsers] = useState("");
   const [linkedlnUsers, setLinkedlnUsers] = useState({});
@@ -93,6 +106,7 @@ const FunctionsProvider = (props) => {
   const [managedRoles, setManagedRoles] = useState({
     Roles: { data: [] },
   });
+  const [linkedlnIndustries, setLinkedlnIndustries] = useState([]);
   const [allPermissions, setAllPermissions] = useState({});
   const [showForgotPasswordSuccess, setShowForgotPasswordSuccess] =
     useState("");
@@ -114,13 +128,15 @@ const FunctionsProvider = (props) => {
   const [userAlert, setUserAlert] = useState({});
   const [adminAlert, setAdminAlert] = useState({});
   const [creditUtilized, setCreditUtilized] = useState({});
-  const [companySearchResult, setCompanySearchResult] = useState({});
-  const [emailSearchResult, setEmailSearchResult] = useState({});
+  const [contactSearchResult, setContactSearchResult] = useState({});
   const [rerunMessage, setRerunMessage] = useState({});
   const [extractResult, setExtractResult] = useState({});
   const [engageResult, setEngageResult] = useState({});
   const [robotMessages, setRobotMessages] = useState({});
   const [verifyMessage, setVerifyMessage] = useState({});
+  const [signUpMessage, setSignUpMessage] = useState({});
+  const [engageTemplate, setEngageTemplate] = useState({});
+  const [addEmailSearch, setAddEmailSearch] = useState(false);
 
   let history = useHistory();
   // useEffect(() => {
@@ -165,7 +181,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/user", requestOptions)
+    fetch(baseURL + "/user", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setUserDetails(result);
@@ -188,7 +204,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/login", requestOptions)
+    fetch(baseURL + "/login", requestOptions)
       .then((response) => {
         console.log(response);
         return response.json();
@@ -221,8 +237,8 @@ const FunctionsProvider = (props) => {
       body: raw,
       redirect: "follow",
     };
-    console.log("meerr");
-    fetch("https://reachio-api-v1.herokuapp.com/api/signin", requestOptions)
+    console.log(baseURL);
+    fetch(baseURL + "/signin", requestOptions)
       .then((response) => {
         console.log(response);
         return response.json();
@@ -258,19 +274,44 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/register", requestOptions)
-      .then((response) => response.text())
+    fetch(baseURL + "/register", requestOptions)
+      .then((response) => response.json())
       .then((result) => {
         console.log(result);
-        login(signUpData.email, signUpData.password);
+        // login(signUpData.email, signUpData.password);
         //put snackbar here
         enqueueSnackbar("Sign Up Successfull", { variant: "success" });
-        setShowModal(true);
-        setModalPage("user_registered");
+        setSignUpMessage(result);
+        // setShowModal(true);
+        // setModalPage("user_registered");
         //redirect to loginset
       })
       .catch((error) => console.log("error", error));
   };
+
+  const verifyEmail = (verificationToken) => {
+    alert("djhdshds");
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    fetch(baseURL + "/verify-email/" + verificationToken, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(result);
+        enqueueSnackbar("Account Verified", { variant: "success" });
+        history.push("/login");
+      })
+      .catch(error => console.log('error', error));
+      
+  }
 
   const banUser = (userId) => {
     var myHeaders = new Headers();
@@ -285,7 +326,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/user/" + userId + "/ban", requestOptions)
+    fetch(baseURL + "/admin/user/" + userId + "/ban", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         getAllUsers();
@@ -311,7 +352,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/admin/user/" + userId + "/activate",
+      baseURL + "/admin/user/" + userId + "/activate",
       requestOptions
     )
       .then((response) => response.text())
@@ -341,7 +382,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/campaign/assign-credit/" + campaignId,
+      baseURL + "/campaign/assign-credit/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -363,80 +404,44 @@ const FunctionsProvider = (props) => {
   };
   /*************** CREATE CAMPAIGN *****************/
 
-  /*** COMPANY SEARCH CAMPAIGN ***/
-  const companySearch = (companyDetails) => {
+  /*** CONTACT SEARCH CAMPAIGN ***/
+  const contactSearch = (contactDetails) => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
 
     var formdata = new FormData();
-    formdata.append("description", companyDetails.description);
-    formdata.append("hq_location", companyDetails.hq_location);
-    formdata.append("industry", companyDetails.industry);
-    formdata.append("no_of_employees", companyDetails.no_of_employees);
-    formdata.append(
-      "estimated_revenue_range",
-      companyDetails.estimated_revenue_range
-    );
-    formdata.append("founded", companyDetails.founded);
-    formdata.append("actively_hiring", companyDetails.actively_hiring);
-    formdata.append("leadership_hire", companyDetails.leadership_hire);
-    formdata.append("company_type", companyDetails.company_type);
+    formdata.append("campaign_name", contactDetails.campaign_name);
+    formdata.append("description", contactDetails.description);
+    formdata.append("hq_location", contactDetails.hq_location);
+    formdata.append("industry", contactDetails.industry);
+    formdata.append("no_of_employees", contactDetails.no_of_employess);
+    formdata.append("estimated_revenue_range", contactDetails.estimated_revenue_range);
+    formdata.append("founded", contactDetails.founded);
+    formdata.append("actively_hiring", contactDetails.actively_hiring);
+    formdata.append("leadership_hire", contactDetails.leadership_hire);
+    formdata.append("company_type", contactDetails.company_type);
+    formdata.append("job_title", contactDetails.job_title);
+    formdata.append("job_status", contactDetails.job_status);
+    formdata.append("skills_and_keyword", contactDetails.skills_keywords);
+    formdata.append("location", contactDetails.location);
+    formdata.append("duration_in_current_role", contactDetails.duration_current_role);
+    formdata.append("company_size", contactDetails.company_size);
 
     var requestOptions = {
-      method: "POST",
+      method: 'POST',
       headers: myHeaders,
       body: formdata,
-      redirect: "follow",
+      redirect: 'follow'
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/create/company-search",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
+    fetch(baseURL + "/campaign/create/contact-search", requestOptions)
+      .then(response => response.json())
+      .then(result => {
         userCampaign();
-        setCompanySearchResult(result);
-        // console.log(result);
-      })
-      .catch((error) => console.log("error", error));
-  };
-
-  /*** EMAIL SEARCH CAMPAIGN ***/
-  const emailSearch = (emailDetails) => {
-    var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer " + token);
-
-    var formdata = new FormData();
-    formdata.append("job_title", emailDetails.job_title);
-    formdata.append("job_status", emailDetails.job_status);
-    formdata.append("skills_and_keyword", emailDetails.skills_keywords);
-    formdata.append("location", emailDetails.location);
-    formdata.append("industry", emailDetails.industry);
-    formdata.append(
-      "duration_in_current_role",
-      emailDetails.duration_current_role
-    );
-    formdata.append("company_size", emailDetails.company_size);
-
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
-    };
-
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/create/email-search",
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        userCampaign();
-        setEmailSearchResult(result);
+        setContactSearchResult(result);
         console.log(result);
       })
-      .catch((error) => console.log("error", error));
+      .catch(error => console.log('error', error));
   };
 
   /*** DATA EXTRACT CAMPAIGN ***/
@@ -445,6 +450,7 @@ const FunctionsProvider = (props) => {
     myHeaders.append("Authorization", "Bearer " + token);
 
     var formdata = new FormData();
+    formdata.append("campaign_name", extractDetails.campaign_name);
     formdata.append("job_title", extractDetails.job_title);
     formdata.append("job_status", extractDetails.job_status);
     formdata.append("skills_and_keyword", extractDetails.skills_keywords);
@@ -464,7 +470,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/create/data-extract",
+      baseURL + "/campaign/create/data-extract",
       requestOptions
     )
       .then((response) => response.json())
@@ -526,16 +532,107 @@ const FunctionsProvider = (props) => {
     formdata.append("job_status", engageDetails.job_status);
     formdata.append("campaign_name", engageDetails.campaign_name);
 
-    // formdata.append("view_profile_seq_duration[0]", "days: 2");
-    // formdata.append("view_profile_seq_duration[1]", "hours: 10");
-    // formdata.append("follow_contact_seq_duration[0]", "days: 2");
-    // formdata.append("follow_contact_seq_duration[1]", "hours: 10");
-    // formdata.append("send_follow_up_seq_message[0]", "hours:10");
-    // formdata.append("send_follow_up_seq_message[1]", "days: 2");
+    formdata.append(
+      "view_profile_seq_duration[0]",
+      "days: " + viewProfile.days
+    );
+    formdata.append(
+      "view_profile_seq_duration[1]",
+      "hours: " + viewProfile.hours
+    );
+    formdata.append(
+      "follow_contact_seq_duration[0]",
+      "days: " + connectionRequest.days
+    );
+    formdata.append(
+      "follow_contact_seq_duration[1]",
+      "hours: " + connectionRequest.hours
+    );
+    formdata.append(
+      "send_follow_up_seq_message[0]",
+      "hours:" + followMessage.hours
+    );
+    formdata.append(
+      "send_follow_up_seq_message[1]",
+      "days:" + followMessage.days
+    );
 
-    // formdata.append("like_a_post_seq[0]", "hours: 10");
-    // formdata.append("like_a_post_seq[1]", "days:2");
-    // formdata.append("like_a_post_seq[2]", "message: Loremipsum");
+    formdata.append("like_a_post_seq[0]", "hours: " + likeAPost.hours);
+    formdata.append("like_a_post_seq[1]", "days:" + likeAPost.days);
+    formdata.append("like_a_post_seq[2]", "message: Loremipsum");
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
+
+    fetch(
+      baseURL + "/campaign/create/engage",
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => {
+        userCampaign();
+        setEngageResult(result);
+        console.log(result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const createEngageTemplate = () => {
+    let viewProfile = { icon: "", text: "View Profile", days: 0, hours: 0 };
+    let connectionRequest = {
+      icon: "",
+      text: "Send Connection Request",
+      days: 0,
+      hours: 0,
+    };
+    let likeAPost = { icon: "", text: "Like a Post", days: 0, hours: 0 };
+    let followMessage = {
+      icon: "",
+      text: "Send Follow Up Message",
+      days: 0,
+      hours: 0,
+    };
+
+    selectedSteps.filter((thisSelectedStep) => {
+      if (thisSelectedStep.text === "View Profile") {
+        viewProfile = thisSelectedStep;
+      } else if (thisSelectedStep.text === "Send Connection Request") {
+        connectionRequest = thisSelectedStep;
+      } else if (thisSelectedStep.text === "Like a Post") {
+        likeAPost = thisSelectedStep;
+      } else {
+        followMessage = thisSelectedStep;
+      }
+    });
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+    console.log(
+      selectedSteps,
+      viewProfile,
+      connectionRequest,
+      likeAPost,
+      followMessage
+    );
+
+    var formdata = new FormData();
+    formdata.append("template_name", templateDetails.template_name);
+    formdata.append("job_title", templateDetails.job_title);
+    formdata.append("industry", templateDetails.industry);
+    formdata.append("location", templateDetails.location);
+    formdata.append(
+      "duration_in_current_role",
+      templateDetails.duration_current_role
+    );
+    formdata.append("company_size", templateDetails.company_size);
+    formdata.append("list_name", templateDetails.list_name);
+    formdata.append("connection_status", templateDetails.connection_status);
+    formdata.append("job_status", templateDetails.job_status);
+    formdata.append("skills_and_keyword", templateDetails.skills_keywords);
 
     formdata.append(
       "view_profile_seq_duration[0]",
@@ -574,73 +671,40 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/create/engage",
+      baseURL + "/campaigns/engage/template/create",
       requestOptions
     )
       .then((response) => response.json())
       .then((result) => {
-        setEngageResult(result);
+        getEngageTemplate();
         console.log(result);
+        enqueueSnackbar("Template Saved", {
+          variant: "success",
+        });
       })
       .catch((error) => console.log("error", error));
   };
 
-  const createEngageTemplate = (templateDetails) => {
+  /* END OF CREATE CAMPAIGN */
+
+  const getEngageTemplate = () => {
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + token);
 
-    var formdata = new FormData();
-    formdata.append("job_title", templateDetails.job_title);
-    formdata.append("industry", templateDetails.industry);
-    formdata.append("location", templateDetails.location);
-    formdata.append(
-      "duration_in_current_role",
-      templateDetails.duration_current_role
-    );
-    formdata.append("company_size", templateDetails.company_size);
-    formdata.append(
-      "view_profile_seq_duration[0]",
-      templateDetails.view_profile_seq_duration[0]
-    );
-    formdata.append(
-      "view_profile_seq_duration[1]",
-      templateDetails.view_profile_seq_duration[1]
-    );
-    formdata.append(
-      "follow_contact_seq_duration[0]",
-      templateDetails.follow_contact_seq_duration[0]
-    );
-    formdata.append(
-      "follow_contact_seq_duration[1]",
-      templateDetails.follow_contact_seq_duration[1]
-    );
-    formdata.append("list_name", templateDetails.list_name);
-    formdata.append("connection_status", templateDetails.connection_status);
-    formdata.append("job_status", templateDetails.job_status);
-    formdata.append("like_a_post_seq", templateDetails.like_a_post_seq);
-    formdata.append(
-      "send_follow_up_seq_message",
-      templateDetails.send_follow_up_seq_message
-    );
-    formdata.append("skills_and_keyword", templateDetails.skills_keywords);
-
     var requestOptions = {
-      method: "POST",
+      method: 'GET',
       headers: myHeaders,
-      body: formdata,
-      redirect: "follow",
+      redirect: 'follow'
     };
 
-    fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaigns/engage/template/create",
-      requestOptions
-    )
-      .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
-  };
-
-  /* END OF CREATE CAMPAIGN */
+    fetch(baseURL + "/campaigns/engage/template", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        console.log(result);
+        setEngageTemplate(result);
+      })
+      .catch(error => console.log('error', error));
+  }
 
   const confirmCampaignSubmission = (campaignId) => {
     var myHeaders = new Headers();
@@ -656,7 +720,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/confirm-submission/" +
+      baseURL + "/campaign/confirm-submission/" +
         campaignId,
       requestOptions
     )
@@ -683,7 +747,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/campaign/rerun/" + campaignId,
+      baseURL + "/campaign/rerun/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -706,7 +770,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/admin/approve-campaign/" + campaignId,
+      baseURL + "/admin/approve-campaign/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -731,7 +795,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/admin/cancel-campaign/" + campaignId,
+      baseURL + "/admin/cancel-campaign/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -766,7 +830,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/user/create", requestOptions)
+    fetch(baseURL + "/admin/user/create", requestOptions)
       .then((response) => response.text())
       .then((result) => {
         getAllUsers();
@@ -785,7 +849,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/metrics", requestOptions)
+    fetch(baseURL + "/admin/metrics", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setMetrics(result);
@@ -804,7 +868,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/graph",
+      baseURL + "/admin/graph",
       requestOptions
     )
       .then((response) => response.json())
@@ -824,7 +888,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/connections/metrics", requestOptions)
+    fetch(baseURL + "/connections/metrics", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setConnectMetrics(result);
@@ -842,7 +906,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/connections/graph", requestOptions)
+    fetch(baseURL + "/connections/graph", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setConnectGraph(result);
@@ -861,7 +925,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/credit/charts",
+      baseURL + "/credit/charts",
       requestOptions
     )
       .then((response) => response.json())
@@ -883,7 +947,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/campaigns?page=" + userCampaignPage,
+      baseURL + "/campaigns?page=" + userCampaignPage,
       requestOptions
     )
       .then((response) => response.json())
@@ -902,7 +966,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/campaign/" + campaign_id, requestOptions)
+    fetch(baseURL + "/campaign/" + campaign_id, requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -925,7 +989,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/campaign/cancel", requestOptions)
+    fetch(baseURL + "/campaign/cancel", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result);
@@ -953,7 +1017,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/request/camp", requestOptions)
+    fetch(baseURL + "/admin/request/camp", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setCancelRequests(result);
@@ -973,7 +1037,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/admin/request/camp/" + requestId,
+      baseURL + "/admin/request/camp/" + requestId,
       requestOptions
     )
       .then((response) => response.json())
@@ -997,7 +1061,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/get-robot-messages",
+      baseURL + "/get-robot-messages",
       requestOptions
     )
       .then((response) => response.json())
@@ -1027,7 +1091,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/send-data-to-robot",
+      baseURL + "/send-data-to-robot",
       requestOptions
     )
       .then((response) => response.json())
@@ -1061,7 +1125,7 @@ const FunctionsProvider = (props) => {
     redirect: 'follow'
   };
 
-  fetch("https://reachio-api-v1.herokuapp.com/api/linkedin-save-2fa-code-to-db", requestOptions)
+  fetch(baseURL + "/linkedin-save-2fa-code-to-db", requestOptions)
     .then(response => response.json())
     .then(result => {
       setVerifyMessage(result);
@@ -1080,7 +1144,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/users", requestOptions)
+    fetch(baseURL + "/admin/users", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAllUsers(result);
@@ -1098,7 +1162,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/user/" + userId, requestOptions)
+    fetch(baseURL + "/admin/user/" + userId, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setDeleteUserMessage(result);
@@ -1117,7 +1181,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    await fetch(REACT_APP_API_URL + "/admin/user/" + userId, requestOptions)
+    await fetch(baseURL + "/admin/user/" + userId, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         userInfo = result;
@@ -1137,7 +1201,7 @@ const FunctionsProvider = (props) => {
     };
 
     await fetch(
-      REACT_APP_API_URL + "/admin/campaign/" + campaignnable_id,
+      baseURL + "/admin/campaign/" + campaignnable_id,
       requestOptions
     )
       .then((response) => response.json())
@@ -1147,6 +1211,39 @@ const FunctionsProvider = (props) => {
       .catch((error) => console.log("error", error));
     return userInfo;
   };
+
+  const getLinkedlnIndustries = () => {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", "Bearer " + token);
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    fetch(baseURL + "/get-linkedin-industries", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        // console.log(result);
+        var lod = Array();
+        if(typeof result.data !== "undefined"){
+          for(var i=0; i< result.data.length; i++){
+            if(typeof result.data[i].Description !== "undefined"){
+              var ee = {};
+              ee.value = result.data[i].Description;
+              ee.label = result.data[i].Description;
+              lod.push(ee);
+            }
+          }
+          setLinkedlnIndustries(lod);
+        }
+        
+        console.log(lod)
+      })
+      .catch(error => console.log('error', error));
+
+  }
 
   const getLinkedlnUser = () => {
     var myHeaders = new Headers();
@@ -1158,7 +1255,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/linkedin-users", requestOptions)
+    fetch(baseURL + "/linkedin-users", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setLinkedlnUsers(result);
@@ -1183,7 +1280,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/campaign/assign/linkedin-user/" + campaignId,
+      baseURL + "/campaign/assign/linkedin-user/" + campaignId,
       requestOptions
     )
       .then((response) => response.json())
@@ -1212,7 +1309,7 @@ const FunctionsProvider = (props) => {
       body: raw,
     };
 
-    fetch(REACT_APP_API_URL + "/reset-password-request", requestOptions)
+    fetch(baseURL + "/reset-password-request", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         if (
@@ -1250,10 +1347,10 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/change-password?token=" + passwordToken,
+      baseURL + "/change-password?token=" + passwordToken,
       requestOptions
     )
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((result) => {
         console.log(result);
         enqueueSnackbar("Password Reset Successfull", { variant: "success" });
@@ -1280,7 +1377,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/user/update-profile", requestOptions)
+    fetch(baseURL + "/user/update-profile", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -1303,7 +1400,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/user/update-password", requestOptions)
+    fetch(baseURL + "/user/update-password", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -1318,7 +1415,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/connections?page=1", requestOptions)
+    fetch(baseURL + "/connections?page=1", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAllConnections(result);
@@ -1340,7 +1437,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/user/upload-image", requestOptions)
+    fetch(baseURL + "/user/upload-image", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         getUserDetails();
@@ -1360,7 +1457,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      REACT_APP_API_URL + "/admin/campaigns?page=" + campaignPage,
+      baseURL + "/admin/campaigns?page=" + campaignPage,
       requestOptions
     )
       .then((response) => response.json())
@@ -1387,7 +1484,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/role/add/", requestOptions)
+    fetch(baseURL + "/admin/role/add/", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -1403,7 +1500,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/role/delete/" + roleId, requestOptions)
+    fetch(baseURL + "/admin/role/delete/" + roleId, requestOptions)
       .then((response) => response.text())
       .then((result) => {
         console.log(result);
@@ -1428,7 +1525,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/role/update/" + roleId, requestOptions)
+    fetch(baseURL + "/admin/role/update/" + roleId, requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -1444,7 +1541,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/permissions", requestOptions)
+    fetch(baseURL + "/admin/permissions", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setAllPermissions(result);
@@ -1463,7 +1560,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/admin/roles", requestOptions)
+    fetch(baseURL + "/admin/roles", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setManagedRoles(result);
@@ -1502,7 +1599,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/purchase-credits", requestOptions)
+    fetch(baseURL + "/purchase-credits", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setPaymentMessage(result);
@@ -1521,7 +1618,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/transactions", requestOptions)
+    fetch(baseURL + "/transactions", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setTransaction(result);
@@ -1539,7 +1636,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/campaign-transactions", requestOptions)
+    fetch(baseURL + "/campaign-transactions", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setUtilization(result);
@@ -1557,7 +1654,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/notifications", requestOptions)
+    fetch(baseURL + "/notifications", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         // setUserAlert(result);
@@ -1577,7 +1674,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/notifications",
+      baseURL + "/admin/notifications",
       requestOptions
     )
       .then((response) => response.json())
@@ -1599,7 +1696,7 @@ const FunctionsProvider = (props) => {
     };
 
     fetch(
-      "https://reachio-api-v1.herokuapp.com/api/admin/notification/mark-as-read",
+      baseURL + "/admin/notification/mark-as-read",
       requestOptions
     )
       .then((response) => response.textz())
@@ -1619,7 +1716,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/logout", requestOptions)
+    fetch(baseURL + "/logout", requestOptions)
       .then((response) => response.text())
       .then(() => {
         setLoggedIn(false);
@@ -1646,7 +1743,7 @@ const FunctionsProvider = (props) => {
       redirect: "follow",
     };
 
-    fetch(REACT_APP_API_URL + "/logout", requestOptions)
+    fetch(baseURL + "/logout", requestOptions)
       .then((response) => response.json())
       .then(() => {
         setLoggedIn(false);
@@ -1796,12 +1893,6 @@ const FunctionsProvider = (props) => {
         setCreateListPage,
         defaultSteps,
         setDefaultSteps,
-        companySearch,
-        companySearchResult,
-        setCompanySearchResult,
-        emailSearch,
-        emailSearchResult,
-        setEmailSearchResult,
         rerunCampaign,
         rerunMessage,
         setRerunMessage,
@@ -1831,6 +1922,22 @@ const FunctionsProvider = (props) => {
         sendTwoFaCode,
         engageResult,
         setEngageResult,
+        templateDetails,
+        setTemplateDetails,
+        signUpMessage,
+        setSignUpMessage,
+        verifyEmail,
+        getLinkedlnIndustries,
+        linkedlnIndustries,
+        setLinkedlnIndustries,
+        contactSearchResult,
+        setContactSearchResult,
+        contactSearch,
+        getEngageTemplate,
+        engageTemplate,
+        setEngageTemplate,
+        addEmailSearch,
+        setAddEmailSearch,
       }}
     >
       {props.children}

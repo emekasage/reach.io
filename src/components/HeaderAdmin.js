@@ -116,7 +116,9 @@ export default function Header() {
                     </p>
                   </li>
                 )}
-                <button className="notify-btn">View All</button>
+                <Link to="/admin/notifications" className="hd-dropdown-lnk">
+                  <button className="notify-btn">View All</button>
+                </Link>
               </ul>
             </div>
 
